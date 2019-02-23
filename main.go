@@ -43,6 +43,7 @@ const (
 	configPath        = "goreadme.json"
 
 	goreadmeAuthor = "goreadme"
+	goreadmeEmail = "posener@gmail.com"
 	goreadmeBranch = "goreadme"
 	goreaedmeRef   = "refs/heads/" + goreadmeBranch
 )
@@ -65,7 +66,7 @@ func main() {
 	}
 	m := mux.NewRouter()
 	m.Methods("GET").Path("/").HandlerFunc(h.home)
-	m.Methods("POST").Path("/github/hook").HandlerFunc(h.hook)
+	m.Methods("POST").Path("/github/hook").Handler(auth(http.HandlerFunc(h.hook)))
 	logrus.Infof("Starting server...")
 	http.ListenAndServe(":"+port, m)
 }
@@ -192,7 +193,7 @@ func (h *handler) runPR(log logrus.FieldLogger, push *github.PushEvent) {
 	date := time.Now()
 	author := &github.CommitAuthor{
 		Name:  github.String(goreadmeAuthor),
-		Email: github.String(goreadmeAuthor + "@gmail.com"),
+		Email: github.String(goreadmeEmail),
 		Date:  &date,
 	}
 	_, _, err = h.github.Repositories.UpdateFile(ctx, owner, repo, readmePath, &github.RepositoryContentFileOptions{

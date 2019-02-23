@@ -1,3 +1,4 @@
+// Package goreadme provides API to create readme markdown file from go doc.
 package goreadme
 
 import (
@@ -6,34 +7,73 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"sync"
 	"text/template"
 
 	"github.com/golang/gddo/doc"
-	"github.com/hashicorp/go-multierror"
 )
 
-type Package struct {
+// pkg contains information about a go package, to be used in the template.
+type pkg struct {
 	Package     *doc.Package
-	SubPackages []SubPackage
+	SubPackages []subPkg
+	Config      Config
 }
 
-type SubPackage struct {
-	Path string
-	Doc  string
+// subPkg is information about sub package, to be used in the template.
+type subPkg struct {
+	Path    string
+	Package *doc.Package
 }
 
-func Create(ctx context.Context, client *http.Client, name string, w io.Writer) error {
-	p, err := get(ctx, client, name)
+// GoReadme enables gettring readme.md text from a go package.
+type GoReadme struct {
+	// Client is an HTTP client used to perform the requests. It can be used
+	// to authenticate github requests, for example, a github client can be used:
+	//
+	//		oauth2.NewClient(ctx, oauth2.StaticTokenSource(
+	//			&oauth2.Token{AccessToken: "...github access token..."
+	//		))
+	Client *http.Client
+
+	config Config
+}
+
+type Config struct {
+	// SkipExamples will omit the examples section from the README.
+	SkipExamples bool `json:"sub_packages"`
+	// SkipSubPackages will omit the sub packages section from the README.
+	SkipSubPackages bool `json:"skip_sub_packages"`
+	// RecursiveSubPackages will retrived subpackages information recursively.
+	// If false, only one level of subpackages will be retrived.
+	RecursiveSubPackages bool `json:"recursive_sub_packages"`
+}
+
+// Create writes the content of readme.md to w, with the default client.
+// name should be a Go repository name, such as "github.com/posener/goreadme".
+func Create(ctx context.Context, name string, w io.Writer) error {
+	g := GoReadme{Client: http.DefaultClient}
+	return g.Create(ctx, name, w)
+}
+
+// WithConfig returns a copy of the converter with the given configuration.
+func (r GoReadme) WithConfig(cfg Config) *GoReadme {
+	r.config = cfg
+	return &r
+}
+
+// Create writes the content of readme.md to w, with r's HTTP client.
+// name should be a Go repository name, such as "github.com/posener/goreadme".
+func (r *GoReadme) Create(ctx context.Context, name string, w io.Writer) error {
+	p, err := r.get(ctx, name)
 	if err != nil {
 		return err
 	}
 	return tmpl.Execute(w, p)
 }
 
-func get(ctx context.Context, c *http.Client, name string) (*Package, error) {
+func (r *GoReadme) get(ctx context.Context, name string) (*pkg, error) {
 	log.Printf("Getting %s", name)
-	p, err := doc.Get(ctx, c, name, "")
+	p, err := doc.Get(ctx, r.Client, name, "")
 	if err != nil {
 		return nil, fmt.Errorf("failed getting %s: %s", name, err)
 	}
@@ -48,36 +88,23 @@ func get(ctx context.Context, c *http.Client, name string) (*Package, error) {
 			p.Examples = append(p.Examples, e)
 		}
 	}
-	pkg := &Package{Package: p}
-	var (
-		wg     sync.WaitGroup
-		mu     sync.Mutex
-		errors *multierror.Error
-	)
-	wg.Add(len(p.Subdirectories))
-	for _, subPkg := range p.Subdirectories {
-		go func(subPkg string) {
-			importPath := name + "/" + subPkg
-			defer wg.Done()
-			log.Printf("Getting %s", importPath)
-			sp, err := doc.Get(ctx, c, importPath, "")
-			mu.Lock()
-			defer mu.Unlock()
-			if err != nil {
-				errors = multierror.Append(errors, fmt.Errorf("failed getting %s: %s", importPath, err))
-				return
-			}
-			if sp.Name == "" {
-				return
-			}
-			pkg.SubPackages = append(pkg.SubPackages, SubPackage{
-				Path: subPkg,
-				Doc:  sp.Synopsis,
-			})
-		}(subPkg)
+	pkg := &pkg{
+		Package: p,
+		Config:  r.config,
 	}
-	wg.Wait()
-	return pkg, errors.ErrorOrNil()
+
+	if !r.config.SkipSubPackages {
+		f := fetcher{
+			importPath: name,
+			client:     r.Client,
+			recursive:  r.config.RecursiveSubPackages,
+		}
+		pkg.SubPackages, err = f.Fetch(ctx, p)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return pkg, nil
 }
 
 var tmpl = template.Must(template.New("readme").Funcs(
@@ -91,14 +118,14 @@ var tmpl = template.Must(template.New("readme").Funcs(
 
 {{.Package.Doc}}
 
-{{if .SubPackages}}
+{{if (and .SubPackages (not .Config.SkipSubPackages)) -}}
 ## Sub Packages
 {{range .SubPackages}}
-* [{{.Path}}](./{{.Path}}){{if .Doc}}: {{.Doc}}{{end}}
-{{end}}
-{{end}}
+* [{{.Path}}](./{{.Path}}){{if .Package.Synopsis}}: {{.Package.Synopsis}}{{end}}
+{{end -}}
+{{end -}}
 
-{{if .Package.Examples}}
+{{if (and .Package.Examples (not .Config.SkipExamples)) -}}
 ## Examples
 {{range .Package.Examples}}
 ### {{.Name}}
@@ -106,6 +133,6 @@ var tmpl = template.Must(template.New("readme").Funcs(
 {{.Doc}}
 
 {{code .Play}}
-{{end}}
-{{end}}
+{{end -}}
+{{end -}}
 `))

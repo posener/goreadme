@@ -7,25 +7,13 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strings"
 	"text/template"
 
 	"github.com/golang/gddo/doc"
 )
 
-// pkg contains information about a go package, to be used in the template.
-type pkg struct {
-	Package     *doc.Package
-	SubPackages []subPkg
-	Config      Config
-}
-
-// subPkg is information about sub package, to be used in the template.
-type subPkg struct {
-	Path    string
-	Package *doc.Package
-}
-
-// GoReadme enables gettring readme.md text from a go package.
+// GoReadme enables getting readme.md text from a go package.
 type GoReadme struct {
 	// Client is an HTTP client used to perform the requests. It can be used
 	// to authenticate github requests, for example, a github client can be used:
@@ -71,6 +59,19 @@ func (r *GoReadme) Create(ctx context.Context, name string, w io.Writer) error {
 	return tmpl.Execute(w, p)
 }
 
+// pkg contains information about a go package, to be used in the template.
+type pkg struct {
+	Package     *doc.Package
+	SubPackages []subPkg
+	Config      Config
+}
+
+// subPkg is information about sub package, to be used in the template.
+type subPkg struct {
+	Path    string
+	Package *doc.Package
+}
+
 func (r *GoReadme) get(ctx context.Context, name string) (*pkg, error) {
 	log.Printf("Getting %s", name)
 	p, err := doc.Get(ctx, r.Client, name, "")
@@ -88,6 +89,12 @@ func (r *GoReadme) get(ctx context.Context, name string) (*pkg, error) {
 			p.Examples = append(p.Examples, e)
 		}
 	}
+
+	if p.IsCmd {
+		p.Name = p.ProjectName
+		p.Doc = strings.TrimPrefix(p.Doc, "Package main is ")
+	}
+
 	pkg := &pkg{
 		Package: p,
 		Config:  r.config,
@@ -112,7 +119,7 @@ var tmpl = template.Must(template.New("readme").Funcs(
 		"code": func(s string) string { return "```golang\n" + s + "\n```\n" },
 	},
 ).Parse(`
-# Package {{.Package.Name}}
+# {{.Package.Name}}
 
 	go get {{.Package.ImportPath}}
 

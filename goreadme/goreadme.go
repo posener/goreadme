@@ -13,27 +13,49 @@ import (
 	"github.com/hashicorp/go-multierror"
 )
 
-type Package struct {
+// pkg contains information about a go package, to be used in the template.
+type pkg struct {
 	Package     *doc.Package
-	SubPackages []SubPackage
+	SubPackages []subPkg
 }
 
-type SubPackage struct {
+// subPkg is information about sub package, to be used in the template.
+type subPkg struct {
 	Path string
 	Doc  string
 }
 
-func Create(ctx context.Context, client *http.Client, name string, w io.Writer) error {
-	p, err := get(ctx, client, name)
+// GoReadme enables gettring readme.md text from a go package.
+type GoReadme struct {
+	// Client is an HTTP client used to perform the requests. It can be used
+	// to authenticate github requests, for example, a github client can be used:
+	//
+	//		oauth2.NewClient(ctx, oauth2.StaticTokenSource(
+	//			&oauth2.Token{AccessToken: "...github access token..."
+	//		))
+	Client *http.Client
+}
+
+// Create writes the content of readme.md to w, with the default client.
+// name should be a Go repository name, such as "github.com/posener/goreadme".
+func Create(ctx context.Context, name string, w io.Writer) error {
+	g := GoReadme{Client: http.DefaultClient}
+	return g.Create(ctx, name, w)
+}
+
+// Create writes the content of readme.md to w, with r's HTTP client.
+// name should be a Go repository name, such as "github.com/posener/goreadme".
+func (r *GoReadme) Create(ctx context.Context, name string, w io.Writer) error {
+	p, err := r.get(ctx, name)
 	if err != nil {
 		return err
 	}
 	return tmpl.Execute(w, p)
 }
 
-func get(ctx context.Context, c *http.Client, name string) (*Package, error) {
+func (r *GoReadme) get(ctx context.Context, name string) (*pkg, error) {
 	log.Printf("Getting %s", name)
-	p, err := doc.Get(ctx, c, name, "")
+	p, err := doc.Get(ctx, r.Client, name, "")
 	if err != nil {
 		return nil, fmt.Errorf("failed getting %s: %s", name, err)
 	}
@@ -48,19 +70,21 @@ func get(ctx context.Context, c *http.Client, name string) (*Package, error) {
 			p.Examples = append(p.Examples, e)
 		}
 	}
-	pkg := &Package{Package: p}
+	pkg := &pkg{Package: p}
 	var (
 		wg     sync.WaitGroup
 		mu     sync.Mutex
 		errors *multierror.Error
 	)
+
+	// Concurrently get information for all sub directories.
 	wg.Add(len(p.Subdirectories))
-	for _, subPkg := range p.Subdirectories {
-		go func(subPkg string) {
-			importPath := name + "/" + subPkg
+	for _, subDir := range p.Subdirectories {
+		go func(subDir string) {
+			importPath := name + "/" + subDir
 			defer wg.Done()
 			log.Printf("Getting %s", importPath)
-			sp, err := doc.Get(ctx, c, importPath, "")
+			sp, err := doc.Get(ctx, r.Client, importPath, "")
 			mu.Lock()
 			defer mu.Unlock()
 			if err != nil {
@@ -70,11 +94,11 @@ func get(ctx context.Context, c *http.Client, name string) (*Package, error) {
 			if sp.Name == "" {
 				return
 			}
-			pkg.SubPackages = append(pkg.SubPackages, SubPackage{
-				Path: subPkg,
+			pkg.SubPackages = append(pkg.SubPackages, subPkg{
+				Path: subDir,
 				Doc:  sp.Synopsis,
 			})
-		}(subPkg)
+		}(subDir)
 	}
 	wg.Wait()
 	return pkg, errors.ErrorOrNil()

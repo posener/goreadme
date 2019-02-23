@@ -21,7 +21,8 @@ func main() {
 		&oauth2.Token{AccessToken: os.Getenv("GITHUB_TOKEN")},
 	))
 
-	err := goreadme.Create(ctx, client, os.Args[1], os.Stdout)
+	g := goreadme.GoReadme{Client: client}
+	err := g.Create(ctx, os.Args[1], os.Stdout)
 	if err != nil {
 		log.Fatalf("Failed: %s", err)
 	}

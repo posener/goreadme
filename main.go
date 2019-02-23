@@ -1,10 +1,29 @@
+// Package main is an HTTP server that works with Github hooks.
+//
+// [goreadme](./goreadme) is a tool for creating README.md files from Go doc
+// of a given package.
+// This server provides Github automation on top of this tool, but creating
+// PRs for your github repository, whenever the README file should be updated.
+//
+// ## Usage
+// 
+// Go to [https://github.com/apps/goreadme](https://github.com/apps/goreadme)
+// Press the "Configure" button, choose your account, and add the repositories
+// you want goreadme to maintain for you.
+//
+// ## How This Works?
+//
+// Once enabled, goreadme is registered on a Github hook, that calls goreadme
+// server the repository default branch is modified.
+// Goreadme then computes the new README.md file and compairs it to the exiting
+// one. If a change is needed, Goreadme will create a PR with the new content
+// of the README.md file.
 package main
 
 import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"os"
 	"strings"
@@ -12,16 +31,15 @@ import (
 
 	"github.com/google/go-github/github"
 	"github.com/gorilla/mux"
-	"github.com/posener/goreadme/auth"
 	"github.com/posener/goreadme/goreadme"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/oauth2"
 )
 
 const (
-	hookName = "goreadme"
-	domain   = "https://goreadme.herokuapp.com"
-	timeout  = time.Second * 60
+	githubAppURL      = "https://github.com/apps/goreadme"
+	timeout           = time.Second * 60
+	defaultReadmePath = "README.md"
 
 	goreadmeAuthor = "goreadme"
 	goreadmeBranch = "goreadme"
@@ -41,32 +59,26 @@ func main() {
 
 	client := oauth2.NewClient(ctx, ts)
 	h := &handler{
-		client: client,
-		github: github.NewClient(client),
+		github:   github.NewClient(client),
+		goreadme: &goreadme.GoReadme{Client: client},
 	}
-	callback, login := auth.Handlers(domain)
 	m := mux.NewRouter()
 	m.Methods("GET").Path("/").HandlerFunc(h.home)
 	m.Methods("POST").Path("/github/hook").HandlerFunc(h.hook)
-	m.Path("/github/callback").Handler(callback)
-	m.Path("/github/login").Handler(login)
 	logrus.Infof("Starting server...")
 	http.ListenAndServe(":"+port, m)
 }
 
 type handler struct {
-	client *http.Client
-	github *github.Client
+	github   *github.Client
+	goreadme *goreadme.GoReadme
 }
 
 func (h *handler) home(w http.ResponseWriter, r *http.Request) {
-	if !auth.IsAuthenticated(r) {
-		http.Redirect(w, r, "/github/login", http.StatusFound)
-		return
-	}
-	fmt.Fprintf(w, "<body><h1>Logged in as %s</h1></body>", auth.ID(r))
+	http.Redirect(w, r, githubAppURL, http.StatusFound)
 }
 
+// hook is called by github when there is a push to repository.
 func (h *handler) hook(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
@@ -87,22 +99,17 @@ func (h *handler) hook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if author := push.GetHeadCommit().GetAuthor().GetName(); author == goreadmeAuthor {
-		log.Infof("Skipping check of change by %s", author)
-		return
-	}
-
 	log.Info("Running goreadme in background...")
 	go h.runPR(log, &push)
 }
 
 func (h *handler) runPR(log logrus.FieldLogger, push *github.PushEvent) {
-
 	var (
 		owner         = push.GetRepo().GetOwner().GetName()
 		repo          = push.GetRepo().GetName()
 		headSHA       = push.GetHeadCommit().GetID()
 		defaultBranch = push.GetRepo().GetDefaultBranch()
+		ref           = push.GetRef()
 	)
 
 	log.WithFields(logrus.Fields{"sha": headSHA, "default branch": defaultBranch}).Infof("Running PR process")
@@ -112,14 +119,18 @@ func (h *handler) runPR(log logrus.FieldLogger, push *github.PushEvent) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
-	err := goreadme.Create(ctx, h.client, "github.com/"+owner+"/"+repo, b)
+	// Create new readme for repository.
+	err := h.goreadme.Create(ctx, "github.com/"+owner+"/"+repo, b)
 	if err != nil {
 		log.Errorf("Failed goreadme: %s", err)
 		return
 	}
 
-	readmePath := "README.md"
-	readme, resp, err := h.github.Repositories.GetReadme(ctx, owner, repo, nil)
+	// Check for changes from current readme
+	readmePath := defaultReadmePath
+	readme, resp, err := h.github.Repositories.GetReadme(ctx, owner, repo, &github.RepositoryContentGetOptions{
+		Ref: ref,
+	})
 	switch {
 	case resp.StatusCode == http.StatusNotFound:
 		log.Infof("No current readme")
@@ -139,13 +150,7 @@ func (h *handler) runPR(log logrus.FieldLogger, push *github.PushEvent) {
 		readmePath = readme.GetPath()
 	}
 
-	date := time.Now()
-	author := &github.CommitAuthor{
-		Name:  github.String(goreadmeAuthor),
-		Email: github.String(goreadmeAuthor + "@gmail.com"),
-		Date:  &date,
-	}
-
+	// Reset goreadme branch - delete it if exists and then create it.
 	_, resp, _ = h.github.Repositories.GetBranch(ctx, owner, repo, goreadmeBranch)
 	if resp.StatusCode != http.StatusNotFound {
 		_, err = h.github.Git.DeleteRef(ctx, owner, repo, goreaedmeRef)
@@ -154,7 +159,6 @@ func (h *handler) runPR(log logrus.FieldLogger, push *github.PushEvent) {
 			return
 		}
 	}
-
 	_, _, err = h.github.Git.CreateRef(ctx, owner, repo, &github.Reference{
 		Ref:    github.String(goreaedmeRef),
 		Object: &github.GitObject{SHA: github.String(headSHA)},
@@ -164,6 +168,13 @@ func (h *handler) runPR(log logrus.FieldLogger, push *github.PushEvent) {
 		return
 	}
 
+	// Commit changes to readme file.
+	date := time.Now()
+	author := &github.CommitAuthor{
+		Name:  github.String(goreadmeAuthor),
+		Email: github.String(goreadmeAuthor + "@gmail.com"),
+		Date:  &date,
+	}
 	_, _, err = h.github.Repositories.UpdateFile(ctx, owner, repo, readmePath, &github.RepositoryContentFileOptions{
 		Author:    author,
 		Committer: author,
@@ -177,6 +188,7 @@ func (h *handler) runPR(log logrus.FieldLogger, push *github.PushEvent) {
 		return
 	}
 
+	// Create pull request
 	pr, _, err := h.github.PullRequests.Create(ctx, owner, repo, &github.NewPullRequest{
 		Title: github.String("readme: Update according to go doc"),
 		Base:  github.String(defaultBranch),
@@ -193,34 +205,3 @@ func (h *handler) runPR(log logrus.FieldLogger, push *github.PushEvent) {
 func branch(push *github.PushEvent) string {
 	return strings.TrimPrefix(push.GetRef(), "refs/heads/")
 }
-
-func (h *handler) createHook(ctx context.Context, owner, repo string) {
-	_, _, err := h.github.Repositories.CreateHook(ctx, owner, repo, &github.Hook{
-		Name:   github.String(hookName),
-		Active: github.Bool(true),
-		Events: []string{"push"},
-		URL:    github.String(domain + "/github/hook"),
-	})
-	if err != nil {
-		logrus.Errorf("Failed creating hook %s/%s: %s", owner, repo, err)
-	}
-}
-
-const home = `
-<html>
-  <head>
-  </head>
-  <body>
-    <p>
-      Well, hello there!
-    </p>
-    <p>
-      We're going to now talk to the GitHub API. Ready?
-      <a href="https://github.com/login/oauth/authorize?scope=user:email&client_id=%s">Click here</a> to begin!</a>
-    </p>
-    <p>
-      If that link doesn't work, remember to provide your own <a href="/apps/building-oauth-apps/authorizing-oauth-apps/">Client ID</a>!
-    </p>
-  </body>
-</html>
-`

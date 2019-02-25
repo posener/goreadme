@@ -2,16 +2,17 @@ package goreadme
 
 import (
 	"context"
-	"fmt"
-	"log"
 	"net/http"
+	"sort"
 	"sync"
 
 	"github.com/golang/gddo/doc"
 	"github.com/hashicorp/go-multierror"
+	"github.com/pkg/errors"
 )
 
-type fetcher struct {
+// subpackagesFetcher fetches sub packages recursively.
+type subpackagesFetcher struct {
 	client     *http.Client
 	importPath string
 	recursive  bool
@@ -22,27 +23,27 @@ type fetcher struct {
 	packages []subPkg
 }
 
-func (f *fetcher) Fetch(ctx context.Context, pkg *doc.Package) ([]subPkg, error) {
+func (f *subpackagesFetcher) Fetch(ctx context.Context, pkg *doc.Package) ([]subPkg, error) {
 	for _, subDir := range pkg.Subdirectories {
 		f.fetch(ctx, subDir)
 	}
 	f.wg.Wait()
+	sort.Slice(f.packages, func(i, j int) bool { return f.packages[i].Path < f.packages[j].Path })
 	return f.packages, f.errors.ErrorOrNil()
 }
 
 // Concurrently fetches information for all sub directories.
-func (f *fetcher) fetch(ctx context.Context, subDir string) {
+func (f *subpackagesFetcher) fetch(ctx context.Context, subDir string) {
 	f.wg.Add(1)
 	importPath := f.importPath + "/" + subDir
 
 	go func() {
 		defer f.wg.Done()
-		log.Printf("Getting %s", importPath)
-		sp, err := doc.Get(ctx, f.client, importPath, "")
+		sp, err := docGet(ctx, f.client, importPath, "")
 		f.mu.Lock()
 		defer f.mu.Unlock()
 		if err != nil {
-			f.errors = multierror.Append(f.errors, fmt.Errorf("failed getting %s: %s", importPath, err))
+			f.errors = multierror.Append(f.errors, errors.Wrapf(err, "failed getting %s", importPath))
 			return
 		}
 		// Append to packages only if this directory is a go package.
@@ -50,8 +51,8 @@ func (f *fetcher) fetch(ctx context.Context, subDir string) {
 			f.packages = append(f.packages, subPkg{Path: subDir, Package: sp})
 		}
 		if f.recursive {
-			for _, subSubDir := range sp.Subdirectories {
-				f.fetch(ctx, subDir+"/"+subSubDir)
+			for _, sd := range sp.Subdirectories {
+				f.fetch(ctx, subDir+"/"+sd)
 			}
 		}
 	}()

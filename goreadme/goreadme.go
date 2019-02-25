@@ -3,15 +3,15 @@ package goreadme
 
 import (
 	"context"
-	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
+	"sort"
 	"strings"
 	"text/template"
 
 	"github.com/golang/gddo/doc"
+	"github.com/pkg/errors"
 )
 
 // New returns a GoReadme object with a custom client.
@@ -33,7 +33,7 @@ type GoReadme struct {
 
 type Config struct {
 	// SkipExamples will omit the examples section from the README.
-	SkipExamples bool `json:"sub_packages"`
+	SkipExamples bool `json:"skip_examples"`
 	// SkipSubPackages will omit the sub packages section from the README.
 	SkipSubPackages bool `json:"skip_sub_packages"`
 	// RecursiveSubPackages will retrived subpackages information recursively.
@@ -79,11 +79,11 @@ type subPkg struct {
 
 func (r *GoReadme) get(ctx context.Context, name string) (*pkg, error) {
 	log.Printf("Getting %s", name)
-	p, err := doc.Get(ctx, r.client, name, "")
+	p, err := docGet(ctx, r.client, name, "")
 	if err != nil {
-		return nil, fmt.Errorf("failed getting %s: %s", name, err)
+		return nil, errors.Wrapf(err, "failed getting %s", name)
 	}
-	workaroundLocalSubdirs(p, name)
+	sort.Strings(p.Subdirectories)
 	for _, f := range p.Funcs {
 		for _, e := range f.Examples {
 			if e.Name == "" {
@@ -98,6 +98,7 @@ func (r *GoReadme) get(ctx context.Context, name string) (*pkg, error) {
 
 	if p.IsCmd {
 		p.Name = p.ProjectName
+		// TODO: make this better
 		p.Doc = strings.TrimPrefix(p.Doc, "Package main is ")
 	}
 
@@ -107,7 +108,7 @@ func (r *GoReadme) get(ctx context.Context, name string) (*pkg, error) {
 	}
 
 	if !r.config.SkipSubPackages {
-		f := fetcher{
+		f := subpackagesFetcher{
 			importPath: name,
 			client:     r.client,
 			recursive:  r.config.RecursiveSubPackages,
@@ -150,23 +151,3 @@ var tmpl = template.Must(template.New("readme").Funcs(
 {{end -}}
 {{end -}}
 `))
-
-// workaroundLocalSubdirs adds subdireoctires for local load.
-// Workaround for #golang/gddo/issues/600
-func workaroundLocalSubdirs(p *doc.Package, pkg string) {
-	if !strings.HasPrefix(pkg, ".") {
-		return // Not local
-	}
-
-	files, err := ioutil.ReadDir(p.ImportPath)
-	if err != nil {
-		log.Printf("Failed reading import path")
-		return
-	}
-
-	for _, f := range files {
-		if f.IsDir() {
-			p.Subdirectories = append(p.Subdirectories, f.Name())
-		}
-	}
-}

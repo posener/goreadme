@@ -6,9 +6,9 @@ Package pkg1 is a testing package.
 
 ## Sub Packages
 
-* [subpkg2](./subpkg2): Package subpkg1 is the second subpackage.
-
 * [subpkg1](./subpkg1): Package subpkg1 is the first subpackage
+
+* [subpkg2](./subpkg2): Package subpkg1 is the second subpackage.
 
 
 ## Examples

@@ -1,0 +1,1 @@
+module pkg3_skip_subpackages

@@ -1,9 +1,8 @@
+# goreadme
 
-# Package main
+    go get github.com/posener/goreadme
 
-	go get github.com/posener/goreadme
-
-Package main is an HTTP server that works with Github hooks.
+an HTTP server that works with Github hooks.
 
 [goreadme](./goreadme) is a tool for creating README.md files from Go doc
 of a given package.
@@ -26,8 +25,8 @@ of the README.md file.
 
 ## Sub Packages
 
-* [goreadme](./goreadme): Package goreadme provides API to create readme markdown file from go doc.
-
 * [cmd/goreadme](./cmd/goreadme): Package main is a command line util that takes a Go repository and write to stdout the calculated README.md content.
+
+* [goreadme](./goreadme): Package goreadme provides API to create readme markdown file from go doc.
 
 Created by [goreadme](https://github.com/apps/goreadme)

@@ -11,6 +11,13 @@ import (
 	"github.com/pkg/errors"
 )
 
+// skipDirs contain directories that should not be scanned
+var skipDirs = map[string]bool{
+	// testdata is a common practice for directories that hold data for tests,
+	// and ususally they shouldn't appear in README.md.
+	"testdata": true,
+}
+
 // subpackagesFetcher fetches sub packages recursively.
 type subpackagesFetcher struct {
 	client     *http.Client
@@ -34,6 +41,10 @@ func (f *subpackagesFetcher) Fetch(ctx context.Context, pkg *doc.Package) ([]sub
 
 // Concurrently fetches information for all sub directories.
 func (f *subpackagesFetcher) fetch(ctx context.Context, subDir string) {
+	if skipDirs[subDir] {
+		return
+	}
+
 	f.wg.Add(1)
 	importPath := f.importPath + "/" + subDir
 

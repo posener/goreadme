@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"html/template"
 	"net/http"
 	"os"
 	"strings"
@@ -63,6 +64,22 @@ func (h *handler) runJob(j *Job) {
 	j.Run()
 }
 
+func (h *handler) jobsList(w http.ResponseWriter, r *http.Request) {
+	var j []Job
+	err := h.db.Model(&Job{}).Order("updated_at DESC").Scan(&j).Error
+	if err != nil {
+		logrus.Errorf("Failed scanning jobs: %s", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+	err = jobsList.Execute(w, j)
+	if err != nil {
+		logrus.Errorf("Failed executing template: %s", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+}
+
 // debugPR runs in debug mode provide the required environment variables.
 // Run with:
 //
@@ -84,3 +101,47 @@ func (h *handler) debugPR() {
 func branch(push *github.PushEvent) string {
 	return strings.TrimPrefix(push.GetRef(), "refs/heads/")
 }
+
+var jobsList = template.Must(template.New("jobs-list").Parse(`<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ListenTo</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+	<h1 class="text-center">Jobs List</h1>
+	<table class="table table-dark">
+	<thead>
+		<tr>
+		<th scope="col">Repository</th>
+		<th scope="col">Job #</th>
+		<th scope="col">Status</th>
+		<th scope="col">Message</th>
+		<th scope="col">Created</th>
+		<th scope="col">Updated</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{range .}}
+		<tr>
+			<th scope="row">{{.Owner}}/{{.Repo}}</th>
+			<td>{{.Num}}</td>
+			<td>{{if .PRURL}}<a href="{{.PRURL}}">{{end}}{{.Status}}{{if .PRURL}}</a>{{end}}</td>
+			<td>{{.Message}}</td>
+			<td>{{.CreatedAt}}</td>
+			<td>{{.UpdatedAt}}</td>
+		</tr>
+		{{end}}
+	</tbody>
+	</table>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+  </body>
+</html>`))

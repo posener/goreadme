@@ -71,6 +71,9 @@ func main() {
 	m := mux.NewRouter()
 	m.Methods("GET").Path("/").HandlerFunc(h.home)
 	m.Methods("POST").Path("/github/hook").HandlerFunc(h.hook)
+
+	m.Methods("GET").Path("/jobs").HandlerFunc(h.jobsList)
+
 	logrus.Infof("Starting server...")
 	http.ListenAndServe(":"+port, m)
 }

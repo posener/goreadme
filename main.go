@@ -62,7 +62,7 @@ func main() {
 	client := oauth2.NewClient(ctx, ts)
 	h := &handler{
 		github:   github.NewClient(client),
-		goreadme: &goreadme.GoReadme{Client: client},
+		goreadme: goreadme.New(client),
 	}
 	m := mux.NewRouter()
 	m.Methods("GET").Path("/").HandlerFunc(h.home)

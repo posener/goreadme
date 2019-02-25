@@ -13,16 +13,20 @@ import (
 	"github.com/golang/gddo/doc"
 )
 
+// New returns a GoReadme object with a custom client.
+// client is an HTTP client used to perform the requests. It can be used
+// to authenticate github requests, for example, a github client can be used:
+//
+//		oauth2.NewClient(ctx, oauth2.StaticTokenSource(
+//			&oauth2.Token{AccessToken: "...github access token..."
+//		))
+func New(c *http.Client) *GoReadme {
+	return &GoReadme{client: c}
+}
+
 // GoReadme enables getting readme.md text from a go package.
 type GoReadme struct {
-	// Client is an HTTP client used to perform the requests. It can be used
-	// to authenticate github requests, for example, a github client can be used:
-	//
-	//		oauth2.NewClient(ctx, oauth2.StaticTokenSource(
-	//			&oauth2.Token{AccessToken: "...github access token..."
-	//		))
-	Client *http.Client
-
+	client *http.Client
 	config Config
 }
 
@@ -39,7 +43,7 @@ type Config struct {
 // Create writes the content of readme.md to w, with the default client.
 // name should be a Go repository name, such as "github.com/posener/goreadme".
 func Create(ctx context.Context, name string, w io.Writer) error {
-	g := GoReadme{Client: http.DefaultClient}
+	g := GoReadme{client: http.DefaultClient}
 	return g.Create(ctx, name, w)
 }
 
@@ -74,7 +78,7 @@ type subPkg struct {
 
 func (r *GoReadme) get(ctx context.Context, name string) (*pkg, error) {
 	log.Printf("Getting %s", name)
-	p, err := doc.Get(ctx, r.Client, name, "")
+	p, err := doc.Get(ctx, r.client, name, "")
 	if err != nil {
 		return nil, fmt.Errorf("failed getting %s: %s", name, err)
 	}
@@ -103,7 +107,7 @@ func (r *GoReadme) get(ctx context.Context, name string) (*pkg, error) {
 	if !r.config.SkipSubPackages {
 		f := fetcher{
 			importPath: name,
-			client:     r.Client,
+			client:     r.client,
 			recursive:  r.config.RecursiveSubPackages,
 		}
 		pkg.SubPackages, err = f.Fetch(ctx, p)

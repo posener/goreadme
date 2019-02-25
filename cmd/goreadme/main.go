@@ -6,23 +6,37 @@ import (
 	"context"
 	"log"
 	"os"
+	"path/filepath"
+
+	"github.com/golang/gddo/gosrc"
 
 	"github.com/posener/goreadme/goreadme"
 	"golang.org/x/oauth2"
 )
 
 func main() {
-	if len(os.Args) < 2 {
-		log.Fatal("Missing argument repository name")
-	}
 	ctx := context.Background()
 
-	client := oauth2.NewClient(ctx, oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: os.Getenv("GITHUB_TOKEN")},
-	))
+	gr := goreadme.New(
+		oauth2.NewClient(ctx, oauth2.StaticTokenSource(
+			&oauth2.Token{AccessToken: os.Getenv("GITHUB_TOKEN")})),
+	)
 
-	err := goreadme.Create(ctx, client, os.Args[1], os.Stdout)
+	err := gr.Create(ctx, pkg(), os.Stdout)
 	if err != nil {
 		log.Fatalf("Failed: %s", err)
 	}
+}
+
+func pkg() string {
+	if len(os.Args) > 1 {
+		return os.Args[1]
+	}
+
+	path, err := filepath.Abs("./")
+	if err != nil {
+		log.Fatal(err)
+	}
+	gosrc.SetLocalDevMode(path)
+	return "."
 }

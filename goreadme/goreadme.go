@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
@@ -82,6 +83,7 @@ func (r *GoReadme) get(ctx context.Context, name string) (*pkg, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed getting %s: %s", name, err)
 	}
+	workaroundLocalSubdirs(p, name)
 	for _, f := range p.Funcs {
 		for _, e := range f.Examples {
 			if e.Name == "" {
@@ -122,28 +124,49 @@ var tmpl = template.Must(template.New("readme").Funcs(
 	template.FuncMap{
 		"code": func(s string) string { return "```golang\n" + s + "\n```\n" },
 	},
-).Parse(`
-# {{.Package.Name}}
+).Parse(`# {{.Package.Name}}
 
-	go get {{.Package.ImportPath}}
+    go get {{.Package.ImportPath}}
 
-{{.Package.Doc}}
+{{ .Package.Doc -}}
+{{if (and .SubPackages (not .Config.SkipSubPackages)) }}
 
-{{if (and .SubPackages (not .Config.SkipSubPackages)) -}}
 ## Sub Packages
 {{range .SubPackages}}
 * [{{.Path}}](./{{.Path}}){{if .Package.Synopsis}}: {{.Package.Synopsis}}{{end}}
 {{end -}}
 {{end -}}
+{{if (and .Package.Examples (not .Config.SkipExamples)) }}
 
-{{if (and .Package.Examples (not .Config.SkipExamples)) -}}
 ## Examples
-{{range .Package.Examples}}
+
+{{range .Package.Examples -}}
 ### {{.Name}}
 
-{{.Doc}}
-
-{{code .Play}}
+{{ if .Doc }}{{ .Doc }}
+{{ end -}}
+{{ if .Play }}{{code .Play}}{{ else }}{{code .Code.Text}}
+{{end -}}
 {{end -}}
 {{end -}}
 `))
+
+// workaroundLocalSubdirs adds subdireoctires for local load.
+// Workaround for #golang/gddo/issues/600
+func workaroundLocalSubdirs(p *doc.Package, pkg string) {
+	if !strings.HasPrefix(pkg, ".") {
+		return // Not local
+	}
+
+	files, err := ioutil.ReadDir(p.ImportPath)
+	if err != nil {
+		log.Printf("Failed reading import path")
+		return
+	}
+
+	for _, f := range files {
+		if f.IsDir() {
+			p.Subdirectories = append(p.Subdirectories, f.Name())
+		}
+	}
+}

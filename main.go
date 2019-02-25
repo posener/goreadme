@@ -43,7 +43,7 @@ const (
 	configPath        = "goreadme.json"
 
 	goreadmeAuthor = "goreadme"
-	goreadmeEmail = "posener@gmail.com"
+	goreadmeEmail  = "posener@gmail.com"
 	goreadmeBranch = "goreadme"
 	goreaedmeRef   = "refs/heads/" + goreadmeBranch
 )

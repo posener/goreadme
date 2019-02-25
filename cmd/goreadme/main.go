@@ -9,7 +9,6 @@ import (
 	"path/filepath"
 
 	"github.com/golang/gddo/gosrc"
-
 	"github.com/posener/goreadme/goreadme"
 	"golang.org/x/oauth2"
 )

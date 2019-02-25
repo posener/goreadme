@@ -10,6 +10,9 @@ require (
 	github.com/gorilla/mux v1.7.0
 	github.com/gorilla/securecookie v1.1.1 // indirect
 	github.com/hashicorp/go-multierror v1.0.0
+	github.com/jinzhu/gorm v1.9.2
+	github.com/jinzhu/inflection v0.0.0-20180308033659-04140366298a // indirect
+	github.com/lib/pq v1.0.0 // indirect
 	github.com/pkg/errors v0.8.1
 	github.com/sirupsen/logrus v1.3.0
 	github.com/src-d/go-git v4.7.0+incompatible

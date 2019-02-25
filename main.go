@@ -24,41 +24,46 @@ import (
 	"context"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/google/go-github/github"
 	"github.com/gorilla/mux"
+	"github.com/jinzhu/gorm"
 	"github.com/posener/goreadme/goreadme"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/oauth2"
-)
 
-const (
-	githubAppURL      = "https://github.com/apps/goreadme"
-	timeout           = time.Second * 60
-	defaultReadmePath = "README.md"
-	configPath        = "goreadme.json"
-
-	goreadmeAuthor = "goreadme"
-	goreadmeEmail  = "posener@gmail.com"
-	goreadmeBranch = "goreadme"
-	goreaedmeRef   = "refs/heads/" + goreadmeBranch
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 var (
 	port         = os.Getenv("PORT")
+	dbURL        = os.Getenv("DATABASE_URL")
 	githubToken  = os.Getenv("GITHUB_TOKEN")
 	githubSecret = []byte(os.Getenv("GITHUB_SECRET")) // Secret for github hooks
 )
 
 func main() {
 	ctx := context.Background()
+
+	db, err := gorm.Open("postgres", dbURL)
+	if err != nil {
+		logrus.Fatalf("Connect to DB on %s: %v", dbURL, err)
+	}
+	defer db.Close()
+
+	db.LogMode(true)
+
+	if err := db.AutoMigrate(&Job{}).Error; err != nil {
+		logrus.Fatalf("Migrate database: %s", err)
+	}
+
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: githubToken},
 	)
 
 	client := oauth2.NewClient(ctx, ts)
 	h := &handler{
+		db:       db,
 		github:   github.NewClient(client),
 		goreadme: goreadme.New(client),
 	}

@@ -154,7 +154,7 @@ func (h *handler) runPR(log logrus.FieldLogger, push *github.PushEvent) {
 	readme, resp, err := h.github.Repositories.GetReadme(ctx, owner, repo, nil)
 	switch {
 	case resp.StatusCode == http.StatusNotFound:
-		log.Infof("No current readme")
+		log.Infof("No current readme, creating a new readme!")
 	case err != nil:
 		log.Errorf("Failed getting upstream readme: %s", err)
 		return
@@ -172,13 +172,18 @@ func (h *handler) runPR(log logrus.FieldLogger, push *github.PushEvent) {
 	}
 
 	// Reset goreadme branch - delete it if exists and then create it.
-	_, resp, _ = h.github.Repositories.GetBranch(ctx, owner, repo, goreadmeBranch)
-	if resp.StatusCode != http.StatusNotFound {
+	_, resp, err = h.github.Repositories.GetBranch(ctx, owner, repo, goreadmeBranch)
+	switch {
+	case resp.StatusCode != http.StatusNotFound:
+		log.Infof("Found existing branch, deleting...")
 		_, err = h.github.Git.DeleteRef(ctx, owner, repo, goreaedmeRef)
 		if err != nil {
 			log.Errorf("Failed deleting existing branch: %s", err)
 			return
 		}
+	case err != nil:
+		log.Errorf("Failed getting branch: %s", err)
+		return
 	}
 	_, _, err = h.github.Git.CreateRef(ctx, owner, repo, &github.Reference{
 		Ref:    github.String(goreaedmeRef),
@@ -187,6 +192,11 @@ func (h *handler) runPR(log logrus.FieldLogger, push *github.PushEvent) {
 	if err != nil {
 		log.Errorf("Failed creating branch: %s", err)
 		return
+	}
+
+	branch, _, err := h.github.Repositories.GetBranch(ctx, owner, repo, goreadmeBranch)
+	if err != nil {
+		log.Errorf("Failed getting the created branch: %s", err)
 	}
 
 	// Commit changes to readme file.
@@ -202,7 +212,7 @@ func (h *handler) runPR(log logrus.FieldLogger, push *github.PushEvent) {
 		Branch:    github.String(goreadmeBranch),
 		Content:   b.Bytes(),
 		Message:   github.String("update readme according to go doc"),
-		SHA:       github.String(headSHA),
+		SHA:       branch.GetCommit().SHA,
 	})
 	if err != nil {
 		log.Errorf("Failed updating readme content: %s", err)

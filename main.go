@@ -25,6 +25,8 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/posener/goreadme/auth"
+
 	"github.com/google/go-github/github"
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
@@ -36,10 +38,10 @@ import (
 )
 
 var (
-	port         = os.Getenv("PORT")
-	dbURL        = os.Getenv("DATABASE_URL")
-	githubToken  = os.Getenv("GITHUB_TOKEN")
-	githubSecret = []byte(os.Getenv("GITHUB_SECRET")) // Secret for github hooks
+	domain      = os.Getenv("DOMAIN")
+	port        = os.Getenv("PORT")
+	dbURL       = os.Getenv("DATABASE_URL")
+	githubToken = os.Getenv("GITHUB_TOKEN")
 )
 
 func main() {
@@ -61,18 +63,34 @@ func main() {
 		&oauth2.Token{AccessToken: githubToken},
 	)
 
+	a := &auth.Auth{
+		SessionSecret: os.Getenv("SESSION_SECRET"),
+		GithubID:      os.Getenv("GITHUB_ID"),
+		GithubSecret:  os.Getenv("GITHUB_SECRET"),
+		RedirectUrl:   domain + "/github/callback",
+		LoginPath:     "/github/login",
+		HomePath:      "/jobs",
+	}
+
+	a.Init()
+
 	client := oauth2.NewClient(ctx, ts)
 	h := &handler{
+		auth:     a,
 		db:       db,
 		github:   github.NewClient(client),
 		goreadme: goreadme.New(client),
 	}
 	h.debugPR()
+
 	m := mux.NewRouter()
 	m.Methods("GET").Path("/").HandlerFunc(h.home)
 	m.Methods("POST").Path("/github/hook").HandlerFunc(h.hook)
 
-	m.Methods("GET").Path("/jobs").HandlerFunc(h.jobsList)
+	m.Path("/github/login").Handler(a.LoginHandler())
+	m.Path("/github/callback").Handler(a.CallbackHandler())
+
+	m.Methods("GET").Path("/jobs").Handler(a.RequireLogin(http.HandlerFunc(h.jobsList)))
 
 	logrus.Infof("Starting server...")
 	http.ListenAndServe(":"+port, m)

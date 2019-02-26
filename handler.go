@@ -9,11 +9,15 @@ import (
 
 	"github.com/google/go-github/github"
 	"github.com/jinzhu/gorm"
+	"github.com/posener/goreadme/auth"
 	"github.com/posener/goreadme/goreadme"
 	"github.com/sirupsen/logrus"
 )
 
+var githubHookSecret = []byte(os.Getenv("GITHUB_HOOK_SECRET")) // Secret for github hooks
+
 type handler struct {
+	auth     *auth.Auth
 	db       *gorm.DB
 	github   *github.Client
 	goreadme *goreadme.GoReadme
@@ -25,7 +29,7 @@ func (h *handler) home(w http.ResponseWriter, r *http.Request) {
 
 // hook is called by github when there is a push to repository.
 func (h *handler) hook(w http.ResponseWriter, r *http.Request) {
-	body, err := github.ValidatePayload(r, githubSecret)
+	body, err := github.ValidatePayload(r, githubHookSecret)
 	if err != nil {
 		logrus.Warnf("Unauthorized request: %s", err)
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
@@ -65,14 +69,18 @@ func (h *handler) runJob(j *Job) {
 }
 
 func (h *handler) jobsList(w http.ResponseWriter, r *http.Request) {
-	var j []Job
-	err := h.db.Model(&Job{}).Order("updated_at DESC").Scan(&j).Error
+	var data struct {
+		User *github.User
+		Jobs   []Job
+	}
+	err := h.db.Model(&Job{}).Order("updated_at DESC").Scan(&data.Jobs).Error
 	if err != nil {
 		logrus.Errorf("Failed scanning jobs: %s", err)
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
-	err = jobsList.Execute(w, j)
+	data.User = h.auth.User(r)
+	err = jobsList.Execute(w, data)
 	if err != nil {
 		logrus.Errorf("Failed executing template: %s", err)
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
@@ -83,12 +91,13 @@ func (h *handler) jobsList(w http.ResponseWriter, r *http.Request) {
 // debugPR runs in debug mode provide the required environment variables.
 // Run with:
 //
-// 		DEBUG=1 REPO=repo OWNER=$USER HEAD=$(git rev-parse HEAD) go run .
+// 		DEBUG_HOOK=1 REPO=repo OWNER=$USER HEAD=$(git rev-parse HEAD) go run .
 //
 func (h *handler) debugPR() {
-	if os.Getenv("DEBUG") != "1" {
+	if os.Getenv("DEBUG_HOOK") != "1" {
 		return
 	}
+	logrus.Warnf("Debugging hook mode!")
 	h.runJob(&Job{
 		Owner:         os.Getenv("OWNER"),
 		Repo:          os.Getenv("REPO"),
@@ -117,6 +126,7 @@ var jobsList = template.Must(template.New("jobs-list").Parse(`<!doctype html>
   </head>
   <body>
 	<h1 class="text-center">Jobs List</h1>
+	<p><img width="42" src="{{.User.GetAvatarURL}}">User: <a href="{{.User.GetHTMLURL}}">{{.User.GetLogin}}<a></p>
 	<table class="table table-dark">
 	<thead>
 		<tr>
@@ -129,7 +139,7 @@ var jobsList = template.Must(template.New("jobs-list").Parse(`<!doctype html>
 		</tr>
 	</thead>
 	<tbody>
-		{{range .}}
+		{{range .Jobs}}
 		<tr>
 			<th scope="row">{{.Owner}}/{{.Repo}}</th>
 			<td>{{.Num}}</td>

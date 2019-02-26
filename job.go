@@ -216,7 +216,7 @@ func (j *Job) init() error {
 	j.Num = maxNum.Num + 1
 	j.Status = "Started"
 	j.log = logrus.WithFields(logrus.Fields{
-		"sha":  j.HeadSHA[:8],
+		"sha":  j.HeadSHA,
 		"job#": j.Num,
 		"repo": j.Owner + "/" + j.Repo,
 	})

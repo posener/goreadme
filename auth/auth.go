@@ -5,11 +5,11 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/sirupsen/logrus"
-	gogithub "github.com/google/go-github/github"
 	"github.com/dghubble/gologin"
 	"github.com/dghubble/gologin/github"
 	"github.com/dghubble/sessions"
+	gogithub "github.com/google/go-github/github"
+	"github.com/sirupsen/logrus"
 	"golang.org/x/oauth2"
 	githuboauth2 "golang.org/x/oauth2/github"
 )
@@ -36,8 +36,8 @@ type Auth struct {
 	GithubID      string
 	GithubSecret  string
 	RedirectUrl   string
-	LoginPath string
-	HomePath string
+	LoginPath     string
+	HomePath      string
 
 	sessionStore *sessions.CookieStore
 }

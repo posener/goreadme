@@ -6,11 +6,13 @@ import (
 	"os"
 	"strings"
 
-	"github.com/posener/goreadme/templates"
+	"github.com/pkg/errors"
+
 	"github.com/google/go-github/github"
 	"github.com/jinzhu/gorm"
 	"github.com/posener/goreadme/auth"
 	"github.com/posener/goreadme/goreadme"
+	"github.com/posener/goreadme/internal/templates"
 	"github.com/sirupsen/logrus"
 )
 
@@ -23,8 +25,10 @@ type handler struct {
 	goreadme *goreadme.GoReadme
 }
 
-func (h *handler) home(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, githubAppURL, http.StatusFound)
+type templateData struct {
+	User  *github.User
+	Repos []*github.Repository
+	Jobs  []Job
 }
 
 // hook is called by github when there is a push to repository.
@@ -48,7 +52,7 @@ func (h *handler) hook(w http.ResponseWriter, r *http.Request) {
 	log := logrus.WithField("repo", push.GetRepo().GetFullName())
 	log.Infof("Got push event to %s", br)
 	if br != push.GetRepo().GetDefaultBranch() {
-		log.Infof("Skipping push to non-default branch %s", branch)
+		log.Infof("Skipping push to non-default branch %s", br)
 		return
 	}
 
@@ -68,24 +72,45 @@ func (h *handler) runJob(j *Job) {
 	j.Run()
 }
 
-func (h *handler) jobsList(w http.ResponseWriter, r *http.Request) {
-	var data struct {
-		templates.Base
-		Jobs []Job
+func (h *handler) home(w http.ResponseWriter, r *http.Request) {
+	var data templateData
+	data.User = h.auth.User(r)
+	repos, _, err := h.github.Repositories.List(r.Context(), data.User.GetLogin(), nil)
+	if err != nil {
+		h.doError(errors.Wrapf(err, "failed getting repo for user %s", data.User.GetLogin()), w, r)
+		return
 	}
+	data.Repos = repos
+	err = templates.Home.Execute(w, data)
+	if err != nil {
+		h.doError(errors.Wrap(err, "failed executing template"), w, r)
+	}
+}
+
+func (h *handler) login(w http.ResponseWriter, r *http.Request) {
+	err := templates.Login.Execute(w, templateData{})
+	if err != nil {
+		h.doError(errors.Wrap(err, "failed executing template"), w, r)
+	}
+}
+
+func (h *handler) jobsList(w http.ResponseWriter, r *http.Request) {
+	var data templateData
 	err := h.db.Model(&Job{}).Order("updated_at DESC").Scan(&data.Jobs).Error
 	if err != nil {
-		logrus.Errorf("Failed scanning jobs: %s", err)
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		h.doError(errors.Wrap(err, "failed scanning jobs"), w, r)
 		return
 	}
 	data.User = h.auth.User(r)
 	err = templates.JobsList.Execute(w, data)
 	if err != nil {
-		logrus.Errorf("Failed executing template: %s", err)
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
-		return
+		h.doError(errors.Wrap(err, "failed executing template"), w, r)
 	}
+}
+
+func (h *handler) doError(err error, w http.ResponseWriter, r *http.Request) {
+	logrus.Error(err)
+	http.Redirect(w, r, "/?error=internal%20server%error", http.StatusFound)
 }
 
 // debugPR runs in debug mode provide the required environment variables.

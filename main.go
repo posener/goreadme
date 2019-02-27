@@ -67,9 +67,11 @@ func main() {
 		SessionSecret: os.Getenv("SESSION_SECRET"),
 		GithubID:      os.Getenv("GITHUB_ID"),
 		GithubSecret:  os.Getenv("GITHUB_SECRET"),
-		RedirectUrl:   domain + "/github/callback",
-		LoginPath:     "/github/login",
-		HomePath:      "/jobs",
+		Scopes:        []string{"repo"},
+		Domain:        domain,
+		RedirectPath:  "/auth/callback",
+		LoginPath:     "/login",
+		HomePath:      "/",
 	}
 
 	a.Init()
@@ -84,13 +86,14 @@ func main() {
 	h.debugPR()
 
 	m := mux.NewRouter()
-	m.Methods("GET").Path("/").HandlerFunc(h.home)
-	m.Methods("POST").Path("/github/hook").HandlerFunc(h.hook)
-
-	m.Path("/github/login").Handler(a.LoginHandler())
-	m.Path("/github/callback").Handler(a.CallbackHandler())
-
+	m.Methods("GET").Path("/login").HandlerFunc(h.login)
+	m.Methods("GET").Path("/").Handler(a.RequireLogin(http.HandlerFunc(h.home)))
 	m.Methods("GET").Path("/jobs").Handler(a.RequireLogin(http.HandlerFunc(h.jobsList)))
+
+	m.Methods("POST").Path("/github/hook").HandlerFunc(h.hook)
+	m.Path("/auth/login").Handler(a.LoginHandler())
+	m.Path("/auth/callback").Handler(a.CallbackHandler())
+	m.Path("/auth/logout").Handler(a.CallbackHandler())
 
 	logrus.Infof("Starting server...")
 	http.ListenAndServe(":"+port, m)

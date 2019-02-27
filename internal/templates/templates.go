@@ -2,16 +2,9 @@ package templates
 
 import (
 	"html/template"
-
-	"github.com/google/go-github/github"
 )
 
-type Base struct {
-	User *github.User
-}
-
-var base = template.Must(template.New("base").Parse(`
-{{define "base"}}
+var html = template.Must(template.New("html").Parse(`
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -22,8 +15,22 @@ var base = template.Must(template.New("base").Parse(`
 </head>
 <body>
 
-<nav class="navbar navbar-expand-md navbar-light">
-    <a class="navbar-brand abs" href="#">Goreadme</a>
+{{template "body" .}}
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>
+`))
+
+var base = template.Must(html.Parse(`
+{{define "body"}}
+<nav class="navbar navbar-expand-md navbar-light bg-light">
+	<a class="navbar-brand abs" href="/">
+		<img src="https://avatars3.githubusercontent.com/in/25929?s=30&u=0a3756b6a47f20c14b650528b9a477a81ca5dd15&v=4" width="30" height="30" alt="">
+		Goreadme
+	</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsingNavbar">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -32,7 +39,8 @@ var base = template.Must(template.New("base").Parse(`
             <li class="nav-item {{if .Jobs}}active{{end}}">
                 <a class="nav-link" href="/jobs">Jobs</a>
             </li>
-        </ul>
+		</ul>
+		{{if .User}}
         <ul class="navbar-nav ml-auto">
 			<li class="nav-item dropdown">
 				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -41,22 +49,40 @@ var base = template.Must(template.New("base").Parse(`
 				</a>
 				<div class="dropdown-menu" aria-labelledby="navbarDropdown">
 					<a class="dropdown-item" href="{{.User.GetHTMLURL}}">Github page</a>
-					<a class="dropdown-item" href="/github/logout">Logout</a>
+					<a class="dropdown-item" href="/auth/logout">Logout</a>
 				</div>
 			</li>
-        </ul>
+		</ul>
+		{{end}}
     </div>
 </nav>
 
   <!-- <h1 class="text-center">{{block "title" .}}{{end}}</h1> -->
 
+  <div class="container">
   {{template "content" .}}
+  </div>
+{{end}}
+`))
 
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-</body>
-</html>
+var Home = template.Must(template.Must(base.Clone()).Parse(`
+{{define "title"}}Home{{end}}
+{{define "content"}}
+<div class="row">
+	<div class="col-sm">
+		<h1>Your Repositories</h1>
+		<ul class="list-group list-group-flush">
+			{{range .Repos}}
+			<li class="list-group-item">
+				<a href="{{.GetHTMLURL}}">{{.GetFullName}}</a>
+				{{if .GetPrivate}}
+				<span>P</span>
+				{{end}}
+			</li>
+			{{end}}
+		</ul>
+	</div>
+</div>
 {{end}}
 `))
 
@@ -87,5 +113,12 @@ var JobsList = template.Must(template.Must(base.Clone()).Parse(`
 	{{end}}
 </tbody>
 </table>
+{{end}}
+`))
+
+var Login = template.Must(base.Parse(`
+{{define "title"}}Login{{end}}
+{{define "content"}}
+<a href="/auth/login">Please Login</a>
 {{end}}
 `))

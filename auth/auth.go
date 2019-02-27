@@ -3,7 +3,7 @@ package auth
 import (
 	"encoding/json"
 	"net/http"
-	"os"
+	"strings"
 
 	"github.com/dghubble/gologin"
 	"github.com/dghubble/gologin/github"
@@ -19,25 +19,15 @@ const (
 	sessionUserKey = "user"
 )
 
-var (
-	cookieConfig = gologin.DefaultCookieConfig
-	debug        = os.Getenv("DEBUG") == "1"
-)
-
-func init() {
-	if debug {
-		logrus.Warnf("Auth in debug mode!")
-		cookieConfig = gologin.DebugOnlyCookieConfig
-	}
-}
-
 type Auth struct {
 	SessionSecret string
 	GithubID      string
 	GithubSecret  string
-	RedirectUrl   string
+	Domain        string
+	RedirectPath  string
 	LoginPath     string
 	HomePath      string
+	Scopes        []string
 
 	sessionStore *sessions.CookieStore
 }
@@ -47,12 +37,19 @@ func (a *Auth) Init() {
 }
 
 func (a *Auth) CallbackHandler() http.Handler {
-	return github.StateHandler(cookieConfig,
+	return github.StateHandler(a.cookieConfig(),
 		github.CallbackHandler(a.config(), http.HandlerFunc(a.loginSuccess), http.HandlerFunc(a.loginFailed)))
 }
 
 func (a *Auth) LoginHandler() http.Handler {
-	return github.StateHandler(cookieConfig, github.LoginHandler(a.config(), nil))
+	return github.StateHandler(a.cookieConfig(), github.LoginHandler(a.config(), nil))
+}
+
+func (a *Auth) LogoutHandler() http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		a.sessionStore.Destroy(w, sessionName)
+		http.Redirect(w, r, a.LoginPath, http.StatusFound)
+	})
 }
 
 // loginSuccess issues a cookie session after successful Github login
@@ -82,16 +79,31 @@ func (a *Auth) loginSuccess(w http.ResponseWriter, r *http.Request) {
 func (a *Auth) loginFailed(w http.ResponseWriter, r *http.Request) {
 	err := gologin.ErrorFromContext(r.Context())
 	logrus.Infof("Login failed: %s", err)
-	http.Error(w, "Unauthorized", http.StatusUnauthorized)
+	http.Redirect(w, r, a.LoginPath+"?errors=unauthorized", http.StatusFound)
 }
 
 func (a *Auth) config() *oauth2.Config {
 	return &oauth2.Config{
 		ClientID:     a.GithubID,
 		ClientSecret: a.GithubSecret,
-		RedirectURL:  a.RedirectUrl,
+		RedirectURL:  a.Domain + a.RedirectPath,
+		Scopes:       a.Scopes,
 		Endpoint:     githuboauth2.Endpoint,
 	}
+}
+
+func (a *Auth) cookieConfig() gologin.CookieConfig {
+	c := gologin.CookieConfig{
+		Name:     "gologin",
+		HTTPOnly: true,
+		Secure:   true,
+		Domain:   a.Domain,
+	}
+	if !strings.HasPrefix(a.Domain, "https") {
+		logrus.Warn("Using insecure cookie")
+		c.Secure = false
+	}
+	return c
 }
 
 // RequireLogin redirects unauthenticated users to the login route.

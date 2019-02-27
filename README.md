@@ -25,8 +25,12 @@ of the README.md file.
 
 ## Sub Packages
 
+* [auth](./auth)
+
 * [cmd/goreadme](./cmd/goreadme): Package main is a command line util that takes a Go repository and write to stdout the calculated README.md content.
 
 * [goreadme](./goreadme): Package goreadme provides API to create readme markdown file from go doc.
+
+* [templates](./templates)
 
 Created by [goreadme](https://github.com/apps/goreadme)

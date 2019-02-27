@@ -14,9 +14,8 @@ import (
 
 // skipDirs contain directories that should not be scanned
 var skipDirs = map[string]bool{
-	// testdata is a common practice for directories that hold data for tests,
-	// and ususally they shouldn't appear in README.md.
 	"testdata": true,
+	"internal": true,
 }
 
 // subpackagesFetcher fetches sub packages recursively.

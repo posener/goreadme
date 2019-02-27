@@ -28,8 +28,8 @@ const (
 	goreaedmeRef   = "refs/heads/" + goreadmeBranch
 )
 
-type Job struct {
-	Num       int    `gorm:"primary_key"`
+type State struct {
+	Num int `gorm:"primary_key"`
 	Repo      string `gorm:"primary_key"`
 	Owner     string `gorm:"primary_key"`
 	HeadSHA   string
@@ -38,6 +38,10 @@ type Job struct {
 	Status    string
 	CreatedAt time.Time
 	UpdatedAt time.Time
+}
+
+type Job struct {
+	State
 
 	defaultBranch string
 
@@ -70,6 +74,7 @@ func (j *Job) Run() {
 		if err != nil {
 			j.log.Errorf("Failed saving failed job: %s", err)
 		}
+		j.updateState()
 	}
 
 	saveSuccess := func(format string, args ...interface{}) {
@@ -81,6 +86,7 @@ func (j *Job) Run() {
 		if err != nil {
 			j.log.Errorf("Failed saving successful job: %s", err)
 		}
+		j.updateState()
 	}
 
 	// Get config
@@ -182,6 +188,29 @@ func (j *Job) Run() {
 
 	j.PRURL = pr.GetHTMLURL()
 	saveSuccess("Created PR")
+}
+
+func (j *Job) updateState() {
+	tx := j.db.Begin()
+	var currentState State
+	err := tx.Model(State{}).Where("owner = ? AND repo = ?", j.Owner, j.Repo).First(&currentState).Error
+	if err != nil {
+		j.log.Errorf("Failed querying for existing state: %s", err)
+		tx.Rollback()
+		return
+	}
+	if currentState.Num >= j.Num {
+		j.log.Infof("Skipping update state due to newer version")
+		tx.Rollback()
+		return
+	}
+	err = tx.Save(j.State).Error
+	if err != nil {
+		j.log.Errorf("Failed saving new state: %s", err)
+		tx.Rollback()
+		return
+	}
+	tx.Commit()
 }
 
 func (j *Job) getConfig(ctx context.Context) (goreadme.Config, error) {

@@ -27,7 +27,9 @@ var tmpl = template.Must(template.New("readme").Funcs(
 {{if .Config.Badges.GoDoc}}
 [![GoDoc](https://godoc.org/{{.Package.ImportPath}}?status.svg)](http://godoc.org/{{.Package.ImportPath}}){{end -}}
 {{if .Config.Badges.GoReportCard}}
-[![Go Report Card](https://goreportcard.com/badge/{{.Package.ImportPath}})](https://goreportcard.com/report/{{.Package.ImportPath}}){{end }}
+[![Go Report Card](https://goreportcard.com/badge/{{.Package.ImportPath}})](https://goreportcard.com/report/{{.Package.ImportPath}}){{end -}}
+{{if .Config.Badges.Goreadme}}
+[![Goreadme](https://goreadme.herokuapp.com/badge/{{fullName .Package}})](https://goreadme.herokuapp.com/badge/{{fullName .Package}}){{end }}
 
 {{ .Package.Doc -}}
 {{if (and .SubPackages (not .Config.SkipSubPackages)) }}

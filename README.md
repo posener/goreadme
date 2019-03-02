@@ -6,7 +6,6 @@
 [![GoDoc](https://godoc.org/github.com/posener/goreadme?status.svg)](http://godoc.org/github.com/posener/goreadme)
 [![goreadme](https://goreadme.herokuapp.com/badge/posener/goreadme.svg)](https://goreadme.herokuapp.com)
 
-
 Package goreadme creates readme markdown file from go doc.
 
 This package can be used as a web service, as a command line tool or as a library.

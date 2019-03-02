@@ -20,6 +20,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"sort"
 	"strings"
 
@@ -117,8 +118,8 @@ func (r *GoReadme) get(ctx context.Context, name string) (*pkg, error) {
 	}
 
 	if p.IsCmd {
-		p.Name = p.ProjectName
 		// TODO: make this better
+		p.Name = filepath.Base(name)
 		p.Doc = strings.TrimPrefix(p.Doc, "Package main is ")
 	}
 

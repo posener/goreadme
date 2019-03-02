@@ -23,7 +23,12 @@ Usage:
 		Show this help.
 	goreadme [import path]
 		Create a readme file. Omitting import path will create
-		a readme for the package in CWD.`)
+		a readme for the package in CWD.
+
+For accessing private github repositories, a suitable Github token can be
+stored in the GITHUB_TOKEN environment variable.
+
+		export GITHUB_TOKEN="<Your github token>"`)
 	}
 	flag.Parse()
 }

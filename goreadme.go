@@ -15,9 +15,11 @@ package goreadme
 
 import (
 	"context"
+	"encoding/json"
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"sort"
 	"strings"
 
@@ -50,6 +52,13 @@ type Config struct {
 	// RecursiveSubPackages will retrived subpackages information recursively.
 	// If false, only one level of subpackages will be retrived.
 	RecursiveSubPackages bool `json:"recursive_sub_packages"`
+	Badges               struct {
+		TravicCI     bool `json:"travis_ci"`
+		CodeCov      bool `json:"code_cov"`
+		GolangCI     bool `json:"golang_ci"`
+		GoDoc        bool `json:"go_doc"`
+		GoReportCard bool `json:"go_report_card"`
+	} `json:"badges"`
 }
 
 // Create writes the content of readme.md to w, with the default client.
@@ -129,5 +138,15 @@ func (r *GoReadme) get(ctx context.Context, name string) (*pkg, error) {
 			return nil, err
 		}
 	}
+	debug(pkg)
 	return pkg, nil
+}
+
+func debug(p *pkg) {
+	if os.Getenv("DEBUG") != "1" {
+		return
+	}
+
+	d, _ := json.MarshalIndent(p, "  ", "  ")
+	log.Printf("Package data: %s", string(d))
 }

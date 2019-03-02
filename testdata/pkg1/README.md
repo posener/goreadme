@@ -1,7 +1,5 @@
 # pkg1
 
-    go get ./testdata/pkg1
-
 Package pkg1 is a testing package.
 
 ## Sub Packages

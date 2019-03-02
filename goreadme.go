@@ -1,4 +1,16 @@
-// Package goreadme provides API to create readme markdown file from go doc.
+// Package goreadme creates readme markdown file from go doc.
+//
+// This package can be used as a web service, as a command line tool or as a library.
+//
+// Try the web service: [https://gotreadme.herokuapp.com](https://gotreadme.herokuapp.com)
+//
+// Integrate directly with Github: [https://github.com/apps/goreadme](https://github.com/apps/goreadme).
+//
+// Use as a command line tool:
+//
+//		$ go get github.com/posener/goreadme/...
+//		$ goreadme
+//
 package goreadme
 
 import (
@@ -8,7 +20,6 @@ import (
 	"net/http"
 	"sort"
 	"strings"
-	"text/template"
 
 	"github.com/golang/gddo/doc"
 	"github.com/pkg/errors"
@@ -120,34 +131,3 @@ func (r *GoReadme) get(ctx context.Context, name string) (*pkg, error) {
 	}
 	return pkg, nil
 }
-
-var tmpl = template.Must(template.New("readme").Funcs(
-	template.FuncMap{
-		"code": func(s string) string { return "```golang\n" + s + "\n```\n" },
-	},
-).Parse(`# {{.Package.Name}}
-
-    go get {{.Package.ImportPath}}
-
-{{ .Package.Doc -}}
-{{if (and .SubPackages (not .Config.SkipSubPackages)) }}
-
-## Sub Packages
-{{range .SubPackages}}
-* [{{.Path}}](./{{.Path}}){{if .Package.Synopsis}}: {{.Package.Synopsis}}{{end}}
-{{end -}}
-{{end -}}
-{{if (and .Package.Examples (not .Config.SkipExamples)) }}
-
-## Examples
-
-{{range .Package.Examples -}}
-### {{.Name}}
-
-{{ if .Doc }}{{ .Doc }}
-{{ end -}}
-{{ if .Play }}{{code .Play}}{{ else }}{{code .Code.Text}}
-{{end -}}
-{{end -}}
-{{end -}}
-`))

@@ -4,6 +4,8 @@ package main
 
 import (
 	"context"
+	"flag"
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -12,6 +14,19 @@ import (
 	"github.com/posener/goreadme"
 	"golang.org/x/oauth2"
 )
+
+func init() {
+	flag.Usage = func() {
+		fmt.Println(`goreadme: Create markdown file from go doc.
+Usage:
+	goreadme -h
+		Show this help.
+	goreadme [import path]
+		Create a readme file. Omitting import path will create
+		a readme for the package in CWD.`)
+	}
+	flag.Parse()
+}
 
 func main() {
 	ctx := context.Background()

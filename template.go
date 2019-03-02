@@ -18,16 +18,24 @@ var tmpl = template.Must(template.New("readme").Funcs(
 	},
 ).Parse(`# {{.Package.Name}}
 
-{{if .Config.Badges.TravicCI}}
-[![Build Status](https://travis-ci.org/{{fullName .Package}}.svg?branch=master)](https://travis-ci.org/{{fullName .Package}}){{end -}}
-{{if .Config.Badges.CodeCov}}
-[![codecov](https://codecov.io/gh/{{fullName .Package}}/branch/master/graph/badge.svg)](https://codecov.io/gh/{{fullName .Package}}){{end -}}
-{{if .Config.Badges.GolangCI}}
-[![golangci](https://golangci.com/badges/{{.Package.ImportPath}}.svg)](https://golangci.com/r/{{.Package.ImportPath}}){{end -}}
-{{if .Config.Badges.GoDoc}}
-[![GoDoc](https://godoc.org/{{.Package.ImportPath}}?status.svg)](http://godoc.org/{{.Package.ImportPath}}){{end -}}
-{{if .Config.Badges.GoReportCard}}
-[![Go Report Card](https://goreportcard.com/badge/{{.Package.ImportPath}})](https://goreportcard.com/report/{{.Package.ImportPath}}){{end }}
+{{if .Config.Badges.TravicCI -}}
+[![Build Status](https://travis-ci.org/{{fullName .Package}}.svg?branch=master)](https://travis-ci.org/{{fullName .Package}})
+{{end -}}
+{{if .Config.Badges.CodeCov -}}
+[![codecov](https://codecov.io/gh/{{fullName .Package}}/branch/master/graph/badge.svg)](https://codecov.io/gh/{{fullName .Package}})
+{{end -}}
+{{if .Config.Badges.GolangCI -}}
+[![golangci](https://golangci.com/badges/{{.Package.ImportPath}}.svg)](https://golangci.com/r/{{.Package.ImportPath}})
+{{end -}}
+{{if .Config.Badges.GoDoc -}}
+[![GoDoc](https://godoc.org/{{.Package.ImportPath}}?status.svg)](http://godoc.org/{{.Package.ImportPath}})
+{{end -}}
+{{if .Config.Badges.GoReportCard -}}
+[![Go Report Card](https://goreportcard.com/badge/{{.Package.ImportPath}})](https://goreportcard.com/report/{{.Package.ImportPath}})
+{{end -}}
+{{if .Config.Badges.Goreadme -}}
+[![goreadme](https://goreadme.herokuapp.com/badge/{{fullName .Package}}.svg)](https://goreadme.herokuapp.com)
+{{end }}
 
 {{ .Package.Doc -}}
 {{if (and .SubPackages (not .Config.SkipSubPackages)) }}

@@ -1,8 +1,6 @@
 # goreadme
 
-    go get github.com/posener/goreadme
-
-Package goreadme creates readme markdown file from go doc.
+[![Build Status](https://travis-ci.org/goreadme.svg?branch=master)](https://travis-ci.org/goreadme)[![codecov](https://codecov.io/gh/goreadme/branch/master/graph/badge.svg)](https://codecov.io/gh/goreadme)[![golangci](https://golangci.com/badges/github.com/goreadme.svg)](https://golangci.com/r/github.com/goreadme)[![GoDoc](https://godoc.org/github.com/goreadme?status.svg)](http://godoc.org/github.com/goreadme)[![Go Report Card](https://goreportcard.com/badge/github.com/goreadme)](https://goreportcard.com/report/github.com/goreadme)Package goreadme creates readme markdown file from go doc.
 
 This package can be used as a web service, as a command line tool or as a library.
 

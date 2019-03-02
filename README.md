@@ -5,6 +5,7 @@
 [![codecov](https://codecov.io/gh/posener/goreadme/branch/master/graph/badge.svg)](https://codecov.io/gh/posener/goreadme)
 [![golangci](https://golangci.com/badges/github.com/posener/goreadme.svg)](https://golangci.com/r/github.com/posener/goreadme)
 [![GoDoc](https://godoc.org/github.com/posener/goreadme?status.svg)](http://godoc.org/github.com/posener/goreadme)
+[![Goreadme](https://goreadme.herokuapp.com/badge/posener/goreadme)](https://goreadme.herokuapp.com/badge/posener/goreadme)
 
 Package goreadme creates readme markdown file from go doc.
 

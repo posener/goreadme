@@ -1,7 +1,6 @@
 # pkg2_recursive
 
 
-
 Package pkg2_recursive is a testing package.
 
 ## Sub Packages

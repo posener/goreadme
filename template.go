@@ -12,6 +12,9 @@ var tmpl = template.Must(template.New("readme").Funcs(
 		"code": func(s string) string {
 			return "```golang\n" + s + "\n```\n"
 		},
+		"inlineCode": func(s string) string {
+			return "`" + s + "`"
+		},
 		"fullName": func(p *doc.Package) string {
 			return strings.TrimPrefix(p.ImportPath, "github.com/")
 		},
@@ -35,18 +38,40 @@ var tmpl = template.Must(template.New("readme").Funcs(
 {{end -}}
 {{if .Config.Badges.Goreadme -}}
 [![goreadme](https://goreadme.herokuapp.com/badge/{{fullName .Package}}.svg)](https://goreadme.herokuapp.com)
-{{end }}
+{{ end }}
+{{ .Package.Doc }}
 
-{{ .Package.Doc -}}
-{{if (and .SubPackages (not .Config.SkipSubPackages)) }}
+{{ if (and .Config.Functions .Package.Funcs) -}}
+## Functions
 
+{{ range .Package.Funcs -}}
+### {{ .Name }}
+
+{{ inlineCode .Decl.Text }}
+
+{{ .Doc }}
+{{ if .Examples -}}
+#### Examples
+{{- range .Examples -}}
+{{ if .Name -}}
+##### {{.Name}}{{ end }}
+
+{{ if .Doc }}{{ .Doc }}
+{{ end -}}
+{{ if .Play }}{{code .Play}}{{ else }}{{code .Code.Text}}
+{{ end -}}
+{{ end -}}
+{{ end -}}
+{{ end -}}
+{{ end -}}
+
+{{if (and .SubPackages (not .Config.SkipSubPackages)) -}}
 ## Sub Packages
 {{range .SubPackages}}
 * [{{.Path}}](./{{.Path}}){{if .Package.Synopsis}}: {{.Package.Synopsis}}{{end}}
 {{end -}}
 {{end -}}
-{{if (and .Package.Examples (not .Config.SkipExamples)) }}
-
+{{if (and .Package.Examples (not .Config.SkipExamples)) -}}
 ## Examples
 
 {{range .Package.Examples -}}

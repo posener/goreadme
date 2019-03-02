@@ -7,5 +7,5 @@
 [![Go Report Card](https://goreportcard.com/badge/./testdata/pkg4_bedges)](https://goreportcard.com/report/./testdata/pkg4_bedges)
 [![goreadme](https://goreadme.herokuapp.com/badge/./testdata/pkg4_bedges.svg)](https://goreadme.herokuapp.com)
 
-
 Package pkg4 tests badges.
+

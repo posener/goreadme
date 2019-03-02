@@ -56,6 +56,8 @@ type GoReadme struct {
 }
 
 type Config struct {
+	// Functions will make functions documentation to be added to the README.
+	Functions bool `json:"functions"`
 	// SkipExamples will omit the examples section from the README.
 	SkipExamples bool `json:"skip_examples"`
 	// SkipSubPackages will omit the sub packages section from the README.
@@ -116,15 +118,20 @@ func (r *GoReadme) get(ctx context.Context, name string) (*pkg, error) {
 		return nil, errors.Wrapf(err, "failed getting %s", name)
 	}
 	sort.Strings(p.Subdirectories)
-	for _, f := range p.Funcs {
-		for _, e := range f.Examples {
-			if e.Name == "" {
-				e.Name = f.Name
+
+	// If functions were not requested to be added to the readme, add their
+	// examples to the main readme.
+	if !r.config.Functions {
+		for _, f := range p.Funcs {
+			for _, e := range f.Examples {
+				if e.Name == "" {
+					e.Name = f.Name
+				}
+				if e.Doc == "" {
+					e.Doc = f.Doc
+				}
+				p.Examples = append(p.Examples, e)
 			}
-			if e.Doc == "" {
-				e.Doc = f.Doc
-			}
-			p.Examples = append(p.Examples, e)
 		}
 	}
 

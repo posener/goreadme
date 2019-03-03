@@ -41,46 +41,53 @@ var tmpl = template.Must(template.New("readme").Funcs(
 {{ end }}
 {{ .Package.Doc }}
 
-{{ if (and .Config.Functions .Package.Funcs) -}}
+{{ if (and .Config.Functions .Package.Funcs) }}
 ## Functions
 
-{{ range .Package.Funcs -}}
+{{ range .Package.Funcs }}
+
 ### {{ .Name }}
 
 {{ inlineCode .Decl.Text }}
 
 {{ .Doc }}
-{{ if .Examples -}}
+
+{{ if .Examples }}
 #### Examples
-{{- range .Examples -}}
-{{ if .Name -}}
-##### {{.Name}}{{ end }}
 
-{{ if .Doc }}{{ .Doc }}
-{{ end -}}
+{{ range .Examples }}
+
+{{ if .Name }}
+##### {{.Name}}
+{{ end }}
+
+{{ .Doc }}
+
 {{ if .Play }}{{code .Play}}{{ else }}{{code .Code.Text}}
-{{ end -}}
-{{ end -}}
-{{ end -}}
-{{ end -}}
-{{ end -}}
+{{ end }}
+{{ end }}
+{{ end }}
+{{ end }}
+{{ end }}
 
-{{if (and .SubPackages (not .Config.SkipSubPackages)) -}}
+{{ if (and .SubPackages (not .Config.SkipSubPackages)) }}
 ## Sub Packages
-{{range .SubPackages}}
+
+{{ range .SubPackages }}
 * [{{.Path}}](./{{.Path}}){{if .Package.Synopsis}}: {{.Package.Synopsis}}{{end}}
-{{end -}}
-{{end -}}
-{{if (and .Package.Examples (not .Config.SkipExamples)) -}}
+{{ end }}
+{{ end }}
+
+{{ if (and .Package.Examples (not .Config.SkipExamples)) }}
 ## Examples
 
-{{range .Package.Examples -}}
+{{ range .Package.Examples }}
 ### {{.Name}}
 
-{{ if .Doc }}{{ .Doc }}
-{{ end -}}
+{{ .Doc }}
+
 {{ if .Play }}{{code .Play}}{{ else }}{{code .Code.Text}}
-{{end -}}
-{{end -}}
-{{end -}}
+{{end }}
+{{end }}
+{{end }}
 `))

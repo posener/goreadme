@@ -1,6 +1,5 @@
 # pkg1
 
-
 Package pkg1 is a testing package.
 
 ## Functions
@@ -30,7 +29,6 @@ Func()
 ### Punk
 
 `func Punk()`
-
 
 ## Examples
 

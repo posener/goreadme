@@ -95,7 +95,7 @@ func (r *GoReadme) Create(ctx context.Context, name string, w io.Writer) error {
 	if err != nil {
 		return err
 	}
-	return tmpl.Execute(w, p)
+	return tmpl.Execute(&multiNewLineEliminator{w: w}, p)
 }
 
 // pkg contains information about a go package, to be used in the template.

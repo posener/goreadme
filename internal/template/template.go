@@ -24,6 +24,12 @@ var base = template.New("base").Funcs(
 		"fullName": func(p *doc.Package) string {
 			return strings.TrimPrefix(p.ImportPath, "github.com/")
 		},
+		"urlOrName": func(f *doc.File) string {
+			if f.URL != "" {
+				return f.URL
+			}
+			return "/" + f.Name
+		},
 	},
 )
 
@@ -51,11 +57,11 @@ var main = template.Must(base.Parse(`# {{.Package.Name}}
 {{ .Package.Doc }}
 
 {{ if .Config.Functions }}
-{{ template "functions" .Package.Funcs }}
+{{ template "functions" .Package }}
 {{ end }}
 
 {{ if (not .Config.SkipSubPackages) }}
-{{ template "subpackages" .SubPackages }}
+{{ template "subpackages" . }}
 {{ end }}
 
 {{ if (not .Config.SkipExamples) }}
@@ -65,13 +71,13 @@ var main = template.Must(base.Parse(`# {{.Package.Name}}
 
 var functions = template.Must(base.Parse(`
 {{ define "functions" }}
-{{ if . }}
+{{ if .Funcs }}
 
 ## Functions
 
-{{ range . }}
+{{ range .Funcs }}
 
-### {{ .Name }}
+### func [{{ .Name }}]({{ urlOrName (index $.Files .Pos.File) }}#L{{ .Pos.Line }})
 
 {{ inlineCode .Decl.Text }}
 
@@ -105,11 +111,11 @@ var exmaples = template.Must(base.Parse(`
 
 var subPackages = template.Must(base.Parse(`
 {{ define "subpackages" }}
-{{ if . }}
+{{ if .SubPackages }}
 
 ## Sub Packages
 
-{{ range . }}
+{{ range .SubPackages }}
 * [{{.Path}}](./{{.Path}}){{if .Package.Synopsis}}: {{.Package.Synopsis}}{{end}}
 {{ end }}
 

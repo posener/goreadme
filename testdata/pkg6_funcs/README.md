@@ -4,7 +4,7 @@ Package pkg1 is a testing package.
 
 ## Functions
 
-### Func
+### func [Func](/pkg.go#L7)
 
 `func Func()`
 
@@ -26,7 +26,7 @@ ExampleFunc_withName tests func with a name
 Func()
 ```
 
-### Punk
+### func [Punk](/pkg.go#L11)
 
 `func Punk()`
 

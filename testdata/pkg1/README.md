@@ -39,4 +39,3 @@ ExampleFunc_withName tests func with a name
 ```golang
 Func()
 ```
-

@@ -8,4 +8,3 @@
 [![goreadme](https://goreadme.herokuapp.com/badge/./testdata/pkg4_bedges.svg)](https://goreadme.herokuapp.com)
 
 Package pkg4 tests badges.
-

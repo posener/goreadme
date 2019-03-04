@@ -17,10 +17,20 @@ func (e *multiNewLineEliminator) Write(in []byte) (int, error) {
 	for _, c := range in {
 		if c == '\n' {
 			e.newLines++
-			if e.newLines > 2 {
+			// Skip not first new line.
+			if e.newLines > 1 {
 				continue
 			}
 		} else {
+			if e.newLines > 1 {
+				// Add second new line if originally there were more
+				// than 1 new line, only if there is another character
+				// to write after it.
+				// This eliminates multiple new lines in the end of
+				// the document.
+				out = append(out, '\n')
+				n++
+			}
 			e.newLines = 0
 		}
 		out = append(out, c)

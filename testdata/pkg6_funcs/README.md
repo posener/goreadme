@@ -30,9 +30,9 @@ Func()
 
 `func Punk()`
 
-## Examples
+#### Examples
 
-### Hello
+##### Hello
 
 Example_hello prints hello
 
@@ -40,7 +40,7 @@ Example_hello prints hello
 fmt.Println("hello")
 ```
 
-### NoDoc
+##### NoDoc
 
 ```golang
 fmt.Println("hello")

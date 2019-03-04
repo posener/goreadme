@@ -8,9 +8,9 @@ Package pkg1 is a testing package.
 
 * [subpkg2](./subpkg2): Package subpkg1 is the second subpackage.
 
-## Examples
+#### Examples
 
-### Hello
+##### Hello
 
 Example_hello prints hello
 
@@ -18,13 +18,13 @@ Example_hello prints hello
 fmt.Println("hello")
 ```
 
-### NoDoc
+##### NoDoc
 
 ```golang
 fmt.Println("hello")
 ```
 
-### Func
+##### Func
 
 ExampleFunc tests func
 
@@ -32,7 +32,7 @@ ExampleFunc tests func
 Func()
 ```
 
-### WithName
+##### WithName
 
 ExampleFunc_withName tests func with a name
 

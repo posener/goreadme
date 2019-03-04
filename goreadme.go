@@ -34,6 +34,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/posener/goreadme/internal/template"
+
 	"github.com/golang/gddo/doc"
 	"github.com/pkg/errors"
 )
@@ -95,7 +97,7 @@ func (r *GoReadme) Create(ctx context.Context, name string, w io.Writer) error {
 	if err != nil {
 		return err
 	}
-	return tmpl.Execute(&multiNewLineEliminator{w: w}, p)
+	return template.Execute(w, p)
 }
 
 // pkg contains information about a go package, to be used in the template.

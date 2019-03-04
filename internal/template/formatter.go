@@ -1,4 +1,4 @@
-package goreadme
+package template
 
 import "io"
 

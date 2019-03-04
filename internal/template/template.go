@@ -1,13 +1,19 @@
-package goreadme
+package template
 
 import (
+	"io"
 	"strings"
 	"text/template"
 
 	"github.com/golang/gddo/doc"
 )
 
-var tmpl = template.Must(template.New("readme").Funcs(
+// Execute is used to execute the README.md template
+func Execute(w io.Writer, data interface{}) error {
+	return main.Execute(&multiNewLineEliminator{w: w}, data)
+}
+
+var base = template.New("base").Funcs(
 	template.FuncMap{
 		"code": func(s string) string {
 			return "```golang\n" + s + "\n```\n"
@@ -19,7 +25,9 @@ var tmpl = template.Must(template.New("readme").Funcs(
 			return strings.TrimPrefix(p.ImportPath, "github.com/")
 		},
 	},
-).Parse(`# {{.Package.Name}}
+)
+
+var main = template.Must(base.Parse(`# {{.Package.Name}}
 
 {{if .Config.Badges.TravicCI -}}
 [![Build Status](https://travis-ci.org/{{fullName .Package}}.svg?branch=master)](https://travis-ci.org/{{fullName .Package}})
@@ -39,12 +47,29 @@ var tmpl = template.Must(template.New("readme").Funcs(
 {{if .Config.Badges.Goreadme -}}
 [![goreadme](https://goreadme.herokuapp.com/badge/{{fullName .Package}}.svg)](https://goreadme.herokuapp.com)
 {{ end }}
+
 {{ .Package.Doc }}
 
-{{ if (and .Config.Functions .Package.Funcs) }}
+{{ if .Config.Functions }}
+{{ template "functions" .Package.Funcs }}
+{{ end }}
+
+{{ if (not .Config.SkipSubPackages) }}
+{{ template "subpackages" .SubPackages }}
+{{ end }}
+
+{{ if (not .Config.SkipExamples) }}
+{{ template "examples" .Package.Examples }}
+{{end }}
+`))
+
+var functions = template.Must(base.Parse(`
+{{ define "functions" }}
+{{ if . }}
+
 ## Functions
 
-{{ range .Package.Funcs }}
+{{ range . }}
 
 ### {{ .Name }}
 
@@ -52,42 +77,42 @@ var tmpl = template.Must(template.New("readme").Funcs(
 
 {{ .Doc }}
 
-{{ if .Examples }}
+{{ template "examples" .Examples }}
+{{ end }}
+
+{{ end }}
+{{ end }}
+`))
+
+var exmaples = template.Must(base.Parse(`
+{{ define "examples" }}
+{{ if . }}
+
 #### Examples
 
-{{ range .Examples }}
+{{ range . }}
 
-{{ if .Name }}
-##### {{.Name}}
-{{ end }}
+{{ if .Name }}##### {{.Name}}{{ end }}
 
 {{ .Doc }}
 
-{{ if .Play }}{{code .Play}}{{ else }}{{code .Code.Text}}
-{{ end }}
-{{ end }}
-{{ end }}
-{{ end }}
+{{ if .Play }}{{code .Play}}{{ else }}{{code .Code.Text}}{{ end }}
 {{ end }}
 
-{{ if (and .SubPackages (not .Config.SkipSubPackages)) }}
+{{ end }}
+{{ end }}
+`))
+
+var subPackages = template.Must(base.Parse(`
+{{ define "subpackages" }}
+{{ if . }}
+
 ## Sub Packages
 
-{{ range .SubPackages }}
+{{ range . }}
 * [{{.Path}}](./{{.Path}}){{if .Package.Synopsis}}: {{.Package.Synopsis}}{{end}}
 {{ end }}
+
 {{ end }}
-
-{{ if (and .Package.Examples (not .Config.SkipExamples)) }}
-## Examples
-
-{{ range .Package.Examples }}
-### {{.Name}}
-
-{{ .Doc }}
-
-{{ if .Play }}{{code .Play}}{{ else }}{{code .Code.Text}}
-{{end }}
-{{end }}
-{{end }}
+{{ end }}
 `))

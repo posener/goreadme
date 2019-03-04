@@ -17,41 +17,46 @@ import (
 	"golang.org/x/oauth2"
 )
 
+var cfg goreadme.Config
+
 func init() {
+	flag.BoolVar(&cfg.RecursiveSubPackages, "recursive", false, "Load docs recursively.")
+	flag.BoolVar(&cfg.Functions, "functions", false, "Write functions section.")
+	flag.BoolVar(&cfg.SkipExamples, "skip-examples", false, "Skip the examples section.")
+	flag.BoolVar(&cfg.SkipSubPackages, "skip-sub-packages", false, "Skip the sub packages section.")
 	flag.Usage = func() {
-		fmt.Println(`goreadme: Create markdown file from go doc.
+		fmt.Fprint(flag.CommandLine.Output(), `goreadme: Create markdown file from go doc.
+
 Usage:
-	goreadme -h
-		Show this help.
-	goreadme [import path]
-		Create a readme file. Omitting import path will create
-		a readme for the package in CWD.
+	goreadme [flags] [import path]
 
-For accessing private github repositories, a suitable Github token can be
-stored in the GITHUB_TOKEN environment variable.
-
-		export GITHUB_TOKEN="<Your github token>"`)
+import path (optional): Create a readme file for a package from github.
+ Omitting import path will create a readme for the package in CWD.
+Flags:
+`)
+		flag.PrintDefaults()
 	}
 	flag.Parse()
 }
 
+
 func main() {
 	ctx := context.Background()
-
 	gr := goreadme.New(
 		oauth2.NewClient(ctx, oauth2.StaticTokenSource(
 			&oauth2.Token{AccessToken: os.Getenv("GITHUB_TOKEN")})),
 	)
 
-	err := gr.Create(ctx, pkg(), os.Stdout)
+	err := gr.WithConfig(cfg).Create(ctx, pkg(flag.Args()), os.Stdout)
 	if err != nil {
 		log.Fatalf("Failed: %s", err)
 	}
 }
 
-func pkg() string {
-	if len(os.Args) > 1 {
-		return os.Args[1]
+
+func pkg(args []string) string {
+	if len(args) > 0 {
+		return args[0]
 	}
 
 	path, err := filepath.Abs("./")

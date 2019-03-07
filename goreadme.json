@@ -1,10 +1,10 @@
 {
-    "recursive_sub_packages": true,
-    "badges": {
-        "travis_ci": true,
+	"recursive_sub_packages": true,
+	"badges": {
+		"travis_ci": true,
 		"code_cov": true,
 		"golang_ci": true,
-        "go_doc": true,
-        "goreadme": true
-    }
+		"go_doc": true,
+		"goreadme": true
+	}
 }

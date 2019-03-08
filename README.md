@@ -10,14 +10,16 @@ Package goreadme creates readme markdown file from go doc.
 
 This package can be used as a web service, as a command line tool or as a library.
 
-Try the web service: [https://gotreadme.herokuapp.com](https://gotreadme.herokuapp.com)
+Try the web service: [[https://gotreadme.herokuapp.com](https://gotreadme.herokuapp.com)](https://gotreadme.herokuapp.com](https://gotreadme.herokuapp.com))
 
-Integrate directly with Github: [https://github.com/apps/goreadme](https://github.com/apps/goreadme).
+Integrate directly with Github: [[https://github.com/apps/goreadme](https://github.com/apps/goreadme)](https://github.com/apps/goreadme](https://github.com/apps/goreadme)).
 
 Use as a command line tool:
 
-		$ go get github.com/posener/goreadme/...
-		$ goreadme -h
+```go
+$ go get github.com/posener/goreadme/...
+$ goreadme -h
+```
 
 ## Why should you use it?
 
@@ -28,7 +30,7 @@ once the library is ready. The problem is that keeping documentation updated
 is important, and hard enough - keeping both updated is twice as hard.
 
 This library provides an easy way to create the one from the other. Using the
-[goreadme Github App](https://github.com/apps/goreadme) makes it even easier.
+[goreadme Github App]([https://github.com/apps/goreadme](https://github.com/apps/goreadme)) makes it even easier.
 
 ## Sub Packages
 

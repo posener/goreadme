@@ -41,11 +41,7 @@ Meaning:
 * A header is a single line that is separated from a paragraph above.
 * Code block is recognized by indentation.
 * URLs will just automatically converted to links
-
-```go
 (Added support to local links - prefixed by dot and slash, for example: [./cmd](./cmd)).
-```
-
 * Lists are also available with "* " prefix or a "1. " prefix.
 
 ## Sub Packages

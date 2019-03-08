@@ -1,14 +1,14 @@
--// Copyied from https://github.com/golang/go/blob/master/src/go/doc/comment.go
-
+// Copyied from https://github.com/golang/go/blob/master/src/go/doc/comment.go
 // Copyright 2009 The Go Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
 // Godoc comment extraction and comment -> HTML formatting.
 
-package doc
+package markdown
 
 import (
+	"fmt"
 	"io"
 	"regexp"
 	"strings"
@@ -16,34 +16,6 @@ import (
 	"unicode"
 	"unicode/utf8"
 )
-
-var (
-	ldquo = []byte("&ldquo;")
-	rdquo = []byte("&rdquo;")
-)
-
-// Escape comment text for HTML. If nice is set,
-// also turn `` into &ldquo; and '' into &rdquo;.
-func commentEscape(w io.Writer, text string, nice bool) {
-	last := 0
-	if nice {
-		for i := 0; i < len(text)-1; i++ {
-			ch := text[i]
-			if ch == text[i+1] && (ch == '`' || ch == '\'') {
-				template.HTMLEscape(w, []byte(text[last:i]))
-				last = i + 2
-				switch ch {
-				case '`':
-					w.Write(ldquo)
-				case '\'':
-					w.Write(rdquo)
-				}
-				i++ // loop will add one more
-			}
-		}
-	}
-	template.HTMLEscape(w, []byte(text[last:]))
-}
 
 const (
 	// Regexp for Go identifiers
@@ -63,24 +35,12 @@ const (
 	pathPart = `([.,:;?!]*[a-zA-Z0-9$'()*+&#=@~_/\-\[\]%])*`
 
 	urlRx = protoPart + `://` + hostPart + pathPart
+
+	// Regexp for local paths
+	localRx = `\.\/[^\s]+`
 )
 
-var matchRx = regexp.MustCompile(`(` + urlRx + `)|(` + identRx + `)`)
-
-var (
-	html_a      = []byte(`<a href="`)
-	html_aq     = []byte(`">`)
-	html_enda   = []byte("</a>")
-	html_i      = []byte("<i>")
-	html_endi   = []byte("</i>")
-	html_p      = []byte("<p>\n")
-	html_endp   = []byte("</p>\n")
-	html_pre    = []byte("<pre>")
-	html_endpre = []byte("</pre>\n")
-	html_h      = []byte(`<h3 id="`)
-	html_hq     = []byte(`">`)
-	html_endh   = []byte("</h3>\n")
-)
+var matchRx = regexp.MustCompile(`(` + urlRx + `)|(` + identRx + `)|(` + localRx + `)`)
 
 // pairedParensPrefixLen returns the length of the longest prefix of s containing paired parentheses.
 func pairedParensPrefixLen(s string) int {
@@ -110,9 +70,7 @@ func pairedParensPrefixLen(s string) int {
 // the corresponding map value is the empty string, the URL is not converted
 // into a link). Go identifiers that appear in the words map are italicized; if
 // the corresponding map value is not the empty string, it is considered a URL
-// and the word is converted into a link. If nice is set, the remaining text's
-// appearance is improved where it makes sense (e.g., `` is turned into &ldquo;
-// and '' into &rdquo;).
+// and the word is converted into a link.
 func emphasize(w io.Writer, line string, words map[string]string, nice bool) {
 	for {
 		m := matchRx.FindStringSubmatchIndex(line)
@@ -122,8 +80,8 @@ func emphasize(w io.Writer, line string, words map[string]string, nice bool) {
 		// m >= 6 (two parenthesized sub-regexps in matchRx, 1st one is urlRx)
 
 		// write text before match
-		commentEscape(w, line[0:m[0]], nice)
-
+		// commentEscape(w, line[0:m[0]], nice)
+		fmt.Fprintf(w, line[0:m[0]])
 		// adjust match if necessary
 		match := line[m[0]:m[1]]
 		if n := pairedParensPrefixLen(match); n < len(match) {
@@ -147,28 +105,49 @@ func emphasize(w io.Writer, line string, words map[string]string, nice bool) {
 			}
 			italics = false // don't italicize URLs
 		}
+		if m[12] >= 0 {
+			// match against first parenthesized sub-regexp; must be match against urlRx
+			if !italics {
+				// no alternative URL in words list, use match instead
+				url = match
+			}
+			italics = false // don't italicize URLs
+		}
+
+		// If the url ends with a punctuation mark, we will hold it here.
+		after := make([]byte, 0, 1)
 
 		// write match
 		if len(url) > 0 {
-			w.Write(html_a)
+			switch url[len(url)-1] {
+			case '.', ',', ':', ';', '?', '!':
+				after = append(after, url[len(url)-1])
+				url = url[:len(url)-1]
+			}
+			fmt.Fprint(w, "[")
 			template.HTMLEscape(w, []byte(url))
-			w.Write(html_aq)
+			fmt.Fprint(w, "](")
 		}
 		if italics {
-			w.Write(html_i)
-		}
-		commentEscape(w, match, nice)
-		if italics {
-			w.Write(html_endi)
+			fmt.Fprint(w, "*")
 		}
 		if len(url) > 0 {
-			w.Write(html_enda)
+			fmt.Fprintf(w, url)
+		} else {
+			fmt.Fprintf(w, match)
 		}
+		if italics {
+			fmt.Fprint(w, "*")
+		}
+		if len(url) > 0 {
+			fmt.Fprint(w, ")")
+		}
+		w.Write(after)
 
 		// advance
 		line = line[m[1]:]
 	}
-	commentEscape(w, line, nice)
+	fmt.Fprintf(w, line)
 }
 
 func indentLen(s string) int {
@@ -280,12 +259,7 @@ type block struct {
 
 var nonAlphaNumRx = regexp.MustCompile(`[^a-zA-Z0-9]`)
 
-func anchorID(line string) string {
-	// Add a "hdr-" prefix to avoid conflicting with IDs used for package symbols.
-	return "hdr-" + nonAlphaNumRx.ReplaceAllString(line, "_")
-}
-
-// ToHTML converts comment text to formatted HTML.
+// ToMarkdown converts comment text to formatted Markdown.
 // The comment was prepared by DocReader,
 // so it is known not to have leading, trailing blank lines
 // nor to have trailing spaces at the end of lines.
@@ -307,36 +281,29 @@ func anchorID(line string) string {
 // Go identifiers that appear in the words map are italicized; if the corresponding
 // map value is not the empty string, it is considered a URL and the word is converted
 // into a link.
-func ToHTML(w io.Writer, text string, words map[string]string) {
+func ToMarkdown(w io.Writer, text string, words map[string]string) {
 	for _, b := range blocks(text) {
 		switch b.op {
 		case opPara:
-			w.Write(html_p)
+			// New paragraph
 			for _, line := range b.lines {
-				emphasize(w, line, words, true)
+				emphasize(w, line, words, false)
 			}
-			w.Write(html_endp)
+			fmt.Fprint(w, "\n")
 		case opHead:
-			w.Write(html_h)
-			id := ""
+			// Headline
+			fmt.Fprint(w, "#### ")
 			for _, line := range b.lines {
-				if id == "" {
-					id = anchorID(line)
-					w.Write([]byte(id))
-					w.Write(html_hq)
-				}
-				commentEscape(w, line, true)
+				fmt.Fprint(w, line)
 			}
-			if id == "" {
-				w.Write(html_hq)
-			}
-			w.Write(html_endh)
+			fmt.Fprint(w, "\n\n")
 		case opPre:
-			w.Write(html_pre)
+			// Code block
+			fmt.Fprint(w, "```go\n")
 			for _, line := range b.lines {
 				emphasize(w, line, nil, false)
 			}
-			w.Write(html_endpre)
+			fmt.Fprint(w, "```\n\n")
 		}
 	}
 }
@@ -415,87 +382,4 @@ func blocks(text string) []block {
 	close()
 
 	return out
-}
-
-// ToText prepares comment text for presentation in textual output.
-// It wraps paragraphs of text to width or fewer Unicode code points
-// and then prefixes each line with the indent. In preformatted sections
-// (such as program text), it prefixes each non-blank line with preIndent.
-func ToText(w io.Writer, text string, indent, preIndent string, width int) {
-	l := lineWrapper{
-		out:    w,
-		width:  width,
-		indent: indent,
-	}
-	for _, b := range blocks(text) {
-		switch b.op {
-		case opPara:
-			// l.write will add leading newline if required
-			for _, line := range b.lines {
-				l.write(line)
-			}
-			l.flush()
-		case opHead:
-			w.Write(nl)
-			for _, line := range b.lines {
-				l.write(line + "\n")
-			}
-			l.flush()
-		case opPre:
-			w.Write(nl)
-			for _, line := range b.lines {
-				if isBlank(line) {
-					w.Write([]byte("\n"))
-				} else {
-					w.Write([]byte(preIndent))
-					w.Write([]byte(line))
-				}
-			}
-		}
-	}
-}
-
-type lineWrapper struct {
-	out       io.Writer
-	printed   bool
-	width     int
-	indent    string
-	n         int
-	pendSpace int
-}
-
-var nl = []byte("\n")
-var space = []byte(" ")
-
-func (l *lineWrapper) write(text string) {
-	if l.n == 0 && l.printed {
-		l.out.Write(nl) // blank line before new paragraph
-	}
-	l.printed = true
-
-	for _, f := range strings.Fields(text) {
-		w := utf8.RuneCountInString(f)
-		// wrap if line is too long
-		if l.n > 0 && l.n+l.pendSpace+w > l.width {
-			l.out.Write(nl)
-			l.n = 0
-			l.pendSpace = 0
-		}
-		if l.n == 0 {
-			l.out.Write([]byte(l.indent))
-		}
-		l.out.Write(space[:l.pendSpace])
-		l.out.Write([]byte(f))
-		l.n += l.pendSpace + w
-		l.pendSpace = 1
-	}
-}
-
-func (l *lineWrapper) flush() {
-	if l.n == 0 {
-		return
-	}
-	l.out.Write(nl)
-	l.pendSpace = 0
-	l.n = 0
 }

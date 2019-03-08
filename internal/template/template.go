@@ -1,11 +1,13 @@
 package template
 
 import (
+	"bytes"
 	"io"
 	"strings"
 	"text/template"
 
 	"github.com/golang/gddo/doc"
+	"github.com/posener/goreadme/internal/markdown"
 )
 
 // Execute is used to execute the README.md template
@@ -29,6 +31,11 @@ var base = template.New("base").Funcs(
 				return f.URL
 			}
 			return "/" + f.Name
+		},
+		"doc": func(s string) string {
+			b := bytes.NewBuffer(nil)
+			markdown.ToMarkdown(b, s, nil)
+			return b.String()
 		},
 	},
 )
@@ -54,7 +61,7 @@ var main = template.Must(base.Parse(`# {{.Package.Name}}
 [![goreadme](https://goreadme.herokuapp.com/badge/{{fullName .Package}}.svg)](https://goreadme.herokuapp.com)
 {{ end }}
 
-{{ .Package.Doc }}
+{{ doc .Package.Doc }}
 
 {{ if .Config.Functions }}
 {{ template "functions" .Package }}
@@ -81,7 +88,7 @@ var functions = template.Must(base.Parse(`
 
 {{ inlineCode .Decl.Text }}
 
-{{ .Doc }}
+{{ doc .Doc }}
 
 {{ template "examples" .Examples }}
 {{ end }}
@@ -100,7 +107,7 @@ var exmaples = template.Must(base.Parse(`
 
 {{ if .Name }}##### {{.Name}}{{ end }}
 
-{{ .Doc }}
+{{ doc .Doc }}
 
 {{ if .Play }}{{code .Play}}{{ else }}{{code .Code.Text}}{{ end }}
 {{ end }}

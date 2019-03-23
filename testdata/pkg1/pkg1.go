@@ -10,10 +10,12 @@
 //
 // A local link should just start with period and slash: ./internal, another local is ./internal/file.go.
 // A web page link should just be written as is: https://goreadme.herokuapp.com, and with path: https://goreadme.herokuapp.com/projects.
+// A url can also have a (title) http://example.org.
+// A local path can also have a (title) ./pkg.go.
 //
 // Another Section Header
 //
-// Inline code can be defined with backquotes: `prinlnt("hello world")`, or with indentation:
+// Inline code can be defined with backticks: `prinlnt("hello world")`, or with indentation:
 //
 // 	func main() {
 //		println("hello world")
@@ -24,6 +26,10 @@
 // 1. List item number 1.
 // 1. List item number 2.
 // 1. List item number 3.
+//
+// An image:
+//
+// (image/gopher) https://golang.org/doc/gopher/frontpage.png
 package pkg1
 
 import "fmt"

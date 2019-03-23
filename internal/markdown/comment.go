@@ -27,6 +27,8 @@ const (
 	// This excludes some rare yet valid urls ending in common punctuation
 	// in order to allow sentences ending in URLs.
 
+	// url title (optional)
+	urlTitle = `(\(([^)]+)\)\W)?`
 	// protocol (required) e.g. http
 	protoPart = `(https?|ftp|file|gopher|mailto|nntp)`
 	// host (required) e.g. www.example.com or [::1]:8080
@@ -40,7 +42,7 @@ const (
 	localRx = `\.\/[^\s]+`
 )
 
-var matchRx = regexp.MustCompile(`(` + urlRx + `)|(` + identRx + `)|(` + localRx + `)`)
+var matchRx = regexp.MustCompile(`(` + urlTitle + `((` + urlRx + `)|(` + localRx + `)))|(` + identRx + `)`)
 
 // pairedParensPrefixLen returns the length of the longest prefix of s containing paired parentheses.
 func pairedParensPrefixLen(s string) int {
@@ -80,7 +82,6 @@ func emphasize(w io.Writer, line string, words map[string]string, nice bool) {
 		// m >= 6 (two parenthesized sub-regexps in matchRx, 1st one is urlRx)
 
 		// write text before match
-		// commentEscape(w, line[0:m[0]], nice)
 		fmt.Fprintf(w, line[0:m[0]])
 		// adjust match if necessary
 		match := line[m[0]:m[1]]
@@ -93,39 +94,47 @@ func emphasize(w io.Writer, line string, words map[string]string, nice bool) {
 
 		// analyze match
 		url := ""
+		title := ""
+		image := false
 		italics := false
 		if words != nil {
 			url, italics = words[match]
-		}
-		if m[2] >= 0 {
-			// match against first parenthesized sub-regexp; must be match against urlRx
-			if !italics {
-				// no alternative URL in words list, use match instead
-				url = match
-			}
-			italics = false // don't italicize URLs
-		}
-		if m[12] >= 0 {
-			// match against first parenthesized sub-regexp; must be match against urlRx
-			if !italics {
-				// no alternative URL in words list, use match instead
-				url = match
-			}
-			italics = false // don't italicize URLs
 		}
 
 		// If the url ends with a punctuation mark, we will hold it here.
 		after := make([]byte, 0, 1)
 
-		// write match
-		if len(url) > 0 {
+		if m[2] >= 0 {
+			// A url
+			// match against first parenthesized sub-regexp; must be match against urlRx
+			if !italics {
+				// no alternative URL in words list, use match instead
+				url = match
+				title = match
+				if m[4] >= 0 {
+					title = line[m[6]:m[7]]
+					url = line[m[8]:m[9]]
+					if strings.HasPrefix(title, "image/") {
+						title = strings.TrimPrefix(title, "image/")
+						image = true
+					}
+				}
+			}
 			switch url[len(url)-1] {
 			case '.', ',', ':', ';', '?', '!':
 				after = append(after, url[len(url)-1])
 				url = url[:len(url)-1]
 			}
+			italics = false // don't italicize URLs
+		}
+
+		// write match
+		if image {
+			fmt.Fprint(w, "!")
+		}
+		if len(url) > 0 {
 			fmt.Fprint(w, "[")
-			template.HTMLEscape(w, []byte(url))
+			template.HTMLEscape(w, []byte(title))
 			fmt.Fprint(w, "](")
 		}
 		if italics {

@@ -33,8 +33,19 @@
 //
 // * Code block is recognized by indentation.
 //
-// * URLs will just automatically converted to links
-// (Added support to local links - prefixed by dot and slash, for example: ./cmd).
+// * Inline code is marked with backticks.
+//
+// * URLs will just automatically converted to links.
+//
+// Additionally, some extra formatting was added.
+//
+// * Local paths will be automatically converted to links, for example: ./goreadme.go.
+//
+// * A url and can have a title, as follows: (goreadme website) https://goreadme.herokuapp.com.
+//
+// * A local path and can have a title, as follows: (goreadme main file) ./goreamde.go.
+//
+// * An image can be added: (image/goreadme icon) ./icon.png
 package goreadme
 
 import (

@@ -10,7 +10,7 @@ Package goreadme creates readme markdown file from go doc.
 
 This package can be used as a web service, as a command line tool or as a library.
 
-Try the [web service](https://gotreadme.herokuapp.com).
+Try the [web service](https://goreadme.herokuapp.com).
 
 Integrate directly with [Github](https://github.com/apps/goreadme).
 
@@ -46,13 +46,13 @@ Meaning:
 
 * Inline code is marked with backticks.
 
-* URLs will just automatically converted to links.
+* URLs will just automatically be converted to links.
 
 Additionally, some extra formatting was added.
 
 * Local paths will be automatically converted to links, for example: [./goreadme.go](./goreadme.go).
 
-* A url and can have a title, as follows: [goreadme website](https://goreadme.herokuapp.com).
+* A URL and can have a title, as follows: [goreadme website](https://goreadme.herokuapp.com).
 
 * A local path and can have a title, as follows: [goreadme main file](./goreamde.go).
 

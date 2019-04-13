@@ -74,6 +74,9 @@ func pairedParensPrefixLen(s string) int {
 // the corresponding map value is not the empty string, it is considered a URL
 // and the word is converted into a link.
 func emphasize(w io.Writer, line string, words map[string]string, nice bool) {
+	if line[len(line)-1] != '\n' {
+		line = line + "\n"
+	}
 	for {
 		m := matchRx.FindStringSubmatchIndex(line)
 		if m == nil {

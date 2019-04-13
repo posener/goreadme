@@ -25,6 +25,15 @@ func main() {
 }
 ```
 
+Diff code block:
+
+```diff
+ func main() {
+-	println("hello world")
++	fmt.Println("hello, world")
+ }
+```
+
 You could also use lists:
 
 1. List item number 1.

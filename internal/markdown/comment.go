@@ -270,6 +270,8 @@ const (
 type block struct {
 	op    op
 	lines []string
+
+	lang string // for opPre, the language of the code block.
 }
 
 var nonAlphaNumRx = regexp.MustCompile(`[^a-zA-Z0-9]`)
@@ -314,7 +316,7 @@ func ToMarkdown(w io.Writer, text string, words map[string]string) {
 			fmt.Fprint(w, "\n\n")
 		case opPre:
 			// Code block
-			fmt.Fprint(w, "```go\n")
+			fmt.Fprintf(w, "```%s\n", b.lang)
 			for _, line := range b.lines {
 				emphasize(w, line, nil, false)
 			}
@@ -334,7 +336,7 @@ func blocks(text string) []block {
 
 	close := func() {
 		if para != nil {
-			out = append(out, block{opPara, para})
+			out = append(out, block{op: opPara, lines: para})
 			para = nil
 		}
 	}
@@ -354,10 +356,17 @@ func blocks(text string) []block {
 			// close paragraph
 			close()
 
+			// Used to remember diff code block.
+			isDiff := false
+
 			// count indented or blank lines
 			j := i + 1
 			for j < len(lines) && (isBlank(lines[j]) || indentLen(lines[j]) > 0) {
 				j++
+				ind := indentLen(lines[j])
+				if len(lines[j]) > ind && (lines[j][ind] == '+' || lines[j][ind] == '-') {
+					isDiff = true
+				}
 			}
 			// but not trailing blank lines
 			for j > i && isBlank(lines[j-1]) {
@@ -369,7 +378,11 @@ func blocks(text string) []block {
 			unindent(pre)
 
 			// put those lines in a pre block
-			out = append(out, block{opPre, pre})
+			lang := "go"
+			if isDiff {
+				lang = "diff"
+			}
+			out = append(out, block{op: opPre, lines: pre, lang: lang})
 			lastWasHeading = false
 			continue
 		}
@@ -381,7 +394,7 @@ func blocks(text string) []block {
 			// might be a heading.
 			if head := heading(line); head != "" {
 				close()
-				out = append(out, block{opHead, []string{head}})
+				out = append(out, block{op: opHead, lines: []string{head}})
 				i += 2
 				lastWasHeading = true
 				continue

@@ -362,11 +362,11 @@ func blocks(text string) []block {
 			// count indented or blank lines
 			j := i + 1
 			for j < len(lines) && (isBlank(lines[j]) || indentLen(lines[j]) > 0) {
-				j++
 				ind := indentLen(lines[j])
 				if len(lines[j]) > ind && (lines[j][ind] == '+' || lines[j][ind] == '-') {
 					isDiff = true
 				}
+				j++
 			}
 			// but not trailing blank lines
 			for j > i && isBlank(lines[j-1]) {

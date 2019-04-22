@@ -24,6 +24,12 @@ func init() {
 	flag.BoolVar(&cfg.Functions, "functions", false, "Write functions section.")
 	flag.BoolVar(&cfg.SkipExamples, "skip-examples", false, "Skip the examples section.")
 	flag.BoolVar(&cfg.SkipSubPackages, "skip-sub-packages", false, "Skip the sub packages section.")
+	flag.BoolVar(&cfg.Badges.Goreadme, "badge-goreadme", false, "Show Goreadme badge.")
+	flag.BoolVar(&cfg.Badges.TravicCI, "badge-travisci", false, "Show TravicCI badge.")
+	flag.BoolVar(&cfg.Badges.CodeCov, "badge-codecov", false, "Show CodeCov badge.")
+	flag.BoolVar(&cfg.Badges.GolangCI, "badge-golangci", false, "Show GolangCI badge.")
+	flag.BoolVar(&cfg.Badges.GoDoc, "badge-godoc", false, "Show GoDoc badge.")
+	flag.BoolVar(&cfg.Badges.GoReportCard, "badge-goreportcard", false, "Show GoReportCard badge.")
 	flag.Usage = func() {
 		fmt.Fprint(
 			flag.CommandLine.Output(),

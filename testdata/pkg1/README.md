@@ -14,6 +14,7 @@ A local link should just start with period and slash: [./internal](./internal), 
 A web page link should just be written as is: [https://goreadme.herokuapp.com](https://goreadme.herokuapp.com), and with path: [https://goreadme.herokuapp.com/projects](https://goreadme.herokuapp.com/projects).
 A url can also have a [title](http://example.org).
 A local path can also have a [title](./pkg.go).
+A local path in inline code `go test [./](./)`.
 
 #### Another Section Header
 

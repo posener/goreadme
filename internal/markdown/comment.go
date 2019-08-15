@@ -39,7 +39,7 @@ const (
 	urlRx = protoPart + `://` + hostPart + pathPart
 
 	// Regexp for local paths
-	localRx = `\.\/[^\s]+`
+	localRx = `\.\/[a-zA-Z0-9_@\-\.\/]*`
 )
 
 var matchRx = regexp.MustCompile(`(` + urlTitle + `((` + urlRx + `)|(` + localRx + `)))|(` + identRx + `)`)

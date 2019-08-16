@@ -105,11 +105,11 @@ func emphasize(w io.Writer, line string, words map[string]string, nice bool) {
 		}
 
 		// If the url ends with a punctuation mark, we will hold it here.
-		after := make([]byte, 0, 1)
+		after := ""
 
 		if m[2] >= 0 {
-			// A url
-			// match against first parenthesized sub-regexp; must be match against urlRx
+			// A url match against first parenthesized sub-regexp; must be
+			// match against urlRx.
 			if !italics {
 				// no alternative URL in words list, use match instead
 				url = match
@@ -124,10 +124,17 @@ func emphasize(w io.Writer, line string, words map[string]string, nice bool) {
 				}
 			}
 
+			// Skip Go path ellipsis.
+			if strings.HasSuffix(url, "/...") {
+				fmt.Fprintf(w, line[1:m[1]])
+				line = line[m[1]:]
+				continue
+			}
+
 			// Remove punctuation mark from url/title suffix.
 			switch url[len(url)-1] {
 			case '.', ',', ':', ';', '?', '!':
-				after = append(after, url[len(url)-1])
+				after = string(url[len(url)-1])
 				if title[len(title)-1] == url[len(url)-1] {
 					title = title[:len(title)-1]
 				}
@@ -160,7 +167,7 @@ func emphasize(w io.Writer, line string, words map[string]string, nice bool) {
 		if len(url) > 0 {
 			fmt.Fprint(w, ")")
 		}
-		w.Write(after)
+		fmt.Fprint(w, after)
 
 		// advance
 		line = line[m[1]:]

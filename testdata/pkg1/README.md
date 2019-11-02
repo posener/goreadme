@@ -62,10 +62,24 @@ Example_hello prints hello
 fmt.Println("hello")
 ```
 
+ Output:
+
+```
+hello
+
+```
+
 ##### NoDoc
 
 ```golang
 fmt.Println("hello")
+```
+
+ Output:
+
+```
+hello
+
 ```
 
 ##### Func
@@ -76,10 +90,24 @@ ExampleFunc tests func
 Func()
 ```
 
+ Output:
+
+```
+hello
+
+```
+
 ##### WithName
 
 ExampleFunc_withName tests func with a name
 
 ```golang
 Func()
+```
+
+ Output:
+
+```
+hello
+
 ```

@@ -17,8 +17,11 @@ func Execute(w io.Writer, data interface{}) error {
 
 var base = template.New("base").Funcs(
 	template.FuncMap{
-		"code": func(s string) string {
+		"gocode": func(s string) string {
 			return "```golang\n" + s + "\n```\n"
+		},
+		"code": func(s string) string {
+			return "```\n" + s + "\n```\n"
 		},
 		"inlineCode": func(s string) string {
 			return "`" + s + "`"
@@ -109,7 +112,10 @@ var exmaples = template.Must(base.Parse(`
 
 {{ doc .Doc }}
 
-{{ if .Play }}{{code .Play}}{{ else }}{{code .Code.Text}}{{ end }}
+{{ if .Play }}{{gocode .Play}}{{ else }}{{gocode .Code.Text}}{{ end }}
+{{ if .Output }} Output:
+
+{{ code .Output }}{{ end }}
 {{ end }}
 
 {{ end }}

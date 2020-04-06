@@ -2,7 +2,6 @@
 
 [![Build Status](https://travis-ci.org/posener/goreadme.svg?branch=master)](https://travis-ci.org/posener/goreadme)
 [![codecov](https://codecov.io/gh/posener/goreadme/branch/master/graph/badge.svg)](https://codecov.io/gh/posener/goreadme)
-[![golangci](https://golangci.com/badges/github.com/posener/goreadme.svg)](https://golangci.com/r/github.com/posener/goreadme)
 [![GoDoc](https://godoc.org/github.com/posener/goreadme?status.svg)](http://godoc.org/github.com/posener/goreadme)
 [![goreadme](https://goreadme.herokuapp.com/badge/posener/goreadme.svg)](https://goreadme.herokuapp.com)
 
@@ -62,7 +61,5 @@ Additionally, some extra formatting was added.
 
 * [cmd/goreadme](./cmd/goreadme): Package main is a command line util that takes a Go repository and write to stdout the calculated README.md content.
 
-
 ---
-
-Created by [goreadme](https://github.com/apps/goreadme)
+Readme created from Go doc with [goreadme](https://github.com/posener/goreadme)

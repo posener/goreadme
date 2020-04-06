@@ -1,0 +1,71 @@
+name: goreadme
+description: Updates README.md from Go doc.
+inputs:
+  package_name:
+    description: Go package name, which is used to import the package.
+    required: true
+  recursive:
+    description: Load docs recursively
+    required: false
+    default: 'false'
+  functions:
+    description: Write functions section
+    required: false
+    default: 'false'
+  skip-examples:
+    description: Skip the examples section
+    required: false
+    default: 'false'
+  skip-sub-packages:
+    description: Skip the sub packages section
+    required: false
+    default: 'false'
+  badge-goreadme:
+    description: Add Goreadme badge
+    required: false
+    default: 'false'
+  badge-travisci:
+    description: Add Code Cov badge
+    required: false
+    default: 'false'
+  badge-codecov:
+    description: Add Code Cov badge
+    required: false
+    default: 'false'
+  badge-golangci:
+    description: Add Golang CI badge
+    required: false
+    default: 'false'
+  badge-godoc:
+    description: Add Go Doc badge
+    required: false
+    default: 'false'
+  badge-goreportcard:
+    description: Add Go report card badge
+    required: false
+    default: 'false'
+  credit:
+    description: Add credit line to Goreadme
+    required: false
+    default: 'true'
+
+runs:
+  using: docker
+  image: Dockerfile
+  args:
+    - "-package_name=${{ inputs.package_name }}"
+    - "-recursive=${{ inputs.recursive }}"
+    - "-functions=${{ inputs.functions }}"
+    - "-skip-examples=${{ inputs.skip-examples }}"
+    - "-skip-sub-packages=${{ inputs.skip-sub-packages }}"
+    - "-badge-goreadme=${{ inputs.badge-goreadme }}"
+    - "-badge-travisci=${{ inputs.badge-travisci }}"
+    - "-badge-codecov=${{ inputs.badge-codecov }}"
+    - "-badge-golangci=${{ inputs.badge-golangci }}"
+    - "-badge-godoc=${{ inputs.badge-godoc }}"
+    - "-badge-goreportcard=${{ inputs.badge-goreportcard }}"
+    - "-credit=${{ inputs.credit }}"
+
+branding:
+  icon: book-open
+  color: blue

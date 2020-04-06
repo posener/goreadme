@@ -20,6 +20,7 @@ import (
 var cfg goreadme.Config
 
 func init() {
+	flag.StringVar(&cfg.PackageName, "package_name", "", "Override package name in doc.")
 	flag.BoolVar(&cfg.RecursiveSubPackages, "recursive", false, "Load docs recursively.")
 	flag.BoolVar(&cfg.Functions, "functions", false, "Write functions section.")
 	flag.BoolVar(&cfg.SkipExamples, "skip-examples", false, "Skip the examples section.")
@@ -30,6 +31,7 @@ func init() {
 	flag.BoolVar(&cfg.Badges.GolangCI, "badge-golangci", false, "Show GolangCI badge.")
 	flag.BoolVar(&cfg.Badges.GoDoc, "badge-godoc", false, "Show GoDoc badge.")
 	flag.BoolVar(&cfg.Badges.GoReportCard, "badge-goreportcard", false, "Show GoReportCard badge.")
+	flag.BoolVar(&cfg.Credit, "credit", true, "Add credit line.")
 	flag.Usage = func() {
 		fmt.Fprint(
 			flag.CommandLine.Output(),

@@ -83,6 +83,7 @@ type GoReadme struct {
 }
 
 type Config struct {
+	PackageName string `json:"package_name"`
 	// Functions will make functions documentation to be added to the README.
 	Functions bool `json:"functions"`
 	// SkipExamples will omit the examples section from the README.
@@ -100,6 +101,7 @@ type Config struct {
 		GoDoc        bool `json:"go_doc"`
 		GoReportCard bool `json:"go_report_card"`
 	} `json:"badges"`
+	Credit bool `json:"credit"`
 }
 
 // Create writes the content of readme.md to w, with the default client.
@@ -146,6 +148,10 @@ func (r *GoReadme) get(ctx context.Context, name string) (*pkg, error) {
 	}
 	sort.Strings(p.Subdirectories)
 
+	if packageName := r.config.PackageName; packageName != "" {
+		p.ImportPath = packageName
+	}
+
 	// If functions were not requested to be added to the readme, add their
 	// examples to the main readme.
 	if !r.config.Functions {
@@ -189,7 +195,7 @@ func (r *GoReadme) get(ctx context.Context, name string) (*pkg, error) {
 }
 
 func debug(p *pkg) {
-	if os.Getenv("DEBUG") != "1" {
+	if os.Getenv("GOREADME_DEBUG") != "1" {
 		return
 	}
 

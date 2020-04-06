@@ -15,6 +15,13 @@ func Execute(w io.Writer, data interface{}) error {
 	return main.Execute(&multiNewLineEliminator{w: w}, data)
 }
 
+func importPath(p *doc.Package) string {
+	if len(p.References) > 0 {
+		return p.References[0]
+	}
+	return p.ImportPath
+}
+
 var base = template.New("base").Funcs(
 	template.FuncMap{
 		"gocode": func(s string) string {
@@ -26,8 +33,11 @@ var base = template.New("base").Funcs(
 		"inlineCode": func(s string) string {
 			return "`" + s + "`"
 		},
+		"importPath": func(p *doc.Package) string {
+			return importPath(p)
+		},
 		"fullName": func(p *doc.Package) string {
-			return strings.TrimPrefix(p.ImportPath, "github.com/")
+			return strings.TrimPrefix(importPath(p), "github.com/")
 		},
 		"urlOrName": func(f *doc.File) string {
 			if f.URL != "" {
@@ -52,13 +62,13 @@ var main = template.Must(base.Parse(`# {{.Package.Name}}
 [![codecov](https://codecov.io/gh/{{fullName .Package}}/branch/master/graph/badge.svg)](https://codecov.io/gh/{{fullName .Package}})
 {{end -}}
 {{if .Config.Badges.GolangCI -}}
-[![golangci](https://golangci.com/badges/{{.Package.ImportPath}}.svg)](https://golangci.com/r/{{.Package.ImportPath}})
+[![golangci](https://golangci.com/badges/{{importPath .Package}}.svg)](https://golangci.com/r/{{importPath .Package}})
 {{end -}}
 {{if .Config.Badges.GoDoc -}}
-[![GoDoc](https://godoc.org/{{.Package.ImportPath}}?status.svg)](http://godoc.org/{{.Package.ImportPath}})
+[![GoDoc](https://godoc.org/{{importPath .Package}}?status.svg)](http://godoc.org/{{importPath .Package}})
 {{end -}}
 {{if .Config.Badges.GoReportCard -}}
-[![Go Report Card](https://goreportcard.com/badge/{{.Package.ImportPath}})](https://goreportcard.com/report/{{.Package.ImportPath}})
+[![Go Report Card](https://goreportcard.com/badge/{{importPath .Package}})](https://goreportcard.com/report/{{importPath .Package}})
 {{end -}}
 {{if .Config.Badges.Goreadme -}}
 [![goreadme](https://goreadme.herokuapp.com/badge/{{fullName .Package}}.svg)](https://goreadme.herokuapp.com)
@@ -76,7 +86,11 @@ var main = template.Must(base.Parse(`# {{.Package.Name}}
 
 {{ if (not .Config.SkipExamples) }}
 {{ template "examples" .Package.Examples }}
-{{end }}
+{{ end }}
+{{ if .Config.Credit }}
+---
+Readme created from Go doc with [goreadme](https://github.com/posener/goreadme)
+{{ end }}
 `))
 
 var functions = template.Must(base.Parse(`

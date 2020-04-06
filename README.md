@@ -1,10 +1,5 @@
 # goreadme
 
-[![Build Status](https://travis-ci.org/posener/goreadme.svg?branch=master)](https://travis-ci.org/posener/goreadme)
-[![codecov](https://codecov.io/gh/posener/goreadme/branch/master/graph/badge.svg)](https://codecov.io/gh/posener/goreadme)
-[![GoDoc](https://godoc.org/github.com/posener/goreadme?status.svg)](http://godoc.org/github.com/posener/goreadme)
-[![goreadme](https://goreadme.herokuapp.com/badge/posener/goreadme.svg)](https://goreadme.herokuapp.com)
-
 Package goreadme creates readme markdown file from go doc.
 
 This package can be used as a web service, as a command line tool or as a library.
@@ -57,9 +52,7 @@ Additionally, some extra formatting was added.
 
 * An image can be added: ![goreadme icon](./icon.png)
 
-## Sub Packages
-
-* [cmd/goreadme](./cmd/goreadme): Package main is a command line util that takes a Go repository and write to stdout the calculated README.md content.
 
 ---
-Readme created from Go doc with [goreadme](https://github.com/posener/goreadme)
+
+Created by [goreadme](https://github.com/apps/goreadme)

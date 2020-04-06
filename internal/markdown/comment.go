@@ -368,11 +368,11 @@ func blocks(text string) []block {
 
 			// Used to remember diff code block.
 			isDiff := false
+			ind := indentLen(line)
 
 			// count indented or blank lines
 			j := i + 1
 			for j < len(lines) && (isBlank(lines[j]) || indentLen(lines[j]) > 0) {
-				ind := indentLen(lines[j])
 				if len(lines[j]) > ind && (lines[j][ind] == '+' || lines[j][ind] == '-') {
 					isDiff = true
 				}

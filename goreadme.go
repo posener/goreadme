@@ -1,12 +1,42 @@
 // Package goreadme creates readme markdown file from go doc.
 //
-// This package can be used as a web service, as a command line tool or as a library.
+// Github Action
 //
-// Try the (web service) https://goreadme.herokuapp.com.
+// Github actions can be configured to update the README.md automatically every time it is needed.
+// Below there is an example that on every time a new change is pushed to the master branch, the
+// action is trigerred, generates a new README file, and if there is a change - commits and pushes
+// it to the master branch.
 //
-// Integrate directly with (Github) https://github.com/apps/goreadme.
+// Add the following content to `.github/workflows/goreadme.md`:
 //
-// Use as a command line tool:
+// 	on:
+// 	  push:
+// 	    branches:
+// 	      - master
+// 	jobs:
+// 	    goreadme:
+// 	        runs-on: ubuntu-latest
+// 	        steps:
+// 	        - name: Check out repository
+// 	          uses: actions/checkout@v2
+// 	        - name: Update README.md according to Go doc
+// 	          uses: posener/goreadme@v1.2.1
+// 	          with:
+// 	            package_name: 'github.com/<your user>/<your project>'
+// 	            badge-travisci: 'true'
+// 	            badge-codecov: 'true'
+// 	            badge-godoc: 'true'
+// 	            badge-goreadme: 'true'
+// 	        - name: Commit and push changes
+// 	          run: |
+// 	            git add README.md
+// 	            if git diff --staged --exit-code; then exit 0; fi
+// 	            git config user.name Goreadme
+// 	            git config user.email posener@gmail.com
+// 	            git commit -m "Update readme according to Go doc"
+// 	            git push origin HEAD:$(echo "${GITHUB_REF}" | cut -d/ -f3)
+//
+// Use as a command line tool
 //
 // 	$ go get github.com/posener/goreadme/...
 // 	$ goreadme -h
@@ -33,6 +63,12 @@
 // * A header is a single line that is separated from a paragraph above.
 //
 // * Code block is recognized by indentation.
+//
+// * Diff block is automatically detected:
+//
+// 	-removed
+// 	 stay
+// 	+added
 //
 // * Inline code is marked with backticks.
 //

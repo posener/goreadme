@@ -25,10 +25,24 @@
 //
 // Diff code block:
 //
-//	 func main() {
-//	-	println("hello world")
-//	+	fmt.Println("hello, world")
-//	 }
+// 	 func main() {
+// 	-	println("hello world")
+// 	+	fmt.Println("hello, world")
+// 	 }
+//
+// Diff code that starts with `+`:
+//
+// 	+func main() {
+// 	-	println("hello world")
+// 	+	fmt.Println("hello, world")
+// 	 }
+//
+// Diff code that starts with `-`:
+//
+// 	-func main() {
+// 	-	println("hello world")
+// 	+	fmt.Println("hello, world")
+// 	 }
 //
 // You could also use lists:
 //

@@ -1,7 +1,7 @@
 name: goreadme
 description: Updates README.md from Go doc.
 inputs:
-  package_name:
+  package-name:
     description: Go package name, which is used to import the package.
     required: true
   recursive:
@@ -53,7 +53,7 @@ runs:
   using: docker
   image: Dockerfile
   args:
-    - "-package_name=${{ inputs.package_name }}"
+    - "-package-name=${{ inputs.package-name }}"
     - "-recursive=${{ inputs.recursive }}"
     - "-functions=${{ inputs.functions }}"
     - "-skip-examples=${{ inputs.skip-examples }}"

@@ -20,13 +20,13 @@ import (
 var cfg goreadme.Config
 
 func init() {
-	flag.StringVar(&cfg.PackageName, "package_name", "", "Override package name in doc.")
+	flag.StringVar(&cfg.PackageName, "package-name", "", "Override package name in doc.")
 	flag.BoolVar(&cfg.RecursiveSubPackages, "recursive", false, "Load docs recursively.")
 	flag.BoolVar(&cfg.Functions, "functions", false, "Write functions section.")
 	flag.BoolVar(&cfg.SkipExamples, "skip-examples", false, "Skip the examples section.")
 	flag.BoolVar(&cfg.SkipSubPackages, "skip-sub-packages", false, "Skip the sub packages section.")
 	flag.BoolVar(&cfg.Badges.Goreadme, "badge-goreadme", false, "Show Goreadme badge.")
-	flag.BoolVar(&cfg.Badges.TravicCI, "badge-travisci", false, "Show TravicCI badge.")
+	flag.BoolVar(&cfg.Badges.TravisCI, "badge-travisci", false, "Show TravisCI badge.")
 	flag.BoolVar(&cfg.Badges.CodeCov, "badge-codecov", false, "Show CodeCov badge.")
 	flag.BoolVar(&cfg.Badges.GolangCI, "badge-golangci", false, "Show GolangCI badge.")
 	flag.BoolVar(&cfg.Badges.GoDoc, "badge-godoc", false, "Show GoDoc badge.")

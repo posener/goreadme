@@ -367,14 +367,14 @@ func blocks(text string) []block {
 			close()
 
 			// Used to remember diff code block.
-			isDiff := false
-			ind := indentLen(line)
+			isDiff := true
+			diffChIdx := diffCharIdx(line)
 
 			// count indented or blank lines
 			j := i + 1
 			for j < len(lines) && (isBlank(lines[j]) || indentLen(lines[j]) > 0) {
-				if len(lines[j]) > ind && (lines[j][ind] == '+' || lines[j][ind] == '-') {
-					isDiff = true
+				if isDiffLine(lines[j], diffChIdx) {
+					isDiff = false
 				}
 				j++
 			}
@@ -420,4 +420,22 @@ func blocks(text string) []block {
 	close()
 
 	return out
+}
+
+// diffCharIdx returns the index of a diff character, given the first line of a code block.
+func diffCharIdx(line string) int {
+	i := indentLen(line) - 1
+	if len(line) > i+1 && (line[i+1] == '+' || line[i+1] == '-') {
+		i++
+	}
+	return i
+}
+
+// isDiffLine returns if this is a valid diff line given a code block line, and the expected index
+// for the diff character.
+func isDiffLine(line string, i int) bool {
+	if isBlank(line) {
+		return false
+	}
+	return len(line) <= i || (line[i] != ' ' && line[i] != '+' && line[i] != '-')
 }

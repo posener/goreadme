@@ -36,6 +36,24 @@ Diff code block:
  }
 ```
 
+Diff code that starts with `+`:
+
+```diff
++func main() {
+-	println("hello world")
++	fmt.Println("hello, world")
+ }
+```
+
+Diff code that starts with `-`:
+
+```diff
+-func main() {
+-	println("hello world")
++	fmt.Println("hello, world")
+ }
+```
+
 You could also use lists:
 
 1. List item number 1.

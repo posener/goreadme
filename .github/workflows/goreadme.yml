@@ -13,7 +13,7 @@ jobs:
         - name: Update README.md according to Go doc
           uses: ./
           with:
-            package_name: 'github.com/posener/goreadme'
+            package-name: 'github.com/posener/goreadme'
             recursive: 'true'
             badge-travisci: 'true'
             badge-codecov: 'true'

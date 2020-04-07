@@ -7,7 +7,7 @@
 // action is trigerred, generates a new README file, and if there is a change - commits and pushes
 // it to the master branch.
 //
-// Add the following content to `.github/workflows/goreadme.md`:
+// Add the following content to `.github/workflows/goreadme.yml`:
 //
 // 	on:
 // 	  push:
@@ -126,12 +126,12 @@ type Config struct {
 	SkipExamples bool `json:"skip_examples"`
 	// SkipSubPackages will omit the sub packages section from the README.
 	SkipSubPackages bool `json:"skip_sub_packages"`
-	// RecursiveSubPackages will retrived subpackages information recursively.
-	// If false, only one level of subpackages will be retrived.
+	// RecursiveSubPackages will retrieved subpackages information recursively.
+	// If false, only one level of subpackages will be retrieved.
 	RecursiveSubPackages bool `json:"recursive_sub_packages"`
 	Badges               struct {
 		Goreadme     bool `json:"goreadme"`
-		TravicCI     bool `json:"travis_ci"`
+		TravisCI     bool `json:"travis_ci"`
 		CodeCov      bool `json:"code_cov"`
 		GolangCI     bool `json:"golang_ci"`
 		GoDoc        bool `json:"go_doc"`

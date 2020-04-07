@@ -22,9 +22,12 @@ jobs:
         
         - name: Commit and push changes
           run: |
+            # Check if README was modified.
             git add README.md
             if git diff --staged --exit-code; then exit 0; fi
+            # Configure git before commit.
             git config user.name Goreadme
             git config user.email posener@gmail.com
+            # Commit and push chnages to upstream branch.
             git commit -m "Update readme according to Go doc"
             git push origin HEAD:$(echo "${GITHUB_REF}" | cut -d/ -f3)

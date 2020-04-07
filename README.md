@@ -14,7 +14,7 @@ Below there is an example that on every time a new change is pushed to the maste
 action is trigerred, generates a new README file, and if there is a change - commits and pushes
 it to the master branch.
 
-Add the following content to `.github/workflows/goreadme.md`:
+Add the following content to `.github/workflows/goreadme.yml`:
 
 ```go
 on:

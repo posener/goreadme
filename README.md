@@ -5,7 +5,9 @@
 [![GoDoc](https://godoc.org/github.com/posener/goreadme?status.svg)](http://godoc.org/github.com/posener/goreadme)
 [![goreadme](https://goreadme.herokuapp.com/badge/posener/goreadme.svg)](https://goreadme.herokuapp.com)
 
-Package goreadme creates readme markdown file from go doc.
+Package goreadme generates readme markdown file from go doc.
+
+The package can be used as a command line tool and as Github action, described below:
 
 #### Github Action
 
@@ -28,7 +30,7 @@ jobs:
         - name: Check out repository
           uses: actions/checkout@v2
         - name: Update README.md according to Go doc
-          uses: posener/goreadme@v1.2.1
+          uses: posener/goreadme@<release>
           with:
             package_name: 'github.com/<your user>/<your project>'
             badge-travisci: 'true'
@@ -54,22 +56,16 @@ $ goreadme -h
 
 #### Why Should You Use It
 
-Both go doc and readme files are important. Go doc to be used by your user's
-library, and README file to welcome users to use your library. They share
-common content, which is usually duplicated from the doc to the readme or vice versa
-once the library is ready. The problem is that keeping documentation updated
-is important, and hard enough - keeping both updated is twice as hard.
-
-This library provides an easy way to create the one from the other. Using the
-goreadme [Github App](https://github.com/apps/goreadme) makes it even easier.
+Both Go doc and readme files are important. Go doc to be used by your user's library, and README
+file to welcome users to use your library. They share common content, which is usually duplicated
+from the doc to the readme or vice versa once the library is ready. The problem is that keeping
+documentation updated is important, and hard enough - keeping both updated is twice as hard.
 
 #### Go Doc Instructions
 
-The formatting of the README.md is done by the go doc parser. This makes the
-Result README.md a bit more limited.
-Currently, `goreadme` supports the formatting as explained
-in [godoc page](https://blog.golang.org/godoc-documenting-go-code).
-Meaning:
+The formatting of the README.md is done by the go doc parser. This makes the result README.md a
+bit more limited. Currently, `goreadme` supports the formatting as explained in
+[godoc page](https://blog.golang.org/godoc-documenting-go-code). Meaning:
 
 * A header is a single line that is separated from a paragraph above.
 
@@ -91,7 +87,7 @@ Additionally, some extra formatting was added.
 
 * Local paths will be automatically converted to links, for example: [./goreadme.go](./goreadme.go).
 
-* A URL and can have a title, as follows: [goreadme website](https://goreadme.herokuapp.com).
+* A URL and can have a title, as follows: [goreadme page](https://github.com/posener/goreadme).
 
 * A local path and can have a title, as follows: [goreadme main file](./goreamde.go).
 

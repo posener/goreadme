@@ -1,15 +1,15 @@
 on:
+  pull_request:
+    branches: [master]
   push:
-    branches:
-      - master
-
+    branches: [master]
 jobs:
     goreadme:
         runs-on: ubuntu-latest
         steps:
         - name: Check out repository
           uses: actions/checkout@v2
-        - name: Update README.md according to Go doc
+        - name: Update readme according to Go doc
           uses: ./
           with:
             recursive: 'true'
@@ -17,3 +17,4 @@ jobs:
             badge-codecov: 'true'
             badge-godoc: 'true'
             badge-goreadme: 'true'
+            github-token: '${{ secrets.GITHUB_TOKEN }}'

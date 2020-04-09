@@ -52,10 +52,19 @@ inputs:
   commit-email:
     description: Email for commit message.
     required: false
+  github-token:
+    description: Github Token for giving permissions to add readme diff comments.
+    required: false
+  debug:
+    description: Print Goredme debug output.
+    required: false
 
 runs:
   using: docker
   image: Dockerfile
+  env:
+    GITHUB_TOKEN: '${{ inputs.github-token }}'
+    GOREADME_DEBUG: '${{ inputs.debug }}'
   args:
     - "-recursive=${{ inputs.recursive }}"
     - "-functions=${{ inputs.functions }}"

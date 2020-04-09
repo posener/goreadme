@@ -13,21 +13,23 @@
 //
 // 	on:
 // 	  push:
-// 	    branches:
-// 	      - master
+// 	    branches: [master]
+// 	  pull_request:
+// 	    branches: [master]
 // 	jobs:
 // 	    goreadme:
 // 	        runs-on: ubuntu-latest
 // 	        steps:
 // 	        - name: Check out repository
 // 	          uses: actions/checkout@v2
-// 	        - name: Update README.md according to Go doc
+// 	        - name: Update readme according to Go doc
 // 	          uses: posener/goreadme@<release>
 // 	          with:
 // 	            badge-travisci: 'true'
 // 	            badge-codecov: 'true'
 // 	            badge-godoc: 'true'
 // 	            badge-goreadme: 'true'
+// 	            github-token: '${{ secrets.GITHUB_TOKEN }}'
 //
 // Use as a command line tool
 //
@@ -226,7 +228,7 @@ func (r *GoReadme) get(ctx context.Context, name string) (*pkg, error) {
 }
 
 func debug(p *pkg) {
-	if os.Getenv("GOREADME_DEBUG") != "1" {
+	if os.Getenv("GOREADME_DEBUG") == "" {
 		return
 	}
 

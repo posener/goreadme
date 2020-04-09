@@ -41,7 +41,7 @@ jobs:
 Use as a command line tool
 
 ```go
-$ go get github.com/posener/goreadme/...
+$ GO111MODULE=on go get github.com/posener/goreadme/cmd/goreadme
 $ goreadme -h
 ```
 
@@ -60,7 +60,21 @@ bit more limited. Currently, `goreadme` supports the formatting as explained in
 
 * A header is a single line that is separated from a paragraph above.
 
-* Code block is recognized by indentation.
+* Code block is recognized by indentation as Go code.
+
+```go
+func main() {
+	...
+}
+```
+
+* Inline code is marked with `backticks`.
+
+* URLs will just automatically be converted to links: [https://github.com/posener/goreadme](https://github.com/posener/goreadme)
+
+Additionally, some extra formatting was added.
+
+* Bullets are recognized when each bullet item is followed by an empty line.
 
 * Diff block is automatically detected:
 
@@ -70,19 +84,15 @@ bit more limited. Currently, `goreadme` supports the formatting as explained in
 +added
 ```
 
-* Inline code is marked with backticks.
+* Local paths will be automatically converted to links: [./goreadme.go](./goreadme.go).
 
-* URLs will just automatically be converted to links.
+* A URL and can have a title: [goreadme page](https://github.com/posener/goreadme).
 
-Additionally, some extra formatting was added.
+* A local path and can have a title: [goreadme main file](./goreamde.go).
 
-* Local paths will be automatically converted to links, for example: [./goreadme.go](./goreadme.go).
+* An image can be added:
 
-* A URL and can have a title, as follows: [goreadme page](https://github.com/posener/goreadme).
-
-* A local path and can have a title, as follows: [goreadme main file](./goreamde.go).
-
-* An image can be added: ![goreadme icon](./icon.png)
+![goreadme icon](./icon.png)
 
 ## Sub Packages
 

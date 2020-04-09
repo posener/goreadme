@@ -127,7 +127,6 @@ type Config struct {
 	// If false, only one level of subpackages will be retrieved.
 	RecursiveSubPackages bool `json:"recursive_sub_packages"`
 	Badges               struct {
-		Goreadme     bool `json:"goreadme"`
 		TravisCI     bool `json:"travis_ci"`
 		CodeCov      bool `json:"code_cov"`
 		GolangCI     bool `json:"golang_ci"`

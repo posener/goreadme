@@ -4,7 +4,6 @@
 		"code_cov": true,
 		"golang_ci": true,
 		"go_doc": true,
-        "go_report_card": true,
-        "goreadme": true
+		"go_report_card": true
     }
 }

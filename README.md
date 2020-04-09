@@ -36,7 +36,6 @@ jobs:
             badge-travisci: 'true'
             badge-codecov: 'true'
             badge-godoc: 'true'
-            badge-goreadme: 'true'
             github-token: '${{ secrets.GITHUB_TOKEN }}'
 ```
 

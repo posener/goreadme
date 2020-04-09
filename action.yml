@@ -21,10 +21,6 @@ inputs:
     description: Skip the sub packages section
     required: false
     default: 'false'
-  badge-goreadme:
-    description: Add Goreadme badge
-    required: false
-    default: 'false'
   badge-travisci:
     description: Add Code Cov badge
     required: false
@@ -70,7 +66,6 @@ runs:
     - "-functions=${{ inputs.functions }}"
     - "-skip-examples=${{ inputs.skip-examples }}"
     - "-skip-sub-packages=${{ inputs.skip-sub-packages }}"
-    - "-badge-goreadme=${{ inputs.badge-goreadme }}"
     - "-badge-travisci=${{ inputs.badge-travisci }}"
     - "-badge-codecov=${{ inputs.badge-codecov }}"
     - "-badge-golangci=${{ inputs.badge-golangci }}"

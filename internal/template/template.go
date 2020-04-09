@@ -69,7 +69,7 @@ var main = template.Must(base.Parse(`# {{.Package.Name}}
 {{end -}}
 {{if .Config.Badges.GoReportCard -}}
 [![Go Report Card](https://goreportcard.com/badge/{{importPath .Package}})](https://goreportcard.com/report/{{importPath .Package}})
-{{end -}}
+{{ end }}
 
 {{ doc .Package.Doc }}
 

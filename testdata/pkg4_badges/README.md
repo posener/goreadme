@@ -5,4 +5,5 @@
 [![golangci](https://golangci.com/badges/./testdata/pkg4_badges.svg)](https://golangci.com/r/./testdata/pkg4_badges)
 [![GoDoc](https://godoc.org/./testdata/pkg4_badges?status.svg)](http://godoc.org/./testdata/pkg4_badges)
 [![Go Report Card](https://goreportcard.com/badge/./testdata/pkg4_badges)](https://goreportcard.com/report/./testdata/pkg4_badges)
+
 Package pkg4 tests badges.

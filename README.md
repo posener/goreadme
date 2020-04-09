@@ -10,12 +10,15 @@ The package can be used as a command line tool and as Github action, described b
 
 ## Github Action
 
-Github actions can be configured to update the README.md automatically every time it is needed.
+Github actions can be configured to update the README file automatically every time it is needed.
 Below there is an example that on every time a new change is pushed to the master branch, the
 action is trigerred, generates a new README file, and if there is a change - commits and pushes
-it to the master branch.
+it to the master branch. In pull requests that affect the README content, if the `github-token`
+is given, the action will post a comment on the pull request with chnages that will be made to
+the README file.
 
-Add the following content to `.github/workflows/goreadme.yml`:
+To use this with Github actions, add the following content to `.github/workflows/goreadme.yml`.
+See [./actions.yml](./actions.yml) for all available input options.
 
 ```go
 on:

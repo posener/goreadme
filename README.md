@@ -32,19 +32,10 @@ jobs:
         - name: Update README.md according to Go doc
           uses: posener/goreadme@<release>
           with:
-            package_name: 'github.com/<your user>/<your project>'
             badge-travisci: 'true'
             badge-codecov: 'true'
             badge-godoc: 'true'
             badge-goreadme: 'true'
-        - name: Commit and push changes
-          run: |
-            git add README.md
-            if git diff --staged --exit-code; then exit 0; fi
-            git config user.name Goreadme
-            git config user.email posener@gmail.com
-            git commit -m "Update readme according to Go doc"
-            git push origin HEAD:$(echo "${GITHUB_REF}" | cut -d/ -f3)
 ```
 
 Use as a command line tool

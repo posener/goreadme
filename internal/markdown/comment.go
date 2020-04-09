@@ -319,7 +319,7 @@ func ToMarkdown(w io.Writer, text string, words map[string]string) {
 			fmt.Fprint(w, "\n")
 		case opHead:
 			// Headline
-			fmt.Fprint(w, "#### ")
+			fmt.Fprint(w, "## ")
 			for _, line := range b.lines {
 				fmt.Fprint(w, line)
 			}

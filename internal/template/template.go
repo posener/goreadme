@@ -104,7 +104,7 @@ var functions = template.Must(base.Parse(`
 
 {{ doc .Doc }}
 
-{{ template "examples" .Examples }}
+{{ template "examplesNoHeading" .Examples }}
 {{ end }}
 
 {{ end }}
@@ -115,11 +115,21 @@ var examples = template.Must(base.Parse(`
 {{ define "examples" }}
 {{ if . }}
 
-#### Examples
+## Examples
+
+{{ template "examplesNoHeading" . }}
+
+{{ end }}
+{{ end }}
+`))
+
+var examplesNoHeading = template.Must(base.Parse(`
+{{ define "examplesNoHeading" }}
+{{ if . }}
 
 {{ range . }}
 
-{{ if .Name }}##### {{.Name}}{{ end }}
+{{ if .Name }}### {{.Name}}{{ end }}
 
 {{ doc .Doc }}
 

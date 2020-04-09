@@ -8,7 +8,7 @@ laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in repreh
 voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
 cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
-#### Section Header
+## Section Header
 
 A local link should just start with period and slash: [./internal](./internal), another local is [./internal/file.go](./internal/file.go).
 A web page link should just be written as is: [https://goreadme.herokuapp.com](https://goreadme.herokuapp.com), and with path: [https://goreadme.herokuapp.com/projects](https://goreadme.herokuapp.com/projects).
@@ -17,7 +17,7 @@ A local path can also have a [title](./pkg.go).
 A local path in inline code `go test [./](./)`.
 Go path ellipsis (also inline ./...) should not be converted to link ./...
 
-#### Another Section Header
+## Another Section Header
 
 Inline code can be defined with backticks: `prinlnt("hello world")`, or with indentation:
 
@@ -70,9 +70,9 @@ An image:
 
 * [subpkg2](./subpkg2): Package subpkg1 is the second subpackage.
 
-#### Examples
+## Examples
 
-##### Hello
+### Hello
 
 Example_hello prints hello
 
@@ -87,7 +87,7 @@ hello
 
 ```
 
-##### NoDoc
+### NoDoc
 
 ```golang
 fmt.Println("hello")
@@ -100,7 +100,7 @@ hello
 
 ```
 
-##### Func
+### Func
 
 ExampleFunc tests func
 
@@ -115,7 +115,7 @@ hello
 
 ```
 
-##### WithName
+### WithName
 
 ExampleFunc_withName tests func with a name
 

@@ -10,8 +10,6 @@ Package pkg1 is a testing package.
 
 Func is the first function with a description
 
-#### Examples
-
 ExampleFunc tests func
 
 ```golang
@@ -25,7 +23,7 @@ hello
 
 ```
 
-##### WithName
+### WithName
 
 ExampleFunc_withName tests func with a name
 
@@ -44,9 +42,9 @@ hello
 
 `func Punk()`
 
-#### Examples
+## Examples
 
-##### Hello
+### Hello
 
 Example_hello prints hello
 
@@ -61,7 +59,7 @@ hello
 
 ```
 
-##### NoDoc
+### NoDoc
 
 ```golang
 fmt.Println("hello")

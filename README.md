@@ -93,7 +93,7 @@ Additionally, some extra formatting was added.
 
 * An image can be added:
 
-![goreadme icon](./icon.png)
+![title of image](https://github.githubassets.com/images/icons/emoji/unicode/1f44c.png)
 
 ## Sub Packages
 

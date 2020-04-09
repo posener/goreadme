@@ -21,21 +21,23 @@ Add the following content to `.github/workflows/goreadme.yml`:
 ```go
 on:
   push:
-    branches:
-      - master
+    branches: [master]
+  pull_request:
+    branches: [master]
 jobs:
     goreadme:
         runs-on: ubuntu-latest
         steps:
         - name: Check out repository
           uses: actions/checkout@v2
-        - name: Update README.md according to Go doc
+        - name: Update readme according to Go doc
           uses: posener/goreadme@<release>
           with:
             badge-travisci: 'true'
             badge-codecov: 'true'
             badge-godoc: 'true'
             badge-goreadme: 'true'
+            github-token: '${{ secrets.GITHUB_TOKEN }}'
 ```
 
 Use as a command line tool

@@ -31,7 +31,7 @@
 //
 // Use as a command line tool
 //
-// 	$ go get github.com/posener/goreadme/...
+// 	$ GO111MODULE=on go get github.com/posener/goreadme/cmd/goreadme
 // 	$ goreadme -h
 //
 // Why Should You Use It
@@ -49,7 +49,19 @@
 //
 // * A header is a single line that is separated from a paragraph above.
 //
-// * Code block is recognized by indentation.
+// * Code block is recognized by indentation as Go code.
+//
+// 	func main() {
+// 		...
+// 	}
+//
+// * Inline code is marked with `backticks`.
+//
+// * URLs will just automatically be converted to links: https://github.com/posener/goreadme
+//
+// Additionally, some extra formatting was added.
+//
+// * Bullets are recognized when each bullet item is followed by an empty line.
 //
 // * Diff block is automatically detected:
 //
@@ -57,19 +69,15 @@
 // 	 stay
 // 	+added
 //
-// * Inline code is marked with backticks.
+// * Local paths will be automatically converted to links: ./goreadme.go.
 //
-// * URLs will just automatically be converted to links.
+// * A URL and can have a title: (goreadme page) https://github.com/posener/goreadme.
 //
-// Additionally, some extra formatting was added.
+// * A local path and can have a title: (goreadme main file) ./goreamde.go.
 //
-// * Local paths will be automatically converted to links, for example: ./goreadme.go.
+// * An image can be added:
 //
-// * A URL and can have a title, as follows: (goreadme page) https://github.com/posener/goreadme.
-//
-// * A local path and can have a title, as follows: (goreadme main file) ./goreamde.go.
-//
-// * An image can be added: (image/goreadme icon) ./icon.png
+// (image/goreadme icon) ./icon.png
 package goreadme
 
 import (

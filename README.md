@@ -7,7 +7,7 @@ Package goreadme generates readme markdown file from go doc.
 
 The package can be used as a command line tool and as Github action, described below:
 
-#### Github Action
+## Github Action
 
 Github actions can be configured to update the README.md automatically every time it is needed.
 Below there is an example that on every time a new change is pushed to the master branch, the
@@ -45,14 +45,14 @@ $ GO111MODULE=on go get github.com/posener/goreadme/cmd/goreadme
 $ goreadme -h
 ```
 
-#### Why Should You Use It
+## Why Should You Use It
 
 Both Go doc and readme files are important. Go doc to be used by your user's library, and README
 file to welcome users to use your library. They share common content, which is usually duplicated
 from the doc to the readme or vice versa once the library is ready. The problem is that keeping
 documentation updated is important, and hard enough - keeping both updated is twice as hard.
 
-#### Go Doc Instructions
+## Go Doc Instructions
 
 The formatting of the README.md is done by the go doc parser. This makes the result README.md a
 bit more limited. Currently, `goreadme` supports the formatting as explained in

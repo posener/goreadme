@@ -79,7 +79,7 @@
 //
 // * An image can be added:
 //
-// (image/goreadme icon) ./icon.png
+// (image/title of image) https://github.githubassets.com/images/icons/emoji/unicode/1f44c.png
 package goreadme
 
 import (

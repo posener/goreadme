@@ -3,8 +3,6 @@
 [![Build Status](https://travis-ci.org/posener/goreadme.svg?branch=master)](https://travis-ci.org/posener/goreadme)
 [![codecov](https://codecov.io/gh/posener/goreadme/branch/master/graph/badge.svg)](https://codecov.io/gh/posener/goreadme)
 [![GoDoc](https://godoc.org/github.com/posener/goreadme?status.svg)](http://godoc.org/github.com/posener/goreadme)
-[![goreadme](https://goreadme.herokuapp.com/badge/posener/goreadme.svg)](https://goreadme.herokuapp.com)
-
 Package goreadme generates readme markdown file from go doc.
 
 The package can be used as a command line tool and as Github action, described below:
@@ -36,6 +34,7 @@ jobs:
             badge-travisci: 'true'
             badge-codecov: 'true'
             badge-godoc: 'true'
+            badge-goreadme: 'true'
             github-token: '${{ secrets.GITHUB_TOKEN }}'
 ```
 

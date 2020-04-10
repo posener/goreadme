@@ -39,6 +39,9 @@ else
 
     # Prepare comment text.
     BODY=$(cat readme_diff.txt | tail +5 | sed "s/\`/'/g")
+
+    echo "Diff:\n\n${BODY}"
+
     BODY="
 [Goreadme](https://github.com/posener/goreadme) diff for \`${README_FILE}\` file for this PR:
 

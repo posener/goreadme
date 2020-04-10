@@ -20,7 +20,6 @@ Func()
 
 ```
 hello
-
 ```
 
 ### WithName
@@ -35,7 +34,6 @@ Func()
 
 ```
 hello
-
 ```
 
 ### func [Punk](/pkg.go#L11)
@@ -56,7 +54,6 @@ fmt.Println("hello")
 
 ```
 hello
-
 ```
 
 ### NoDoc
@@ -69,5 +66,4 @@ fmt.Println("hello")
 
 ```
 hello
-
 ```

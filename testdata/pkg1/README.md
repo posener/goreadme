@@ -84,7 +84,6 @@ fmt.Println("hello")
 
 ```
 hello
-
 ```
 
 ### NoDoc
@@ -97,7 +96,6 @@ fmt.Println("hello")
 
 ```
 hello
-
 ```
 
 ### Func
@@ -112,7 +110,6 @@ Func()
 
 ```
 hello
-
 ```
 
 ### WithName
@@ -127,5 +124,4 @@ Func()
 
 ```
 hello
-
 ```

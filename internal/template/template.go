@@ -28,7 +28,10 @@ var base = template.New("base").Funcs(
 			return "```golang\n" + s + "\n```\n"
 		},
 		"code": func(s string) string {
-			return "```\n" + s + "\n```\n"
+			if !strings.HasSuffix(s, "\n") {
+				s = s + "\n"
+			}
+			return "```\n" + s + "```\n"
 		},
 		"inlineCode": func(s string) string {
 			return "`" + s + "`"

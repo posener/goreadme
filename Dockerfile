@@ -1,4 +1,4 @@
-FROM golang:1.14.1-alpine3.11
+FROM golang:1.13.10-alpine3.11
 
 ADD . /home/goreadme
 WORKDIR /home/goreadme

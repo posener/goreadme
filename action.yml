@@ -1,10 +1,6 @@
 name: goreadme
 description: Updates readme from Go doc.
 inputs:
-  readme_file:
-    description: Name of readme file.
-    required: false
-    default: 'README.md'
   recursive:
     description: Load docs recursively
     required: false
@@ -45,6 +41,13 @@ inputs:
     description: Add credit line to Goreadme
     required: false
     default: 'true'
+  readme-file:
+    description: Name of readme file.
+    required: false
+    default: 'README.md'
+  import-path:
+    description: Override package import path.
+    required: false
   commit-email:
     description: Email for commit message.
     required: false
@@ -59,6 +62,8 @@ runs:
   using: docker
   image: Dockerfile
   env:
+    README_FILE: '${{ inputs.readme-file }}'
+    IMPORT_PATH: '${{ inputs.import-path }}'
     GITHUB_TOKEN: '${{ inputs.github-token }}'
     GOREADME_DEBUG: '${{ inputs.debug }}'
   args:

@@ -20,7 +20,7 @@ import (
 var cfg goreadme.Config
 
 func init() {
-	flag.StringVar(&cfg.PackageName, "package-name", "", "Override package name in doc.")
+	flag.StringVar(&cfg.ImportPath, "import-path", "", "Override package import path.")
 	flag.BoolVar(&cfg.RecursiveSubPackages, "recursive", false, "Load docs recursively.")
 	flag.BoolVar(&cfg.Functions, "functions", false, "Write functions section.")
 	flag.BoolVar(&cfg.SkipExamples, "skip-examples", false, "Skip the examples section.")

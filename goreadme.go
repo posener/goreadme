@@ -119,7 +119,9 @@ type GoReadme struct {
 }
 
 type Config struct {
-	PackageName string `json:"package_name"`
+	// ImportPath is used to override the import path. For example: github.com/user/project,
+	// github.com/user/project/package or github.com/user/project/version.
+	ImportPath string `json:"import_path"`
 	// Functions will make functions documentation to be added to the README.
 	Functions bool `json:"functions"`
 	// SkipExamples will omit the examples section from the README.
@@ -183,8 +185,8 @@ func (r *GoReadme) get(ctx context.Context, name string) (*pkg, error) {
 	}
 	sort.Strings(p.Subdirectories)
 
-	if packageName := r.config.PackageName; packageName != "" {
-		p.ImportPath = packageName
+	if override := r.config.ImportPath; override != "" {
+		p.ImportPath = override
 	}
 
 	// If functions were not requested to be added to the readme, add their

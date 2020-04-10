@@ -2,18 +2,18 @@
 #
 # Entry point for Github Action container.
 
-PACKAGE_NAME="github.com/${GITHUB_REPOSITORY}"
+IMPORT_PATH="${INPUT_IMPORT_PATH:-github.com/${GITHUB_REPOSITORY}}"
 # Branch in push mode, or PR# in pull_request mode.
 BRANCH=$(echo "${GITHUB_REF}" | cut -d/ -f3)
 README="${INPUT_README_FILE}"
 EMAIL="${INPUT_COMMIT-EMAIL:-posener@gmail.com}"
 
-echo "Processing: ${PACKAGE_NAME}@${BRANCH}
+echo "Processing: ${IMPORT_PATH}@${BRANCH}
 Event: ${GITHUB_EVENT_NAME}
 "
 
 # Run Goreadme on the current HEAD.
-goreadme -package-name="${PACKAGE_NAME}" $@ > ${README}
+goreadme -import-path="${IMPORT_PATH}" $@ > ${README}
 
 # Check if README was modified or was added, and don't push changes if nothing changed.
 git add ${README}

@@ -1,0 +1,4 @@
+{
+	"import_path": "github.com/other/repo",
+	"badges": {"travis_ci": true}
+}

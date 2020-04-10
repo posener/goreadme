@@ -65,7 +65,7 @@ ${BODY}
     # Make the API call to post the comment.
 
     # Prepare the body for json:
-    BODY=$(echo "${BODY}" | sed ':a;N;$!ba;s/\n/\\n/g')
+    BODY=$(echo "${BODY}" | sed 's/\"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
     
     curl "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${BRANCH}/reviews" \
         --fail \

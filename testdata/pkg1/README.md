@@ -54,6 +54,15 @@ Diff code that starts with `-`:
  }
 ```
 
+Code with space but no - or + signs is not a diff code
+
+```go
+func main() {
+	println("hello world")
+	fmt.Println("hello, world")
+}
+```
+
 You could also use lists:
 
 1. List item number 1.

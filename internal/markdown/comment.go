@@ -366,15 +366,20 @@ func blocks(text string) []block {
 			// close paragraph
 			close()
 
-			// Used to remember diff code block.
-			isDiff := true
+			// Used to remember if all lines are valid diff code blocks.
+			isValidDiff := true
+			// Used to remember if there was at least one '+' or '-' signs.
+			anyDiff := false
 			diffChIdx := diffCharIdx(line)
 
 			// count indented or blank lines
 			j := i + 1
 			for j < len(lines) && (isBlank(lines[j]) || indentLen(lines[j]) > 0) {
+				if isValidDiffLine(lines[j], diffChIdx) {
+					isValidDiff = false
+				}
 				if isDiffLine(lines[j], diffChIdx) {
-					isDiff = false
+					anyDiff = true
 				}
 				j++
 			}
@@ -389,7 +394,7 @@ func blocks(text string) []block {
 
 			// put those lines in a pre block
 			lang := "go"
-			if isDiff {
+			if isValidDiff && anyDiff {
 				lang = "diff"
 			}
 			out = append(out, block{op: opPre, lines: pre, lang: lang})
@@ -433,9 +438,14 @@ func diffCharIdx(line string) int {
 
 // isDiffLine returns if this is a valid diff line given a code block line, and the expected index
 // for the diff character.
-func isDiffLine(line string, i int) bool {
+func isValidDiffLine(line string, i int) bool {
 	if isBlank(line) {
 		return false
 	}
 	return len(line) <= i || (line[i] != ' ' && line[i] != '+' && line[i] != '-')
+}
+
+// isDiffLine returns if the character at i is a '+' or a '-' sign.
+func isDiffLine(line string, i int) bool {
+	return len(line) > i && (line[i] == '+' || line[i] == '-')
 }

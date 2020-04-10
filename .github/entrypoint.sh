@@ -1,6 +1,7 @@
 #! /bin/sh
 #
 # Entry point for Github Action container.
+set -e
 
 IMPORT_PATH="${INPUT_IMPORT_PATH:-github.com/${GITHUB_REPOSITORY}}"
 # Branch in push mode, or PR# in pull_request mode.

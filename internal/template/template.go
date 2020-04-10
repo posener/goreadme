@@ -65,7 +65,7 @@ var main = template.Must(base.Parse(`# {{.Package.Name}}
 [![golangci](https://golangci.com/badges/{{importPath .Package}}.svg)](https://golangci.com/r/{{importPath .Package}})
 {{end -}}
 {{if .Config.Badges.GoDoc -}}
-[![GoDoc](https://godoc.org/{{importPath .Package}}?status.svg)](http://godoc.org/{{importPath .Package}})
+[![GoDoc](https://img.shields.io/badge/pkg.go.dev-doc-blue)](http://pkg.go.dev/{{importPath .Package}})
 {{end -}}
 {{if .Config.Badges.GoReportCard -}}
 [![Go Report Card](https://goreportcard.com/badge/{{importPath .Package}})](https://goreportcard.com/report/{{importPath .Package}})

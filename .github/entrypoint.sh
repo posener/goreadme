@@ -5,7 +5,6 @@
 IMPORT_PATH="${INPUT_IMPORT_PATH:-github.com/${GITHUB_REPOSITORY}}"
 # Branch in push mode, or PR# in pull_request mode.
 BRANCH=$(echo "${GITHUB_REF}" | cut -d/ -f3)
-README="${INPUT_README_FILE}"
 EMAIL="${INPUT_COMMIT-EMAIL:-posener@gmail.com}"
 
 echo "Processing: ${IMPORT_PATH}@${BRANCH}
@@ -13,13 +12,13 @@ Event: ${GITHUB_EVENT_NAME}
 "
 
 # Run Goreadme on the current HEAD.
-goreadme -import-path="${IMPORT_PATH}" $@ > ${README}
+goreadme -import-path="${IMPORT_PATH}" $@ > ${README_FILE}
 
 # Check if README was modified or was added, and don't push changes if nothing changed.
-git add ${README}
-if git diff --staged --exit-code --no-color ${README} > readme_diff.txt
+git add ${README_FILE}
+if git diff --staged --exit-code --no-color ${README_FILE} > readme_diff.txt
 then
-    echo "No changes were made to ${README}, aborting"
+    echo "No changes were made to ${README_FILE}, aborting"
     exit 0
 fi
 
@@ -40,7 +39,7 @@ else
     # Prepare comment text.
     BODY=$(cat readme_diff.txt | tail +5 | sed "s/\`/'/g")
     BODY="
-[Goreadme](https://github.com/posener/goreadme) diff for \`${README}\` file for this PR:
+[Goreadme](https://github.com/posener/goreadme) diff for \`${README_FILE}\` file for this PR:
 
 \`\`\`diff
 ${BODY}

@@ -60,7 +60,8 @@ documentation updated is important, and hard enough - keeping both updated is tw
 
 The formatting of the README.md is done by the go doc parser. This makes the result README.md a
 bit more limited. Currently, `goreadme` supports the formatting as explained in
-[godoc page](https://blog.golang.org/godoc-documenting-go-code). Meaning:
+[godoc page](https://blog.golang.org/godoc-documenting-go-code), or
+[here](https://pkg.go.dev/github.com/fluhus/godoc-tricks). Meaning:
 
 * A header is a single line that is separated from a paragraph above.
 
@@ -76,25 +77,28 @@ func main() {
 
 * URLs will just automatically be converted to links: [https://github.com/posener/goreadme](https://github.com/posener/goreadme)
 
-Additionally, some extra formatting was added.
+Additionally, the syntax was extended to include some more markdown features while keeping the Go
+doc readable:
 
-* Bullets are recognized when each bullet item is followed by an empty line.
+* Bulleted and numbered lists are possible when each bullet item is followed by an empty line.
 
-* Diff block is automatically detected:
+* Diff blocks are automatically detected when each line in a code block starts with a `' '`,
+`'-'` or `'+'`:
 
 ```diff
--removed
- stay
-+added
+-removed line starts with '-'
+ remained line starts with ' '
++added line starts with '+'
 ```
 
-* Local paths will be automatically converted to links: [./goreadme.go](./goreadme.go).
+* A repository file can be linked when providing a path that start with `[./](./)`: [./goreadme.go](./goreadme.go).
 
-* A URL and can have a title: [goreadme page](https://github.com/posener/goreadme).
+* A link can have a link text by prefixing it with parenthesised text:
+[goreadme page](https://github.com/posener/goreadme).
 
-* A local path and can have a title: [goreadme main file](./goreamde.go).
+* A link to repository file and can have a link text: [goreadme main file](./goreamde.go).
 
-* An image can be added:
+* An image can be added by prefixing a link to an image with `(image/<image title>)`:
 
 ![title of image](https://github.githubassets.com/images/icons/emoji/unicode/1f44c.png)
 

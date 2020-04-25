@@ -39,6 +39,7 @@ jobs:
             badge-codecov: 'true'
             badge-godoc: 'true'
             badge-goreadme: 'true'
+            # Optional: Token allows goreadme to comment the PR with diff preview.
             github-token: '${{ secrets.GITHUB_TOKEN }}'
 ```
 

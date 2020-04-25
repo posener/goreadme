@@ -16,4 +16,8 @@ jobs:
             badge-travisci: 'true'
             badge-codecov: 'true'
             badge-godoc: 'true'
-            github-token: '${{ secrets.GITHUB_TOKEN }}'
+        - name: Save readme diff
+          uses: actions/upload-artifact@v1
+          with:
+            name: Readme diff
+            path: readme_diff.txt

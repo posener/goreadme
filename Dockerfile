@@ -5,7 +5,7 @@ WORKDIR /home/goreadme
 RUN go install ./cmd/goreadme
 
 FROM alpine:3.11
-RUN apk add git curl
+RUN apk add git curl jq
 COPY --from=0 /go/bin/goreadme /bin/goreadme
 
 ADD .github/entrypoint.sh /entrypoint.sh

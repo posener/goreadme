@@ -1,0 +1,20 @@
+on:
+    pull_request:
+      branches: [master]
+    push:
+      branches: [master]
+jobs:
+    goaction:
+      runs-on: ubuntu-latest
+      steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+      - name: Update action files
+        uses: posener/goaction@master
+        with:
+          path: cmd/action
+          name: goreadme
+          description: Updates readme from Go doc
+          github-token: '${{ secrets.GITHUB_TOKEN }}'
+          icon: book-open
+          color: blue

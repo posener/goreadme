@@ -1,83 +1,84 @@
 name: goreadme
-description: Updates readme from Go doc.
+description: Github action for goreadme
 inputs:
-  recursive:
-    description: Load docs recursively
-    required: false
-    default: 'false'
-  functions:
-    description: Write functions section
-    required: false
-    default: 'false'
-  skip-examples:
-    description: Skip the examples section
-    required: false
-    default: 'false'
-  skip-sub-packages:
-    description: Skip the sub packages section
-    required: false
-    default: 'false'
-  badge-travisci:
-    description: Add Code Cov badge
-    required: false
-    default: 'false'
   badge-codecov:
-    description: Add Code Cov badge
+    default: false
+    description: Show CodeCov badge.
     required: false
-    default: 'false'
-  badge-golangci:
-    description: Add Golang CI badge
-    required: false
-    default: 'false'
   badge-godoc:
-    description: Add Go Doc badge
+    default: false
+    description: Show GoDoc badge.
     required: false
-    default: 'false'
+  badge-golangci:
+    default: false
+    description: Show GolangCI badge.
+    required: false
   badge-goreportcard:
-    description: Add Go report card badge
+    default: false
+    description: Show GoReportCard badge.
     required: false
-    default: 'false'
+  badge-travisci:
+    default: false
+    description: Show TravisCI badge.
+    required: false
   credit:
-    description: Add credit line to Goreadme
+    default: true
+    description: Add credit line to Goreadme.
     required: false
-    default: 'true'
-  readme-file:
-    description: Name of readme file.
+  debug:
+    default: false
+    description: Print Goredme debug output
     required: false
-    default: 'README.md'
+  email:
+    default: posener@gmail.com
+    description: Email for commit message
+    required: false
+  functions:
+    default: false
+    description: Write functions section.
+    required: false
+  github-token:
+    description: Github token for PR comments. Optional.
+    required: false
   import-path:
     description: Override package import path.
     required: false
-  commit-email:
-    description: Email for commit message.
+  readme-file:
+    default: README.md
+    description: Name of readme file
     required: false
-  github-token:
-    description: Github Token for giving permissions to add readme diff comments.
+  recursive:
+    default: false
+    description: Load docs recursively.
     required: false
-  debug:
-    description: Print Goredme debug output.
+  skip-examples:
+    default: false
+    description: Skip the examples section.
     required: false
-
+  skip-sub-packages:
+    default: false
+    description: Skip the sub packages section.
+    required: false
 runs:
   using: docker
   image: Dockerfile
   env:
-    README_FILE: '${{ inputs.readme-file }}'
-    IMPORT_PATH: '${{ inputs.import-path }}'
-    GITHUB_TOKEN: '${{ inputs.github-token }}'
-    GOREADME_DEBUG: '${{ inputs.debug }}'
+    email: "${{ inputs.email }}"
+    github-token: "${{ inputs.github-token }}"
   args:
-    - "-recursive=${{ inputs.recursive }}"
-    - "-functions=${{ inputs.functions }}"
-    - "-skip-examples=${{ inputs.skip-examples }}"
-    - "-skip-sub-packages=${{ inputs.skip-sub-packages }}"
-    - "-badge-travisci=${{ inputs.badge-travisci }}"
-    - "-badge-codecov=${{ inputs.badge-codecov }}"
-    - "-badge-golangci=${{ inputs.badge-golangci }}"
-    - "-badge-godoc=${{ inputs.badge-godoc }}"
-    - "-badge-goreportcard=${{ inputs.badge-goreportcard }}"
-    - "-credit=${{ inputs.credit }}"
-
+  - "-badge-codecov=${{ inputs.badge-codecov }}"
+  - "-badge-godoc=${{ inputs.badge-godoc }}"
+  - "-badge-golangci=${{ inputs.badge-golangci }}"
+  - "-badge-goreportcard=${{ inputs.badge-goreportcard }}"
+  - "-badge-travisci=${{ inputs.badge-travisci }}"
+  - "-credit=${{ inputs.credit }}"
+  - "-debug=${{ inputs.debug }}"
+  - "-functions=${{ inputs.functions }}"
+  - "-import-path=${{ inputs.import-path }}"
+  - "-readme-file=${{ inputs.readme-file }}"
+  - "-recursive=${{ inputs.recursive }}"
+  - "-skip-examples=${{ inputs.skip-examples }}"
+  - "-skip-sub-packages=${{ inputs.skip-sub-packages }}"
 branding:
   icon: book-open
   color: blue

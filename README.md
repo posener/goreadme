@@ -105,6 +105,8 @@ doc readable:
 
 ## Sub Packages
 
+* [cmd/action](./cmd/action): Github action for goreadme
+
 * [cmd/goreadme](./cmd/goreadme): Package main is a command line util that takes a Go repository and write to stdout the calculated README.md content.
 
 ---

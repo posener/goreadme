@@ -9,7 +9,9 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 
+	"github.com/golang/gddo/gosrc"
 	"github.com/posener/goaction"
 	"github.com/posener/goaction/actionutil"
 	"github.com/posener/goreadme"
@@ -27,6 +29,8 @@ var (
 )
 
 func init() {
+	log.SetFlags(log.Lshortfile)
+
 	flag.StringVar(&cfg.ImportPath, "import-path", "", "Override package import path.")
 	flag.BoolVar(&cfg.RecursiveSubPackages, "recursive", false, "Load docs recursively.")
 	flag.BoolVar(&cfg.Functions, "functions", false, "Write functions section.")
@@ -45,14 +49,26 @@ func init() {
 	if *debug {
 		os.Setenv("GOREADME_DEBUG", "1")
 	}
+
+	// Set import path if was not overridden.
+	if cfg.ImportPath == "" {
+		cfg.ImportPath = "github.com/" + goaction.Repository
+	}
 }
 
 func main() {
 	ctx := context.Background()
+
+	localPath, err := filepath.Abs("./")
+	if err != nil {
+		log.Fatal(err)
+	}
+	gosrc.SetLocalDevMode(localPath)
+
 	gr := func(w io.Writer) error {
 		return goreadme.New(http.DefaultClient).WithConfig(cfg).Create(ctx, ".", w)
 	}
-	err := script.Writer("goreadme", gr).ToFile(*path)
+	err = script.Writer("goreadme", gr).ToFile(*path)
 	if err != nil {
 		log.Fatalf("Failed: %s", err)
 	}
@@ -71,13 +87,14 @@ func main() {
 
 	diff := gitDiff()
 
-	if diff == "" {
-		log.Println("No changes were made. Aborting")
-		os.Exit(0)
-	}
+	log.Printf("Diff:\n\n%s\n", diff)
 
 	switch {
 	case goaction.IsPush():
+		if diff == "" {
+			log.Println("No changes were made. Skipping push.")
+			break
+		}
 		push()
 	case goaction.IsPR():
 		pr(diff)
@@ -113,10 +130,13 @@ func pr(diff string) {
 		return
 	}
 
-	body := fmt.Sprintf(
-		"[goreadme](https://github.com/posener/goreadme) diff for %s file for this PR:\n\n%s",
-		*path,
-		diff)
+	body := "[goreadme](https://github.com/posener/goreadme) will not make any changes in this PR"
+	if diff != "" {
+		body = fmt.Sprintf(
+			"[goreadme](https://github.com/posener/goreadme) diff for %s file for this PR:\n\n%s",
+			*path,
+			diff)
+	}
 
 	ctx := context.Background()
 	err := actionutil.PRComment(ctx, githubToken, "goreadme", body)

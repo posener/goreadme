@@ -15,13 +15,6 @@ func Execute(w io.Writer, data interface{}) error {
 	return main.Execute(&multiNewLineEliminator{w: w}, data)
 }
 
-func importPath(p *doc.Package) string {
-	if len(p.References) > 0 {
-		return p.References[0]
-	}
-	return p.ImportPath
-}
-
 var base = template.New("base").Funcs(
 	template.FuncMap{
 		"gocode": func(s string) string {
@@ -37,10 +30,10 @@ var base = template.New("base").Funcs(
 			return "`" + s + "`"
 		},
 		"importPath": func(p *doc.Package) string {
-			return importPath(p)
+			return p.ImportPath
 		},
 		"fullName": func(p *doc.Package) string {
-			return strings.TrimPrefix(importPath(p), "github.com/")
+			return strings.TrimPrefix(p.ImportPath, "github.com/")
 		},
 		"urlOrName": func(f *doc.File) string {
 			if f.URL != "" {

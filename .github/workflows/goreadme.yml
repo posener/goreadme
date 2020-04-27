@@ -12,8 +12,9 @@ jobs:
         - name: Update readme according to Go doc
           uses: ./
           with:
-            recursive: 'true'
-            badge-travisci: 'true'
-            badge-codecov: 'true'
-            badge-godoc: 'true'
+            recursive: true
+            badge-travisci: true
+            badge-codecov: true
+            badge-godoc: true
             github-token: '${{ secrets.GITHUB_TOKEN }}'
+            debug: true

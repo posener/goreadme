@@ -26,7 +26,7 @@
 // 	        - name: Check out repository
 // 	          uses: actions/checkout@v2
 // 	        - name: Update readme according to Go doc
-// 	          uses: posener/goreadme@<release>
+// 	          uses: posener/goreadme@v1
 // 	          with:
 // 	            badge-travisci: 'true'
 // 	            badge-codecov: 'true'

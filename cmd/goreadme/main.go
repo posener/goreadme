@@ -65,15 +65,23 @@ Flags:
 func main() {
 	// Steps to do only in Github Action mode.
 	if goaction.CI {
+		// Setup debug mode.
 		if debug {
 			os.Setenv("GOREADME_DEBUG", "1")
 		}
+
+		// Setup output file.
 		var err error
 		out, err = os.Create(path)
 		if err != nil {
 			log.Fatalf("Failed opening file %s: %s", path, err)
 		}
 		defer out.Close()
+
+		// Fix import path if it was not overridden by the user.
+		if cfg.ImportPath == "" {
+			cfg.ImportPath = "github.com/" + goaction.Repository
+		}
 	}
 
 	ctx := context.Background()

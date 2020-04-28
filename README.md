@@ -1,8 +1,8 @@
 # goreadme
 
-[![Build Status](https://travis-ci.org/posener/goreadme.svg?branch=master)](https://travis-ci.org/posener/goreadme)
-[![codecov](https://codecov.io/gh/posener/goreadme/branch/master/graph/badge.svg)](https://codecov.io/gh/posener/goreadme)
-[![GoDoc](https://img.shields.io/badge/pkg.go.dev-doc-blue)](http://pkg.go.dev/github.com/posener/goreadme)
+[![Build Status](https://travis-ci.org/..svg?branch=master)](https://travis-ci.org/.)
+[![codecov](https://codecov.io/gh/./branch/master/graph/badge.svg)](https://codecov.io/gh/.)
+[![GoDoc](https://img.shields.io/badge/pkg.go.dev-doc-blue)](http://pkg.go.dev/.)
 
 Package goreadme generates readme markdown file from go doc.
 
@@ -33,7 +33,7 @@ jobs:
         - name: Check out repository
           uses: actions/checkout@v2
         - name: Update readme according to Go doc
-          uses: posener/goreadme@<release>
+          uses: posener/goreadme@v1
           with:
             badge-travisci: 'true'
             badge-codecov: 'true'
@@ -105,9 +105,7 @@ doc readable:
 
 ## Sub Packages
 
-* [cmd/action](./cmd/action): Github action for goreadme
-
-* [cmd/goreadme](./cmd/goreadme): Package main is a command line util that takes a Go repository and write to stdout the calculated README.md content.
+* [cmd/goreadme](./cmd/goreadme): Goreadme command line tool and Github action
 
 ---
 Readme created from Go doc with [goreadme](https://github.com/posener/goreadme)

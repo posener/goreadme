@@ -61,6 +61,8 @@ github.com/posener/goaction v0.0.0-20200427210710-c797f51f7799 h1:ryKYUxBj9YyVK8
 github.com/posener/goaction v0.0.0-20200427210710-c797f51f7799/go.mod h1:hDmDJ+d7+9Qf3HMMIG6Stam4tpZ1SqWRizCGfVoXDUM=
 github.com/posener/goaction v0.0.1 h1:n7VBhoE04If/kLRsAvbUtvHb24lVKi3b1Dl9z5W4nPA=
 github.com/posener/goaction v0.0.1/go.mod h1:hDmDJ+d7+9Qf3HMMIG6Stam4tpZ1SqWRizCGfVoXDUM=
+github.com/posener/goaction v0.0.3 h1:SXWG8sIubt201zxylY1Ler2hjXQnWLu5ZS4sFkpazNQ=
+github.com/posener/goaction v0.0.3/go.mod h1:/i08bNarkXCayFPBgAzpoB+w9GGAy9r3wpm6FbZb1wg=
 github.com/posener/script v1.1.4 h1:tfyEeQirqVdzm7+/wk4jsoYe1OcKPnxrhZ9ZS8kNBm0=
 github.com/posener/script v1.1.4/go.mod h1:Rg3ijooqulo05aGLyGsHoLmIOUzHUVK19WVgrYBPU/E=
 github.com/spf13/afero v0.0.0-20170901052352-ee1bd8ee15a1/go.mod h1:j4pytiNVoe2o6bmDsKpLACNPDBIoEAkihy7loJ1B0CQ=

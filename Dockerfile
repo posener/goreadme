@@ -4,7 +4,7 @@ RUN apk add git
 
 COPY . /home/src
 WORKDIR /home/src
-RUN go build -o /bin/action ./cmd/action
+RUN go build -o /bin/action ./cmd/goreadme
 
 FROM alpine:3.11
 RUN apk add git

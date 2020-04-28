@@ -1,84 +1,83 @@
 name: goreadme
-description: Github action for goreadme
+description: "Goreadme command line tool and Github action"
 inputs:
-  badge-codecov:
-    default: false
-    description: Show CodeCov badge.
-    required: false
-  badge-godoc:
-    default: false
-    description: Show GoDoc badge.
-    required: false
-  badge-golangci:
-    default: false
-    description: Show GolangCI badge.
-    required: false
-  badge-goreportcard:
-    default: false
-    description: Show GoReportCard badge.
-    required: false
-  badge-travisci:
-    default: false
-    description: Show TravisCI badge.
-    required: false
-  credit:
-    default: true
-    description: Add credit line to Goreadme.
+  readme-file:
+    default: README.md
+    description: "Name of readme file"
     required: false
   debug:
-    default: false
-    description: Print Goredme debug output
+    description: "Print Goredme debug output"
     required: false
   email:
     default: posener@gmail.com
-    description: Email for commit message
-    required: false
-  functions:
-    default: false
-    description: Write functions section.
+    description: "Email for commit message"
     required: false
   github-token:
-    description: Github token for PR comments. Optional.
+    description: "Github token for PR comments. Optional."
     required: false
   import-path:
-    description: Override package import path.
-    required: false
-  readme-file:
-    default: README.md
-    description: Name of readme file
+    description: "Override package import path."
     required: false
   recursive:
     default: false
-    description: Load docs recursively.
+    description: "Load docs recursively."
+    required: false
+  functions:
+    default: false
+    description: "Write functions section."
     required: false
   skip-examples:
     default: false
-    description: Skip the examples section.
+    description: "Skip the examples section."
     required: false
   skip-sub-packages:
     default: false
-    description: Skip the sub packages section.
+    description: "Skip the sub packages section."
+    required: false
+  badge-travisci:
+    default: false
+    description: "Show TravisCI badge."
+    required: false
+  badge-codecov:
+    default: false
+    description: "Show CodeCov badge."
+    required: false
+  badge-golangci:
+    default: false
+    description: "Show GolangCI badge."
+    required: false
+  badge-godoc:
+    default: false
+    description: "Show GoDoc badge."
+    required: false
+  badge-goreportcard:
+    default: false
+    description: "Show GoReportCard badge."
+    required: false
+  credit:
+    default: true
+    description: "Add credit line."
     required: false
 runs:
   using: docker
   image: Dockerfile
   env:
+    readme-file: "${{ inputs.readme-file }}"
+    debug: "${{ inputs.debug }}"
     email: "${{ inputs.email }}"
     github-token: "${{ inputs.github-token }}"
   args:
-  - "-badge-codecov=${{ inputs.badge-codecov }}"
-  - "-badge-godoc=${{ inputs.badge-godoc }}"
-  - "-badge-golangci=${{ inputs.badge-golangci }}"
-  - "-badge-goreportcard=${{ inputs.badge-goreportcard }}"
-  - "-badge-travisci=${{ inputs.badge-travisci }}"
-  - "-credit=${{ inputs.credit }}"
-  - "-debug=${{ inputs.debug }}"
-  - "-functions=${{ inputs.functions }}"
   - "-import-path=${{ inputs.import-path }}"
-  - "-readme-file=${{ inputs.readme-file }}"
   - "-recursive=${{ inputs.recursive }}"
+  - "-functions=${{ inputs.functions }}"
   - "-skip-examples=${{ inputs.skip-examples }}"
   - "-skip-sub-packages=${{ inputs.skip-sub-packages }}"
+  - "-badge-travisci=${{ inputs.badge-travisci }}"
+  - "-badge-codecov=${{ inputs.badge-codecov }}"
+  - "-badge-golangci=${{ inputs.badge-golangci }}"
+  - "-badge-godoc=${{ inputs.badge-godoc }}"
+  - "-badge-goreportcard=${{ inputs.badge-goreportcard }}"
+  - "-credit=${{ inputs.credit }}"
 branding:
   icon: book-open
   color: blue

@@ -7,9 +7,6 @@ inputs:
     default: README.md
     description: "Name of readme file"
     required: false
-  debug:
-    description: "Print Goredme debug output"
-    required: false
   email:
     default: posener@gmail.com
     description: "Email for commit message"
@@ -65,7 +62,6 @@ runs:
   image: Dockerfile
   env:
     readme-file: "${{ inputs.readme-file }}"
-    debug: "${{ inputs.debug }}"
     email: "${{ inputs.email }}"
     github-token: "${{ inputs.github-token }}"
   args:

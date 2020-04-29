@@ -105,17 +105,17 @@ func main() {
 
 	log.Printf("Diff:\n\n%s\n", diff)
 
-	switch {
-	case goaction.IsPush():
+	switch goaction.Event {
+	case goaction.EventPush:
 		if diff == "" {
 			log.Println("No changes were made. Skipping push.")
 			break
 		}
 		push()
-	case goaction.IsPR():
+	case goaction.EventPullRequest:
 		pr(diff)
 	default:
-		log.Fatalf("unexpected action mode.")
+		log.Fatalf("Unexpected action mode: %s", goaction.Event)
 	}
 }
 
@@ -173,7 +173,7 @@ func pr(diff string) {
 	}
 
 	ctx := context.Background()
-	err := actionutil.PRComment(ctx, githubToken, "goreadme", body)
+	err := actionutil.PRComment(ctx, githubToken, body)
 	if err != nil {
 		log.Fatal(err)
 	}

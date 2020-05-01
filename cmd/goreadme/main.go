@@ -6,13 +6,13 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"path/filepath"
 
 	"github.com/golang/gddo/gosrc"
 	"github.com/posener/goaction"
 	"github.com/posener/goaction/actionutil"
+	"github.com/posener/goaction/log"
 	"github.com/posener/goreadme"
 	"golang.org/x/oauth2"
 )
@@ -32,8 +32,6 @@ var (
 )
 
 func init() {
-	log.SetFlags(log.Lshortfile)
-
 	flag.StringVar(&cfg.ImportPath, "import-path", "", "Override package import path.")
 	flag.BoolVar(&cfg.RecursiveSubPackages, "recursive", false, "Load docs recursively.")
 	flag.BoolVar(&cfg.Functions, "functions", false, "Write functions section.")
@@ -108,7 +106,7 @@ func main() {
 	switch goaction.Event {
 	case goaction.EventPush:
 		if diff == "" {
-			log.Println("No changes were made. Skipping push.")
+			log.Printf("No changes were made. Skipping push.")
 			break
 		}
 		push()
@@ -160,7 +158,7 @@ func push() {
 // Post a pull request comment with the expected diff.
 func pr(diff string) {
 	if githubToken == "" {
-		log.Println("In order to add request comment, set the GITHUB_TOKEN input.")
+		log.Printf("In order to add request comment, set the GITHUB_TOKEN input.")
 		return
 	}
 

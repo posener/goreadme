@@ -17,6 +17,9 @@ inputs:
   import-path:
     description: "Override package import path."
     required: false
+  title:
+    description: "Override readme title. Default is package name."
+    required: false
   recursive:
     default: false
     description: "Load docs recursively."
@@ -66,6 +69,7 @@ runs:
     github-token: "${{ inputs.github-token }}"
   args:
   - "-import-path=${{ inputs.import-path }}"
+  - "-title=${{ inputs.title }}"
   - "-recursive=${{ inputs.recursive }}"
   - "-functions=${{ inputs.functions }}"
   - "-skip-examples=${{ inputs.skip-examples }}"

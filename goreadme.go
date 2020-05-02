@@ -192,14 +192,6 @@ func (r *GoReadme) get(ctx context.Context, name string) (*pkg, error) {
 	}
 	sort.Strings(p.Subdirectories)
 
-	if override := r.config.Title; override != "" {
-		p.Name = override
-	}
-
-	if override := r.config.ImportPath; override != "" {
-		p.ImportPath = override
-	}
-
 	// If functions were not requested to be added to the readme, add their
 	// examples to the main readme.
 	if !r.config.Functions {
@@ -220,6 +212,14 @@ func (r *GoReadme) get(ctx context.Context, name string) (*pkg, error) {
 		// TODO: make this better
 		p.Name = filepath.Base(name)
 		p.Doc = strings.TrimPrefix(p.Doc, "Package main is ")
+	}
+
+	if override := r.config.Title; override != "" {
+		p.Name = override
+	}
+
+	if override := r.config.ImportPath; override != "" {
+		p.ImportPath = override
 	}
 
 	pkg := &pkg{

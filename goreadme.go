@@ -124,6 +124,8 @@ type GoReadme struct {
 }
 
 type Config struct {
+	// Override readme title. Default is package name.
+	Title string `json:"title"`
 	// ImportPath is used to override the import path. For example: github.com/user/project,
 	// github.com/user/project/package or github.com/user/project/version.
 	ImportPath string `json:"import_path"`
@@ -189,6 +191,10 @@ func (r *GoReadme) get(ctx context.Context, name string) (*pkg, error) {
 		return nil, errors.Wrapf(err, "failed getting %s", name)
 	}
 	sort.Strings(p.Subdirectories)
+
+	if override := r.config.Title; override != "" {
+		p.Name = override
+	}
 
 	if override := r.config.ImportPath; override != "" {
 		p.ImportPath = override

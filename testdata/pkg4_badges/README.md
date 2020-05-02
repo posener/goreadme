@@ -1,4 +1,4 @@
-# pkg4
+# New Title
 
 [![Build Status](https://travis-ci.org/./testdata/pkg4_badges.svg?branch=master)](https://travis-ci.org/./testdata/pkg4_badges)
 [![codecov](https://codecov.io/gh/./testdata/pkg4_badges/branch/master/graph/badge.svg)](https://codecov.io/gh/./testdata/pkg4_badges)

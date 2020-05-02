@@ -33,6 +33,7 @@ var (
 
 func init() {
 	flag.StringVar(&cfg.ImportPath, "import-path", "", "Override package import path.")
+	flag.StringVar(&cfg.Title, "title", "", "Override readme title. Default is package name.")
 	flag.BoolVar(&cfg.RecursiveSubPackages, "recursive", false, "Load docs recursively.")
 	flag.BoolVar(&cfg.Functions, "functions", false, "Write functions section.")
 	flag.BoolVar(&cfg.SkipExamples, "skip-examples", false, "Skip the examples section.")

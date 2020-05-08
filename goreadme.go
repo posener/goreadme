@@ -243,7 +243,7 @@ func (r *GoReadme) get(ctx context.Context, name string) (*pkg, error) {
 }
 
 func debug(p *pkg) {
-	if os.Getenv("GOREADME_DEBUG") == "" {
+	if os.Getenv("debug") == "" {
 		return
 	}
 

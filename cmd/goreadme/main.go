@@ -18,17 +18,23 @@ import (
 )
 
 var (
-	// Holds configuration for Goreadme invokation.
+	// Holds configuration for Goreadme invocation.
 	cfg goreadme.Config
 
 	// Write readme output
 	out io.WriteCloser = os.Stdout
 
 	// Github action variables.
-	path        = goaction.Getenv("readme-file", "README.md", "Name of readme file")
-	debug       = goaction.Getenv("debug", "", "Print Goredme debug output") != ""
-	email       = goaction.Getenv("email", "posener@gmail.com", "Email for commit message")
-	githubToken = goaction.Getenv("github-token", "", "Github token for PR comments. Optional.")
+	//goaction:description Name of readme file.
+	//goaction:default README.md
+	path = os.Getenv("readme-file")
+	//goaction:description Print Goreadme debug output. Set to any non empty value for true.
+	_ = os.Getenv("debug")
+	//goaction:description Email for commit message.
+	//goaction:default posener@gmail.com
+	email = os.Getenv("email")
+	//goaction:description Github token for PR comments. Optional.
+	githubToken = os.Getenv("github-token")
 )
 
 func init() {
@@ -63,12 +69,7 @@ Flags:
 
 func main() {
 	// Steps to do only in Github Action mode.
-	if goaction.CI {
-		// Setup debug mode.
-		if debug {
-			os.Setenv("GOREADME_DEBUG", "1")
-		}
-
+	if path != "" {
 		// Setup output file.
 		var err error
 		out, err = os.Create(path)
@@ -76,7 +77,8 @@ func main() {
 			log.Fatalf("Failed opening file %s: %s", path, err)
 		}
 		defer out.Close()
-
+	}
+	if goaction.CI {
 		// Fix import path if it was not overridden by the user.
 		if cfg.ImportPath == "" {
 			cfg.ImportPath = "github.com/" + goaction.Repository
@@ -143,7 +145,7 @@ func gitDiff() string {
 	return fmt.Sprintf("Path: %s\n\n```diff\n%s\n```\n\n", path, d)
 }
 
-// Commit and push chnages to upstream branch.
+// Commit and push changes to upstream branch.
 func push() {
 	err := actionutil.GitConfig("goreadme", email)
 	if err != nil {

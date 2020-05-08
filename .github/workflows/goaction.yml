@@ -12,7 +12,7 @@ jobs:
       - name: Update action files
         uses: posener/goaction@master
         with:
-          path: cmd/goreadme/main.go
+          path: cmd/goreadme
           name: goreadme
           description: Updates readme from Go doc
           github-token: '${{ secrets.GITHUB_TOKEN }}'

@@ -5,11 +5,14 @@ description: "Goreadme command line tool and Github action"
 inputs:
   readme-file:
     default: README.md
-    description: "Name of readme file"
+    description: "Name of readme file."
+    required: false
+  debug:
+    description: "Print Goreadme debug output. Set to any non empty value for true."
     required: false
   email:
     default: posener@gmail.com
-    description: "Email for commit message"
+    description: "Email for commit message."
     required: false
   github-token:
     description: "Github token for PR comments. Optional."
@@ -65,6 +68,7 @@ runs:
   image: Dockerfile
   env:
     readme-file: "${{ inputs.readme-file }}"
+    debug: "${{ inputs.debug }}"
     email: "${{ inputs.email }}"
     github-token: "${{ inputs.github-token }}"
   args:

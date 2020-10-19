@@ -131,6 +131,8 @@ type Config struct {
 	ImportPath string `json:"import_path"`
 	// Functions will make functions documentation to be added to the README.
 	Functions bool `json:"functions"`
+	// Types will make types documentation to be added to the README.
+	Types bool `json:"types"`
 	// SkipExamples will omit the examples section from the README.
 	SkipExamples bool `json:"skip_examples"`
 	// SkipSubPackages will omit the sub packages section from the README.
@@ -196,6 +198,19 @@ func (r *GoReadme) get(ctx context.Context, name string) (*pkg, error) {
 	// examples to the main readme.
 	if !r.config.Functions {
 		for _, f := range p.Funcs {
+			for _, e := range f.Examples {
+				if e.Name == "" {
+					e.Name = f.Name
+				}
+				if e.Doc == "" {
+					e.Doc = f.Doc
+				}
+				p.Examples = append(p.Examples, e)
+			}
+		}
+	}
+	if !r.config.Types {
+		for _, f := range p.Types {
 			for _, e := range f.Examples {
 				if e.Name == "" {
 					e.Name = f.Name

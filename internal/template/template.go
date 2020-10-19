@@ -3,6 +3,7 @@ package template
 import (
 	"bytes"
 	"io"
+	"regexp"
 	"strings"
 	"text/template"
 
@@ -27,6 +28,11 @@ var base = template.New("base").Funcs(
 			return "```\n" + s + "```\n"
 		},
 		"inlineCode": func(s string) string {
+			return "`" + s + "`"
+		},
+		"inlineCodeEllipsis": func(s string) string {
+			r := regexp.MustCompile(`\{[^[]*\}`)
+			s = r.ReplaceAllString(s, "{ ... }")
 			return "`" + s + "`"
 		},
 		"importPath": func(p *doc.Package) string {
@@ -73,6 +79,10 @@ var main = template.Must(base.Parse(`# {{.Package.Name}}
 {{ template "functions" .Package }}
 {{ end }}
 
+{{ if .Config.Types }}
+{{ template "types" .Package }}
+{{ end }}
+
 {{ if (not .Config.SkipSubPackages) }}
 {{ template "subpackages" . }}
 {{ end }}
@@ -97,6 +107,27 @@ var functions = template.Must(base.Parse(`
 ### func [{{ .Name }}]({{ urlOrName (index $.Files .Pos.File) }}#L{{ .Pos.Line }})
 
 {{ inlineCode .Decl.Text }}
+
+{{ doc .Doc }}
+
+{{ template "examplesNoHeading" .Examples }}
+{{ end }}
+
+{{ end }}
+{{ end }}
+`))
+
+var types = template.Must(base.Parse(`
+{{ define "types" }}
+{{ if .Types }}
+
+## Types
+
+{{ range .Types }}
+
+### type [{{ .Name }}]({{ urlOrName (index $.Files .Pos.File) }}#L{{ .Pos.Line }})
+
+{{ inlineCodeEllipsis .Decl.Text }}
 
 {{ doc .Doc }}
 

@@ -24,3 +24,9 @@ func ExampleFunc_withName() {
 	Func()
 	// Output: hello
 }
+
+// ExampleExampleType tests using the type ExampleType
+func ExampleExampleType_assignment() {
+	example := new(ExampleType)
+	example.val = 1
+}

@@ -67,3 +67,8 @@ import "fmt"
 func Func() {
 	fmt.Println("hello")
 }
+
+type ExampleType struct {
+	val              int
+	ExampleInterface interface{}
+}

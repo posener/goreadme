@@ -134,3 +134,14 @@ Func()
 ```
 hello
 ```
+
+### Assignment
+
+ExampleExampleType tests using the type ExampleType
+
+```golang
+
+example := new(ExampleType)
+example.val = 1
+
+```

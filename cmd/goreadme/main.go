@@ -153,7 +153,7 @@ func push() {
 		log.Fatal(err)
 	}
 
-	err = actionutil.GitCommitPush([]string{path}, "Update readme accoridng to godoc")
+	err = actionutil.GitCommitPush([]string{path}, "Update readme according to godoc")
 	if err != nil {
 		log.Fatal(err)
 	}

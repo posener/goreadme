@@ -31,6 +31,10 @@ inputs:
     default: false
     description: "Write functions section."
     required: false
+  types:
+    default: false
+    description: "Write types section."
+    required: false
   skip-examples:
     default: false
     description: "Skip the examples section."
@@ -76,6 +80,7 @@ runs:
   - "-title=${{ inputs.title }}"
   - "-recursive=${{ inputs.recursive }}"
   - "-functions=${{ inputs.functions }}"
+  - "-types=${{ inputs.types }}"
   - "-skip-examples=${{ inputs.skip-examples }}"
   - "-skip-sub-packages=${{ inputs.skip-sub-packages }}"
   - "-badge-travisci=${{ inputs.badge-travisci }}"

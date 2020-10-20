@@ -31,7 +31,7 @@ var base = template.New("base").Funcs(
 			return "`" + s + "`"
 		},
 		"inlineCodeEllipsis": func(s string) string {
-			r := regexp.MustCompile(`\{[^[]*\}`)
+			r := regexp.MustCompile(`\{.*\}`)
 			s = r.ReplaceAllString(s, "{ ... }")
 			return "`" + s + "`"
 		},

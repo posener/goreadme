@@ -226,22 +226,6 @@ func (r *GoReadme) get(ctx context.Context, name string) (*pkg, error) {
 		}
 	}
 
-	// If types were not requested to be added to the readme, add their
-	// examples to the main readme.
-	if !r.config.Types {
-		for _, f := range p.Types {
-			for _, e := range f.Examples {
-				if e.Name == "" {
-					e.Name = f.Name
-				}
-				if e.Doc == "" {
-					e.Doc = f.Doc
-				}
-				p.Examples = append(p.Examples, e)
-			}
-		}
-	}
-
 	if p.IsCmd {
 		// TODO: make this better
 		p.Name = filepath.Base(name)

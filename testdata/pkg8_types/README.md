@@ -20,3 +20,15 @@ example := new(ExampleType)
 example.val = 1
 
 ```
+
+### type [ExampleType2](/pkg.go#L11)
+
+`type ExampleType2 struct { ... }`
+
+ExampleType2 is a type with an array
+
+### type [ExampleTypeInt](/pkg.go#L17)
+
+`type ExampleTypeInt struct { ... }`
+
+ExampleTypeInt is a one-liner type

@@ -1,8 +1,8 @@
 # goreadme
 
-[![Build Status](https://travis-ci.org/romainbou/goreadme.svg?branch=master)](https://travis-ci.org/romainbou/goreadme)
-[![codecov](https://codecov.io/gh/romainbou/goreadme/branch/master/graph/badge.svg)](https://codecov.io/gh/romainbou/goreadme)
-[![GoDoc](https://img.shields.io/badge/pkg.go.dev-doc-blue)](http://pkg.go.dev/github.com/romainbou/goreadme)
+[![Build Status](https://travis-ci.org/posener/goreadme.svg?branch=master)](https://travis-ci.org/posener/goreadme)
+[![codecov](https://codecov.io/gh/posener/goreadme/branch/master/graph/badge.svg)](https://codecov.io/gh/posener/goreadme)
+[![GoDoc](https://img.shields.io/badge/pkg.go.dev-doc-blue)](http://pkg.go.dev/github.com/posener/goreadme)
 
 Package goreadme generates readme markdown file from go doc.
 

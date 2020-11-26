@@ -129,6 +129,8 @@ type Config struct {
 	// ImportPath is used to override the import path. For example: github.com/user/project,
 	// github.com/user/project/package or github.com/user/project/version.
 	ImportPath string `json:"import_path"`
+	// DestinationPath will be where README.md will be written
+	DestinationPath string `json:"destination_path"`
 	// Functions will make functions documentation to be added to the README.
 	Functions bool `json:"functions"`
 	// Types will make types documentation to be added to the README.

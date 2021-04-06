@@ -16,5 +16,6 @@ jobs:
           name: goreadme
           description: Updates readme from Go doc
           github-token: '${{ secrets.GITHUB_TOKEN }}'
+          image: 'golang:1.16.3-alpine3.13'
           icon: book-open
           color: blue

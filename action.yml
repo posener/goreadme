@@ -23,6 +23,9 @@ inputs:
   title:
     description: "Override readme title. Default is package name."
     required: false
+  branch:
+    description: "Override the default branch name."
+    required: false
   recursive:
     default: false
     description: "Load docs recursively."
@@ -78,6 +81,7 @@ runs:
   args:
   - "-import-path=${{ inputs.import-path }}"
   - "-title=${{ inputs.title }}"
+  - "-branch=${{ inputs.branch }}"
   - "-recursive=${{ inputs.recursive }}"
   - "-functions=${{ inputs.functions }}"
   - "-types=${{ inputs.types }}"

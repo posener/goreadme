@@ -58,10 +58,10 @@ var base = template.New("base").Funcs(
 var main = template.Must(base.Parse(`# {{.Package.Name}}
 
 {{if .Config.Badges.TravisCI -}}
-[![Build Status](https://travis-ci.org/{{fullName .Package}}.svg?branch=master)](https://travis-ci.org/{{fullName .Package}})
+[![Build Status](https://travis-ci.org/{{fullName .Package}}.svg?branch={{.Config.Branch}})](https://travis-ci.org/{{fullName .Package}})
 {{end -}}
 {{if .Config.Badges.CodeCov -}}
-[![codecov](https://codecov.io/gh/{{fullName .Package}}/branch/master/graph/badge.svg)](https://codecov.io/gh/{{fullName .Package}})
+[![codecov](https://codecov.io/gh/{{fullName .Package}}/branch/{{.Config.Branch}}/graph/badge.svg)](https://codecov.io/gh/{{fullName .Package}})
 {{end -}}
 {{if .Config.Badges.GolangCI -}}
 [![golangci](https://golangci.com/badges/{{importPath .Package}}.svg)](https://golangci.com/r/{{importPath .Package}})

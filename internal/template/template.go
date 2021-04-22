@@ -60,6 +60,9 @@ var main = template.Must(base.Parse(`# {{.Package.Name}}
 {{if .Config.Badges.TravisCI -}}
 [![Build Status](https://travis-ci.org/{{fullName .Package}}.svg?branch={{.Config.Branch}})](https://travis-ci.org/{{fullName .Package}})
 {{end -}}
+{{if .Config.Badges.Github -}}
+[![GitHub Workflow Status](https://{{fullName .Package}}/workflows/CI/badge.svg)](https://{{fullName .Package}}/actions)
+{{end -}}
 {{if .Config.Badges.CodeCov -}}
 [![codecov](https://codecov.io/gh/{{fullName .Package}}/branch/{{.Config.Branch}}/graph/badge.svg)](https://codecov.io/gh/{{fullName .Package}})
 {{end -}}

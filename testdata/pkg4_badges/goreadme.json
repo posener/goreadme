@@ -1,6 +1,7 @@
 {
 	"badges": {
 		"travis_ci": true,
+		"github": true,
 		"code_cov": true,
 		"golang_ci": true,
 		"go_doc": true,

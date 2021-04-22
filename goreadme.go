@@ -148,6 +148,7 @@ type Config struct {
 	Branch string `json:"branch"`
 	Badges struct {
 		TravisCI     bool `json:"travis_ci"`
+		Github       bool `json:"github"`
 		CodeCov      bool `json:"code_cov"`
 		GolangCI     bool `json:"golang_ci"`
 		GoDoc        bool `json:"go_doc"`

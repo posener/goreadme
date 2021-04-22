@@ -50,6 +50,10 @@ inputs:
     default: false
     description: "Show TravisCI badge."
     required: false
+  badge-github:
+    default: false
+    description: "Show Github Workflow badge."
+    required: false
   badge-codecov:
     default: false
     description: "Show CodeCov badge."

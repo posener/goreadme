@@ -47,7 +47,7 @@ inputs:
     description: "Skip the sub packages section."
     required: false
   commit-message:
-    default: false
+    default: Update readme according to godoc
     description: "Override the default commit message."
     required: false
   badge-travisci:
@@ -95,7 +95,9 @@ runs:
   - "-types=${{ inputs.types }}"
   - "-skip-examples=${{ inputs.skip-examples }}"
   - "-skip-sub-packages=${{ inputs.skip-sub-packages }}"
+  - "-commit-message=${{ inputs.commit-message }}"
   - "-badge-travisci=${{ inputs.badge-travisci }}"
+  - "-badge-github=${{ inputs.badge-github }}"
   - "-badge-codecov=${{ inputs.badge-codecov }}"
   - "-badge-golangci=${{ inputs.badge-golangci }}"
   - "-badge-godoc=${{ inputs.badge-godoc }}"

@@ -146,7 +146,9 @@ type Config struct {
 	// By default, this will be set to the default branch of origin.
 	// If origin is not set, this will default to 'main'.
 	Branch string `json:"branch"`
-	Badges struct {
+	// CommitMessage is the commit message used when the readme file is updated
+	CommitMessage string `json:"commit_message"`
+	Badges        struct {
 		TravisCI     bool `json:"travis_ci"`
 		Github       bool `json:"github"`
 		CodeCov      bool `json:"code_cov"`

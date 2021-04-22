@@ -46,6 +46,7 @@ func init() {
 	flag.BoolVar(&cfg.Types, "types", false, "Write types section.")
 	flag.BoolVar(&cfg.SkipExamples, "skip-examples", false, "Skip the examples section.")
 	flag.BoolVar(&cfg.SkipSubPackages, "skip-sub-packages", false, "Skip the sub packages section.")
+	flag.StringVar(&cfg.CommitMessage, "commit-message", "Update readme according to godoc", "Override the default commit message.")
 	flag.BoolVar(&cfg.Badges.TravisCI, "badge-travisci", false, "Show TravisCI badge.")
 	flag.BoolVar(&cfg.Badges.Github, "badge-github", false, "Show Github Workflow badge.")
 	flag.BoolVar(&cfg.Badges.CodeCov, "badge-codecov", false, "Show CodeCov badge.")
@@ -155,7 +156,7 @@ func push() {
 		log.Fatal(err)
 	}
 
-	err = actionutil.GitCommitPush([]string{path}, "Update readme according to godoc")
+	err = actionutil.GitCommitPush([]string{path}, cfg.CommitMessage)
 	if err != nil {
 		log.Fatal(err)
 	}

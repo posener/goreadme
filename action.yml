@@ -46,6 +46,10 @@ inputs:
     default: false
     description: "Skip the sub packages section."
     required: false
+  commit-message:
+    default: false
+    description: "Override the default commit message."
+    required: false
   badge-travisci:
     default: false
     description: "Show TravisCI badge."

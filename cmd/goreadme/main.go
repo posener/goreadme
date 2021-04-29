@@ -36,6 +36,12 @@ var (
 	email = os.Getenv("email")
 	//goaction:description Github token for PR comments. Optional.
 	githubToken = os.Getenv("github-token")
+
+	// Aliases for path and githubToken.
+	//goaction:description An optional alias which can be used instead of 'readme-file'.
+	path2 = os.Getenv("README_FILE")
+	//goaction:description An optional alias which can be used instead of 'github-token'.
+	githubToken2 = os.Getenv("GITHUB_TOKEN")
 )
 
 func init() {
@@ -67,6 +73,13 @@ Flags:
 		flag.PrintDefaults()
 	}
 	flag.Parse()
+
+	if path == "" {
+		path = path2
+	}
+	if githubToken == "" {
+		githubToken = githubToken2
+	}
 }
 
 func main() {

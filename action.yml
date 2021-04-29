@@ -17,6 +17,12 @@ inputs:
   github-token:
     description: "Github token for PR comments. Optional."
     required: false
+  README_FILE:
+    description: "An optional alias which can be used instead of 'readme-file'."
+    required: false
+  GITHUB_TOKEN:
+    description: "An optional alias which can be used instead of 'github-token'."
+    required: false
   import-path:
     description: "Override package import path."
     required: false
@@ -75,6 +81,8 @@ runs:
     debug: "${{ inputs.debug }}"
     email: "${{ inputs.email }}"
     github-token: "${{ inputs.github-token }}"
+    README_FILE: "${{ inputs.README_FILE }}"
+    GITHUB_TOKEN: "${{ inputs.GITHUB_TOKEN }}"
   args:
   - "-import-path=${{ inputs.import-path }}"
   - "-title=${{ inputs.title }}"

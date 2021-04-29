@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"net/http"
 	"os"
 	"path/filepath"
 
@@ -87,10 +88,12 @@ func main() {
 	}
 
 	ctx := context.Background()
-	gr := goreadme.New(
-		oauth2.NewClient(ctx, oauth2.StaticTokenSource(
-			&oauth2.Token{AccessToken: githubToken})),
-	)
+	client := http.DefaultClient
+	if githubToken != "" {
+		client = oauth2.NewClient(ctx, oauth2.StaticTokenSource(
+			&oauth2.Token{AccessToken: githubToken}))
+	}
+	gr := goreadme.New(client)
 
 	err := gr.WithConfig(cfg).Create(ctx, pkg(flag.Args()), out)
 	if err != nil {

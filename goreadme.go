@@ -105,6 +105,7 @@ import (
 
 	"github.com/golang/gddo/doc"
 	"github.com/pkg/errors"
+	"github.com/posener/goaction"
 	"github.com/posener/goreadme/internal/template"
 )
 
@@ -284,7 +285,9 @@ func debug(p *pkg) {
 
 // getHeadBranch returns the head branch name. If one cannot be found it returns "main"
 func getHeadBranch() string {
-	if out, err := exec.Command("git", "remote", "show", "origin").Output(); err != nil || len(out) == 0 {
+	if githubRefBranch := goaction.Branch(); githubRefBranch != "" {
+		return githubRefBranch
+	} else if out, err := exec.Command("git", "remote", "show", "origin").Output(); err != nil || len(out) == 0 {
 		return "main"
 	} else if match := regexp.MustCompile(`HEAD branch: ([^\s]+)`).FindAllSubmatch(out, -1); len(match) == 0 || len(match[0]) < 2 {
 		return "main"

@@ -17,6 +17,77 @@ import (
 	"unicode/utf8"
 )
 
+// ToMarkdown converts comment text to formatted Markdown.
+// The comment was prepared by DocReader,
+// so it is known not to have leading, trailing blank lines
+// nor to have trailing spaces at the end of lines.
+// The comment markers have already been removed.
+//
+// Each span of unindented non-blank lines is converted into
+// a single paragraph. There is one exception to the rule: a span that
+// consists of a single line, is followed by another paragraph span,
+// begins with a capital letter, and contains no punctuation
+// other than parentheses and commas is formatted as a heading.
+//
+// A span of indented lines is converted into a <pre> block,
+// with the common indent prefix removed.
+//
+// URLs in the comment text are converted into links; if the URL also appears
+// in the words map, the link is taken from the map (if the corresponding map
+// value is the empty string, the URL is not converted into a link).
+func ToMarkdown(w io.Writer, text string, opts ...Option) {
+	var o options
+	for _, f := range opts {
+		f(&o)
+	}
+
+	for _, b := range blocks(text, o.noDiffs) {
+		switch b.op {
+		case opPara:
+			// New paragraph
+			for _, line := range b.lines {
+				emphasize(w, line, o.words, false)
+			}
+			fmt.Fprint(w, "\n")
+		case opHead:
+			// Headline
+			fmt.Fprint(w, "## ")
+			for _, line := range b.lines {
+				fmt.Fprint(w, line)
+			}
+			fmt.Fprint(w, "\n\n")
+		case opPre:
+			// Code block
+			fmt.Fprintf(w, "```%s\n", b.lang)
+			for _, line := range b.lines {
+				emphasize(w, line, nil, false)
+			}
+			fmt.Fprint(w, "```\n\n")
+		}
+	}
+}
+
+// Option is option type for ToMarkdown
+type Option func(*options)
+
+// OptWords sets the list of known words.
+// Go identifiers that appear in the words map are italicized; if the corresponding
+// map value is not the empty string, it is considered a URL and the word is converted
+// into a link.
+func OptWords(words map[string]string) Option {
+	return func(o *options) { o.words = words }
+}
+
+// OptNoDiff disables automatic marking of code blocks as diffs.
+func OptNoDiff(noDiffs bool) Option {
+	return func(o *options) { o.noDiffs = noDiffs }
+}
+
+type options struct {
+	words   map[string]string
+	noDiffs bool
+}
+
 const (
 	// Regexp for Go identifiers
 	identRx = `[\pL_][\pL_0-9]*`
@@ -284,58 +355,7 @@ type block struct {
 	lang string // for opPre, the language of the code block.
 }
 
-var nonAlphaNumRx = regexp.MustCompile(`[^a-zA-Z0-9]`)
-
-// ToMarkdown converts comment text to formatted Markdown.
-// The comment was prepared by DocReader,
-// so it is known not to have leading, trailing blank lines
-// nor to have trailing spaces at the end of lines.
-// The comment markers have already been removed.
-//
-// Each span of unindented non-blank lines is converted into
-// a single paragraph. There is one exception to the rule: a span that
-// consists of a single line, is followed by another paragraph span,
-// begins with a capital letter, and contains no punctuation
-// other than parentheses and commas is formatted as a heading.
-//
-// A span of indented lines is converted into a <pre> block,
-// with the common indent prefix removed.
-//
-// URLs in the comment text are converted into links; if the URL also appears
-// in the words map, the link is taken from the map (if the corresponding map
-// value is the empty string, the URL is not converted into a link).
-//
-// Go identifiers that appear in the words map are italicized; if the corresponding
-// map value is not the empty string, it is considered a URL and the word is converted
-// into a link.
-func ToMarkdown(w io.Writer, text string, words map[string]string) {
-	for _, b := range blocks(text) {
-		switch b.op {
-		case opPara:
-			// New paragraph
-			for _, line := range b.lines {
-				emphasize(w, line, words, false)
-			}
-			fmt.Fprint(w, "\n")
-		case opHead:
-			// Headline
-			fmt.Fprint(w, "## ")
-			for _, line := range b.lines {
-				fmt.Fprint(w, line)
-			}
-			fmt.Fprint(w, "\n\n")
-		case opPre:
-			// Code block
-			fmt.Fprintf(w, "```%s\n", b.lang)
-			for _, line := range b.lines {
-				emphasize(w, line, nil, false)
-			}
-			fmt.Fprint(w, "```\n\n")
-		}
-	}
-}
-
-func blocks(text string) []block {
+func blocks(text string, skipDiffs bool) []block {
 	var (
 		out  []block
 		para []string
@@ -394,7 +414,7 @@ func blocks(text string) []block {
 
 			// put those lines in a pre block
 			lang := "go"
-			if isValidDiff && anyDiff {
+			if isValidDiff && anyDiff && !skipDiffs {
 				lang = "diff"
 			}
 			out = append(out, block{op: opPre, lines: pre, lang: lang})

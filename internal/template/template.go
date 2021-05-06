@@ -12,49 +12,53 @@ import (
 	"github.com/posener/goreadme/internal/markdown"
 )
 
-// Execute is used to execute the README.md template.
-func Execute(w io.Writer, data interface{}) error {
-	return templates.Execute(&multiNewLineEliminator{w: w}, data)
-}
-
 //go:embed *.md.gotmpl
 var files embed.FS
 
-var templates = template.Must(template.New("main.md.gotmpl").Funcs(funcs).ParseFS(files, "*"))
+// Execute is used to execute the README.md template.
+func Execute(w io.Writer, data interface{}, options ...markdown.Option) error {
+	templates, err := template.New("main.md.gotmpl").Funcs(funcs(options)).ParseFS(files, "*")
+	if err != nil {
+		return err
+	}
+	return templates.Execute(&multiNewLineEliminator{w: w}, data)
+}
 
-var funcs = template.FuncMap{
-	"gocode": func(s string) string {
-		return "```golang\n" + s + "\n```\n"
-	},
-	"code": func(s string) string {
-		if !strings.HasSuffix(s, "\n") {
-			s = s + "\n"
-		}
-		return "```\n" + s + "```\n"
-	},
-	"inlineCode": func(s string) string {
-		return "`" + s + "`"
-	},
-	"inlineCodeEllipsis": func(s string) string {
-		r := regexp.MustCompile(`{(?s).*}`)
-		s = r.ReplaceAllString(s, "{ ... }")
-		return "`" + s + "`"
-	},
-	"importPath": func(p *doc.Package) string {
-		return p.ImportPath
-	},
-	"fullName": func(p *doc.Package) string {
-		return strings.TrimPrefix(p.ImportPath, "github.com/")
-	},
-	"urlOrName": func(f *doc.File) string {
-		if f.URL != "" {
-			return f.URL
-		}
-		return "/" + f.Name
-	},
-	"doc": func(s string) string {
-		b := bytes.NewBuffer(nil)
-		markdown.ToMarkdown(b, s, nil)
-		return b.String()
-	},
+func funcs(options []markdown.Option) template.FuncMap {
+	return template.FuncMap{
+		"doc": func(s string) string {
+			b := bytes.NewBuffer(nil)
+			markdown.ToMarkdown(b, s, options...)
+			return b.String()
+		},
+		"gocode": func(s string) string {
+			return "```golang\n" + s + "\n```\n"
+		},
+		"code": func(s string) string {
+			if !strings.HasSuffix(s, "\n") {
+				s = s + "\n"
+			}
+			return "```\n" + s + "```\n"
+		},
+		"inlineCode": func(s string) string {
+			return "`" + s + "`"
+		},
+		"inlineCodeEllipsis": func(s string) string {
+			r := regexp.MustCompile(`{(?s).*}`)
+			s = r.ReplaceAllString(s, "{ ... }")
+			return "`" + s + "`"
+		},
+		"importPath": func(p *doc.Package) string {
+			return p.ImportPath
+		},
+		"fullName": func(p *doc.Package) string {
+			return strings.TrimPrefix(p.ImportPath, "github.com/")
+		},
+		"urlOrName": func(f *doc.File) string {
+			if f.URL != "" {
+				return f.URL
+			}
+			return "/" + f.Name
+		},
+	}
 }

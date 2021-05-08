@@ -150,12 +150,12 @@ type Config struct {
 	// CommitMessage is the commit message used when the readme file is updated
 	CommitMessage string `json:"commit_message"`
 	Badges        struct {
-		TravisCI     bool `json:"travis_ci"`
-		Github       bool `json:"github"`
-		CodeCov      bool `json:"code_cov"`
-		GolangCI     bool `json:"golang_ci"`
-		GoDoc        bool `json:"go_doc"`
-		GoReportCard bool `json:"go_report_card"`
+		TravisCI     bool   `json:"travis_ci"`
+		Github       string `json:"github"`
+		CodeCov      bool   `json:"code_cov"`
+		GolangCI     bool   `json:"golang_ci"`
+		GoDoc        bool   `json:"go_doc"`
+		GoReportCard bool   `json:"go_report_card"`
 	} `json:"badges"`
 	Credit bool `json:"credit"`
 }

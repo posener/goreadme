@@ -48,7 +48,7 @@ func init() {
 	flag.BoolVar(&cfg.SkipSubPackages, "skip-sub-packages", false, "Skip the sub packages section.")
 	flag.StringVar(&cfg.CommitMessage, "commit-message", "Update readme according to godoc", "Override the default commit message.")
 	flag.BoolVar(&cfg.Badges.TravisCI, "badge-travisci", false, "Show TravisCI badge.")
-	flag.BoolVar(&cfg.Badges.Github, "badge-github", false, "Show Github Workflow badge.")
+	flag.StringVar(&cfg.Badges.Github, "badge-github", "", "Show Github Workflow badge for the yaml file.")
 	flag.BoolVar(&cfg.Badges.CodeCov, "badge-codecov", false, "Show CodeCov badge.")
 	flag.BoolVar(&cfg.Badges.GolangCI, "badge-golangci", false, "Show GolangCI badge.")
 	flag.BoolVar(&cfg.Badges.GoDoc, "badge-godoc", false, "Show GoDoc badge.")

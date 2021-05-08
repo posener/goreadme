@@ -1,6 +1,7 @@
 # goreadme
 
 [![Build Status](https://travis-ci.org/marksalpeter/goreadme.svg?branch=master)](https://travis-ci.org/marksalpeter/goreadme)
+[![GitHub Workflow Status](https://github.com/marksalpeter/goreadme/actions/workflows/false/badge.svg?branch=master)](https://github.com/marksalpeter/goreadme/actions/workflows/false?query=branch:master)
 [![codecov](https://codecov.io/gh/marksalpeter/goreadme/branch/master/graph/badge.svg)](https://codecov.io/gh/marksalpeter/goreadme)
 [![GoDoc](https://img.shields.io/badge/pkg.go.dev-doc-blue)](http://pkg.go.dev/github.com/marksalpeter/goreadme)
 

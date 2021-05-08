@@ -1,0 +1,17 @@
+{{ define "examplesNoHeading" }}
+{{ if . }}
+
+{{ range . }}
+
+{{ if .Name }}### {{.Name}}{{ end }}
+
+{{ doc .Doc }}
+
+{{ if .Play }}{{gocode .Play}}{{ else }}{{gocode .Code.Text}}{{ end }}
+{{ if .Output }} Output:
+
+{{ code .Output }}{{ end }}
+{{ end }}
+
+{{ end }}
+{{ end }}

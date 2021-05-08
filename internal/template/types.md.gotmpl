@@ -1,0 +1,18 @@
+{{ define "types" }}
+{{ if .Types }}
+
+## Types
+
+{{ range .Types }}
+
+### type [{{ .Name }}]({{ urlOrName (index $.Files .Pos.File) }}#L{{ .Pos.Line }})
+
+{{ inlineCodeEllipsis .Decl.Text }}
+
+{{ doc .Doc }}
+
+{{ template "examplesNoHeading" .Examples }}
+{{ end }}
+
+{{ end }}
+{{ end }}

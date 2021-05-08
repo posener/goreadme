@@ -103,6 +103,7 @@ import (
 
 	"github.com/golang/gddo/doc"
 	"github.com/pkg/errors"
+	"github.com/posener/goreadme/internal/markdown"
 	"github.com/posener/goreadme/internal/template"
 )
 
@@ -137,6 +138,8 @@ type Config struct {
 	SkipExamples bool `json:"skip_examples"`
 	// SkipSubPackages will omit the sub packages section from the README.
 	SkipSubPackages bool `json:"skip_sub_packages"`
+	// NoDiffBlocks disables marking code blocks as diffs if they start with minus or plus signes.
+	NoDiffBlocks bool `json:"no_diff_blocks"`
 	// RecursiveSubPackages will retrieved subpackages information recursively.
 	// If false, only one level of subpackages will be retrieved.
 	RecursiveSubPackages bool `json:"recursive_sub_packages"`
@@ -170,7 +173,7 @@ func (r *GoReadme) Create(ctx context.Context, name string, w io.Writer) error {
 	if err != nil {
 		return err
 	}
-	return template.Execute(w, p)
+	return template.Execute(w, p, markdown.OptNoDiff(r.config.NoDiffBlocks))
 }
 
 // pkg contains information about a go package, to be used in the template.

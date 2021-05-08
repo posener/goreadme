@@ -1,0 +1,18 @@
+{{ define "functions" }}
+{{ if .Funcs }}
+
+## Functions
+
+{{ range .Funcs }}
+
+### func [{{ .Name }}]({{ urlOrName (index $.Files .Pos.File) }}#L{{ .Pos.Line }})
+
+{{ inlineCode .Decl.Text }}
+
+{{ doc .Doc }}
+
+{{ template "examplesNoHeading" .Examples }}
+{{ end }}
+
+{{ end }}
+{{ end }}

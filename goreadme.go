@@ -97,12 +97,15 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strings"
 
 	"github.com/golang/gddo/doc"
 	"github.com/pkg/errors"
+	"github.com/posener/goaction"
 	"github.com/posener/goreadme/internal/template"
 )
 
@@ -140,8 +143,15 @@ type Config struct {
 	// RecursiveSubPackages will retrieved subpackages information recursively.
 	// If false, only one level of subpackages will be retrieved.
 	RecursiveSubPackages bool `json:"recursive_sub_packages"`
-	Badges               struct {
+	// Branch is the branch name that will be used when rendering the badges in the template.
+	// By default, this will be set to the default branch of origin.
+	// If origin is not set, this will default to 'main'.
+	Branch string `json:"branch"`
+	// CommitMessage is the commit message used when the readme file is updated
+	CommitMessage string `json:"commit_message"`
+	Badges        struct {
 		TravisCI     bool `json:"travis_ci"`
+		Github       bool `json:"github"`
 		CodeCov      bool `json:"code_cov"`
 		GolangCI     bool `json:"golang_ci"`
 		GoDoc        bool `json:"go_doc"`
@@ -240,6 +250,10 @@ func (r *GoReadme) get(ctx context.Context, name string) (*pkg, error) {
 		p.ImportPath = override
 	}
 
+	if override := r.config.Branch; override == "" {
+		r.config.Branch = getHeadBranch()
+	}
+
 	pkg := &pkg{
 		Package: p,
 		Config:  r.config,
@@ -267,4 +281,17 @@ func debug(p *pkg) {
 
 	d, _ := json.MarshalIndent(p, "  ", "  ")
 	log.Printf("Package data: %s", string(d))
+}
+
+// getHeadBranch returns the head branch name. If one cannot be found it returns "main"
+func getHeadBranch() string {
+	if githubRefBranch := goaction.Branch(); githubRefBranch != "" {
+		return githubRefBranch
+	} else if out, err := exec.Command("git", "remote", "show", "origin").Output(); err != nil || len(out) == 0 {
+		return "main"
+	} else if match := regexp.MustCompile(`HEAD branch: ([^\s]+)`).FindAllSubmatch(out, -1); len(match) == 0 || len(match[0]) < 2 {
+		return "main"
+	} else {
+		return string(match[0][1])
+	}
 }

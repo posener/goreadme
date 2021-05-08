@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"testing"
 
@@ -48,6 +49,28 @@ func TestCreate(t *testing.T) {
 				require.NoError(t, ioutil.WriteFile(readmeFileName(dir), buf.Bytes(), 0664))
 			}
 			assertReadme(t, dir, buf.String())
+		})
+	}
+}
+
+func Test_getHeadBranch(t *testing.T) {
+	tests := []struct {
+		name string
+		want string
+	}{
+		{
+			name: "head branch name is returned",
+			want: "master",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if err := exec.Command("git", "checkout", tt.want).Run(); err != nil {
+				t.Error(err)
+			}
+			if got := getHeadBranch(); got != tt.want {
+				t.Errorf("getDefaultBranch() = %v, want %v", got, tt.want)
+			}
 		})
 	}
 }

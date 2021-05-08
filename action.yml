@@ -55,8 +55,7 @@ inputs:
     description: "Show TravisCI badge."
     required: false
   badge-github:
-    default: false
-    description: "Show Github Workflow badge."
+    description: "Show Github Workflow badge for the yaml file."
     required: false
   badge-codecov:
     default: false

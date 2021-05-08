@@ -8,7 +8,7 @@
 // Below there is an example that on every time a new change is pushed to the master branch, the
 // action is trigerred, generates a new README file, and if there is a change - commits and pushes
 // it to the master branch. In pull requests that affect the README content, if the `github-token`
-// is given, the action will post a comment on the pull request with chnages that will be made to
+// is given, the action will post a comment on the pull request with changes that will be made to
 // the README file.
 //
 // To use this with Github actions, add the following content to `.github/workflows/goreadme.yml`.

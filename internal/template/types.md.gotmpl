@@ -12,6 +12,35 @@
 {{ doc .Doc }}
 
 {{ template "examplesNoHeading" .Examples }}
+
+{{/* Iterate functions returning this type */}}
+{{ range .Funcs }}
+
+#### func [{{ .Name }}]({{ urlOrName (index $.Files .Pos.File) }}#L{{ .Pos.Line }})
+
+{{ inlineCodeEllipsis .Decl.Text }}
+
+{{ doc .Doc }}
+
+{{ template "examplesNoHeading" .Examples }}
+
+{{ end }}
+{{/* Done with functions returning this type */}}
+
+{{/* Iterate methods */}}
+{{ range .Methods }}
+
+#### func ({{ .Recv }}) [{{ .Name }}]({{ urlOrName (index $.Files .Pos.File) }}#L{{ .Pos.Line }})
+
+{{ inlineCodeEllipsis .Decl.Text }}
+
+{{ doc .Doc }}
+
+{{ template "examplesNoHeading" .Examples }}
+
+{{ end }}
+{{/* Done with methods */}}
+
 {{ end }}
 
 {{ end }}

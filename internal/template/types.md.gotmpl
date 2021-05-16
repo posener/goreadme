@@ -11,6 +11,22 @@
 
 {{ doc .Doc }}
 
+{{ if .Consts }}
+
+#### Constants
+
+{{ template "values" .Consts }}
+
+{{ end }}
+
+{{ if .Vars }}
+
+#### Variables
+
+{{ template "values" .Vars }}
+
+{{ end }}
+
 {{ template "examplesNoHeading" .Examples }}
 
 {{/* Iterate functions returning this type */}}

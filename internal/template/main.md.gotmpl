@@ -18,6 +18,22 @@
 
 {{ doc .Package.Doc }}
 
+{{ if .Package.Consts }}
+
+## Constants
+
+{{ template "values" .Package.Consts }}
+
+{{ end }}
+
+{{ if .Package.Vars }}
+
+## Variables
+
+{{ template "values" .Package.Vars }}
+
+{{ end }}
+
 {{ if .Config.Functions }}
 {{ template "functions" .Package }}
 {{ end }}

@@ -1,0 +1,11 @@
+{{ define "values" }}
+
+{{ range . }}
+
+{{ doc .Doc }}
+
+{{ gocode .Decl.Text }}
+
+{{ end }}
+
+{{ end }}

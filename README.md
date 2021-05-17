@@ -103,6 +103,14 @@ doc readable:
 
 ![title of image](https://github.githubassets.com/images/icons/emoji/unicode/1f44c.png)
 
+## Testing
+
+The goreadme tests the test cases in the [./testdata](./testdata) directory. It generates readme files for
+all the packages in that directory and asserts that the result readme matches the existing one.
+When modifying goreadme behavior, there is no need to manually change these readme files. It is
+possible to run `WRITE_READMES=1 go test ./...` which regenerates them and check the changes
+match the expected (optionally using `git diff`).
+
 ## Sub Packages
 
 * [cmd/goreadme](./cmd/goreadme): Goreadme command line tool and Github action

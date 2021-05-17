@@ -46,6 +46,7 @@ var (
 
 func init() {
 	flag.StringVar(&cfg.ImportPath, "import-path", "", "Override package import path.")
+	flag.StringVar(&cfg.DestinationPath, "destination-path", "", "Override package destination path.")
 	flag.StringVar(&cfg.Title, "title", "", "Override readme title. Default is package name.")
 	flag.BoolVar(&cfg.RecursiveSubPackages, "recursive", false, "Load docs recursively.")
 	flag.BoolVar(&cfg.Functions, "functions", false, "Write functions section.")
@@ -83,6 +84,26 @@ Flags:
 }
 
 func main() {
+
+	if cfg.DestinationPath != "" {
+		path = cfg.DestinationPath
+		var err error
+		fmt.Println(filepath.Dir(path))
+		if _, err := os.Stat(filepath.Dir(path)); os.IsNotExist(err) {
+			// Make directory recursively if it does not exist
+			err := os.MkdirAll(filepath.Dir(path), 0755)
+			if err != nil {
+				log.Fatalf("Failed creating folders %s: %s", path, err)
+			}
+		}
+
+		out, err = os.Create(path)
+		if err != nil {
+			log.Fatalf("Failed opening file %s: %s", path, err)
+		}
+		defer out.Close()
+	}
+
 	// Steps to do only in Github Action mode.
 	if path != "" {
 		// Setup output file.
@@ -138,6 +159,16 @@ func main() {
 }
 
 func pkg(args []string) string {
+
+	if cfg.ImportPath != "" {
+		path, err := filepath.Abs("./")
+		if err != nil {
+			log.Fatal(err)
+		}
+		gosrc.SetLocalDevMode(path)
+		return cfg.ImportPath
+	}
+
 	if len(args) > 0 {
 		return args[0]
 	}

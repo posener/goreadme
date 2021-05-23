@@ -16,11 +16,13 @@ import (
 	"github.com/posener/goaction/log"
 	"github.com/posener/goreadme"
 	"golang.org/x/oauth2"
+
+	"github.com/posener/goreadme/internal/config"
 )
 
 var (
 	// Holds configuration for Goreadme invocation.
-	cfg goreadme.Config
+	cfg config.Config
 
 	// Write readme output
 	out io.WriteCloser = os.Stdout
@@ -48,8 +50,12 @@ func init() {
 	flag.StringVar(&cfg.ImportPath, "import-path", "", "Override package import path.")
 	flag.StringVar(&cfg.Title, "title", "", "Override readme title. Default is package name.")
 	flag.BoolVar(&cfg.RecursiveSubPackages, "recursive", false, "Load docs recursively.")
+	flag.BoolVar(&cfg.Consts, "constants", false, "Write package constants section, and if 'types' is specified, also write per-type constants section.")
+	flag.BoolVar(&cfg.Vars, "variabless", false, "Write package variables section, and if 'types' is specified, also write per-type variables section.")
 	flag.BoolVar(&cfg.Functions, "functions", false, "Write functions section.")
 	flag.BoolVar(&cfg.Types, "types", false, "Write types section.")
+	flag.BoolVar(&cfg.Factories, "factories", false, "If 'types' is specified, write section for functions returning each type.")
+	flag.BoolVar(&cfg.Methods, "methods", false, "If 'types' is specified, write section for methods for each type.")
 	flag.BoolVar(&cfg.SkipExamples, "skip-examples", false, "Skip the examples section.")
 	flag.BoolVar(&cfg.SkipSubPackages, "skip-sub-packages", false, "Skip the sub packages section.")
 	flag.BoolVar(&cfg.Badges.TravisCI, "badge-travisci", false, "Show TravisCI badge.")

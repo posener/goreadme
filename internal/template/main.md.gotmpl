@@ -1,24 +1,24 @@
 # {{.Package.Name}}
 
-{{if .Config.Badges.TravisCI -}}
+{{if config.Badges.TravisCI -}}
 [![Build Status](https://travis-ci.org/{{fullName .Package}}.svg?branch=master)](https://travis-ci.org/{{fullName .Package}})
 {{end -}}
-{{if .Config.Badges.CodeCov -}}
+{{if config.Badges.CodeCov -}}
 [![codecov](https://codecov.io/gh/{{fullName .Package}}/branch/master/graph/badge.svg)](https://codecov.io/gh/{{fullName .Package}})
 {{end -}}
-{{if .Config.Badges.GolangCI -}}
+{{if config.Badges.GolangCI -}}
 [![golangci](https://golangci.com/badges/{{importPath .Package}}.svg)](https://golangci.com/r/{{importPath .Package}})
 {{end -}}
-{{if .Config.Badges.GoDoc -}}
+{{if config.Badges.GoDoc -}}
 [![GoDoc](https://img.shields.io/badge/pkg.go.dev-doc-blue)](http://pkg.go.dev/{{importPath .Package}})
 {{end -}}
-{{if .Config.Badges.GoReportCard -}}
+{{if config.Badges.GoReportCard -}}
 [![Go Report Card](https://goreportcard.com/badge/{{importPath .Package}})](https://goreportcard.com/report/{{importPath .Package}})
 {{ end }}
 
 {{ doc .Package.Doc }}
 
-{{ if .Package.Consts }}
+{{ if and config.Consts .Package.Consts }}
 
 ## Constants
 
@@ -26,7 +26,7 @@
 
 {{ end }}
 
-{{ if .Package.Vars }}
+{{ if and config.Vars .Package.Vars }}
 
 ## Variables
 
@@ -34,22 +34,22 @@
 
 {{ end }}
 
-{{ if .Config.Functions }}
+{{ if config.Functions }}
 {{ template "functions" .Package }}
 {{ end }}
 
-{{ if .Config.Types }}
+{{ if config.Types }}
 {{ template "types" .Package }}
 {{ end }}
 
-{{ if (not .Config.SkipSubPackages) }}
+{{ if (not config.SkipSubPackages) }}
 {{ template "subpackages" . }}
 {{ end }}
 
-{{ if (not .Config.SkipExamples) }}
+{{ if (not config.SkipExamples) }}
 {{ template "examples" .Package.Examples }}
 {{ end }}
-{{ if .Config.Credit }}
+{{ if config.Credit }}
 ---
 Readme created from Go doc with [goreadme](https://github.com/posener/goreadme)
 {{ end }}

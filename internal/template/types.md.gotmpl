@@ -11,7 +11,7 @@
 
 {{ doc .Doc }}
 
-{{ if .Consts }}
+{{ if and config.Consts .Consts }}
 
 #### Constants
 
@@ -19,7 +19,7 @@
 
 {{ end }}
 
-{{ if .Vars }}
+{{ if and config.Vars .Vars }}
 
 #### Variables
 
@@ -29,6 +29,7 @@
 
 {{ template "examplesNoHeading" .Examples }}
 
+{{ if config.Factories }}
 {{/* Iterate functions returning this type */}}
 {{ range .Funcs }}
 
@@ -42,7 +43,9 @@
 
 {{ end }}
 {{/* Done with functions returning this type */}}
+{{ end }}
 
+{{ if config.Methods }}
 {{/* Iterate methods */}}
 {{ range .Methods }}
 
@@ -56,6 +59,7 @@
 
 {{ end }}
 {{/* Done with methods */}}
+{{ end }}
 
 {{ end }}
 

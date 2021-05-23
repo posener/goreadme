@@ -64,21 +64,11 @@ package pkg1
 
 import "fmt"
 
-const (
-	// ConstVal1 is a const in a const block.
-	ConstVal1 int = 1
-)
+// SomeConst is a package-level constant.
+const SomeConst int = 5
 
-// ConstVal2 is a const outside a const block.
-const ConstVal2 string = "2"
-
-var (
-	// VarVal1 is a var in a var block.
-	VarVal1 int = 3
-)
-
-// VarVal2 is a var outside a var block.
-var VarVal2 string = "4"
+// SomeVar is a package-level variable.
+var SomeVar int = 6
 
 func Func() {
 	fmt.Println("hello")

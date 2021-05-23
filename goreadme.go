@@ -103,6 +103,7 @@ import (
 
 	"github.com/golang/gddo/doc"
 	"github.com/pkg/errors"
+	"github.com/posener/goreadme/internal/config"
 	"github.com/posener/goreadme/internal/markdown"
 	"github.com/posener/goreadme/internal/template"
 )
@@ -124,34 +125,7 @@ type GoReadme struct {
 	config Config
 }
 
-type Config struct {
-	// Override readme title. Default is package name.
-	Title string `json:"title"`
-	// ImportPath is used to override the import path. For example: github.com/user/project,
-	// github.com/user/project/package or github.com/user/project/version.
-	ImportPath string `json:"import_path"`
-	// Functions will make functions documentation to be added to the README.
-	Functions bool `json:"functions"`
-	// Types will make types documentation to be added to the README.
-	Types bool `json:"types"`
-	// SkipExamples will omit the examples section from the README.
-	SkipExamples bool `json:"skip_examples"`
-	// SkipSubPackages will omit the sub packages section from the README.
-	SkipSubPackages bool `json:"skip_sub_packages"`
-	// NoDiffBlocks disables marking code blocks as diffs if they start with minus or plus signes.
-	NoDiffBlocks bool `json:"no_diff_blocks"`
-	// RecursiveSubPackages will retrieved subpackages information recursively.
-	// If false, only one level of subpackages will be retrieved.
-	RecursiveSubPackages bool `json:"recursive_sub_packages"`
-	Badges               struct {
-		TravisCI     bool `json:"travis_ci"`
-		CodeCov      bool `json:"code_cov"`
-		GolangCI     bool `json:"golang_ci"`
-		GoDoc        bool `json:"go_doc"`
-		GoReportCard bool `json:"go_report_card"`
-	} `json:"badges"`
-	Credit bool `json:"credit"`
-}
+type Config = config.Config
 
 // Create writes the content of readme.md to w, with the default client.
 // name should be a Go repository name, such as "github.com/posener/goreadme".
@@ -173,14 +147,13 @@ func (r *GoReadme) Create(ctx context.Context, name string, w io.Writer) error {
 	if err != nil {
 		return err
 	}
-	return template.Execute(w, p, markdown.OptNoDiff(r.config.NoDiffBlocks))
+	return template.Execute(w, p, r.config, markdown.OptNoDiff(r.config.NoDiffBlocks))
 }
 
 // pkg contains information about a go package, to be used in the template.
 type pkg struct {
 	Package     *doc.Package
 	SubPackages []subPkg
-	Config      Config
 }
 
 // subPkg is information about sub package, to be used in the template.
@@ -245,7 +218,6 @@ func (r *GoReadme) get(ctx context.Context, name string) (*pkg, error) {
 
 	pkg := &pkg{
 		Package: p,
-		Config:  r.config,
 	}
 
 	if !r.config.SkipSubPackages {

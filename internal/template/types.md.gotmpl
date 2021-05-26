@@ -1,9 +1,9 @@
 {{ define "types" }}
-{{ if .Types }}
+{{ if .Package.Types }}
 
 ## Types
 
-{{ range .Types }}
+{{ range .Package.Types }}
 
 ### type [{{ .Name }}]({{ urlOrName (index $.Files .Pos.File) }}#L{{ .Pos.Line }})
 
@@ -11,20 +11,12 @@
 
 {{ doc .Doc }}
 
-{{ if .Consts }}
-
-#### Constants
-
-{{ template "values" .Consts }}
-
+{{ if $.Config.Consts }}
+{{ template "consts" . }}
 {{ end }}
 
-{{ if .Vars }}
-
-#### Variables
-
-{{ template "values" .Vars }}
-
+{{ if $.Config.Vars }}
+{{ template "vars" . }}
 {{ end }}
 
 {{ template "examplesNoHeading" .Examples }}

@@ -18,20 +18,12 @@
 
 {{ doc .Package.Doc }}
 
-{{ if .Package.Consts }}
-
-## Constants
-
-{{ template "values" .Package.Consts }}
-
+{{ if .Config.Consts }}
+{{ template "consts" .Package }}
 {{ end }}
 
-{{ if .Package.Vars }}
-
-## Variables
-
-{{ template "values" .Package.Vars }}
-
+{{ if .Config.Vars }}
+{{ template "vars" .Package }}
 {{ end }}
 
 {{ if .Config.Functions }}
@@ -39,7 +31,7 @@
 {{ end }}
 
 {{ if .Config.Types }}
-{{ template "types" .Package }}
+{{ template "types" . }}
 {{ end }}
 
 {{ if (not .Config.SkipSubPackages) }}

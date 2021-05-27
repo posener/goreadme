@@ -1,5 +1,5 @@
-// Package pkg1 is a testing package.
-package pkg1
+// Package pkg10 is a testing package.
+package pkg10
 
 const (
 	// ConstVal1 is a const in a const block.

@@ -11,20 +11,12 @@
 
 {{ doc .Doc }}
 
-{{ if and config.Consts .Consts }}
-
-#### Constants
-
-{{ template "values" .Consts }}
-
+{{ if config.Consts }}
+{{ template "typesConsts" .Consts }}
 {{ end }}
 
-{{ if and config.Vars .Vars }}
-
-#### Variables
-
-{{ template "values" .Vars }}
-
+{{ if config.Vars }}
+{{ template "typesVars" .Vars }}
 {{ end }}
 
 {{ template "examplesNoHeading" .Examples }}

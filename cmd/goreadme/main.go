@@ -16,13 +16,11 @@ import (
 	"github.com/posener/goaction/log"
 	"github.com/posener/goreadme"
 	"golang.org/x/oauth2"
-
-	"github.com/posener/goreadme/internal/config"
 )
 
 var (
 	// Holds configuration for Goreadme invocation.
-	cfg config.Config
+	cfg goreadme.Config
 
 	// Write readme output
 	out io.WriteCloser = os.Stdout

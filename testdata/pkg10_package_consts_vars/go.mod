@@ -1,3 +1,3 @@
-module pkg6
+module pkg10
 
 go 1.15

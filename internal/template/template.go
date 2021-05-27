@@ -9,7 +9,6 @@ import (
 	"text/template"
 
 	"github.com/golang/gddo/doc"
-	"github.com/posener/goreadme/internal/config"
 	"github.com/posener/goreadme/internal/markdown"
 )
 
@@ -17,7 +16,7 @@ import (
 var files embed.FS
 
 // Execute is used to execute the README.md template.
-func Execute(w io.Writer, data interface{}, cfg config.Config, options ...markdown.Option) error {
+func Execute(w io.Writer, data interface{}, cfg interface{}, options ...markdown.Option) error {
 	templates, err := template.New("main.md.gotmpl").Funcs(funcs(cfg, options)).ParseFS(files, "*")
 	if err != nil {
 		return err
@@ -25,9 +24,9 @@ func Execute(w io.Writer, data interface{}, cfg config.Config, options ...markdo
 	return templates.Execute(&multiNewLineEliminator{w: w}, data)
 }
 
-func funcs(cfg config.Config, options []markdown.Option) template.FuncMap {
+func funcs(cfg interface{}, options []markdown.Option) template.FuncMap {
 	return template.FuncMap{
-		"config": func() config.Config {
+		"config": func() interface{} {
 			return cfg
 		},
 		"doc": func(s string) string {

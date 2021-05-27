@@ -1,6 +1,6 @@
-# pkg1
+# pkg11
 
-Package pkg1 is a testing package.
+Package pkg11 is a testing package.
 
 ## Constants
 

@@ -18,20 +18,12 @@
 
 {{ doc .Package.Doc }}
 
-{{ if and config.Consts .Package.Consts }}
-
-## Constants
-
-{{ template "values" .Package.Consts }}
-
+{{ if config.Consts }}
+{{ template "consts" .Package.Consts }}
 {{ end }}
 
-{{ if and config.Vars .Package.Vars }}
-
-## Variables
-
-{{ template "values" .Package.Vars }}
-
+{{ if config.Vars }}
+{{ template "vars" .Package.Vars }}
 {{ end }}
 
 {{ if config.Functions }}

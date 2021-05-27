@@ -1,0 +1,15 @@
+{{ define "vars" }}
+{{ if . }}
+
+## Variables
+
+{{ range . }}
+
+{{ doc .Doc }}
+
+{{ gocode .Decl.Text }}
+
+{{ end }}
+
+{{ end }}
+{{ end }}

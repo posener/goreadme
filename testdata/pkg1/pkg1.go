@@ -64,6 +64,12 @@ package pkg1
 
 import "fmt"
 
+// SomeConst is a package-level constant.
+const SomeConst int = 5
+
+// SomeVar is a package-level variable.
+var SomeVar int = 6
+
 func Func() {
 	fmt.Println("hello")
 }

@@ -1,0 +1,7 @@
+{
+    "types": true,
+    "factories": true,
+    "methods": true,
+    "consts": true,
+    "vars": true
+}

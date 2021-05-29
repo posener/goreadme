@@ -138,10 +138,22 @@ type Config struct {
 	// ImportPath is used to override the import path. For example: github.com/user/project,
 	// github.com/user/project/package or github.com/user/project/version.
 	ImportPath string `json:"import_path"`
+	// Consts will make constants documentation to be added to the README.
+	// If Types is specified, constants for each type will also be added to the README.
+	Consts bool `json:"consts"`
+	// Vars will make exported variables documentation to be added to the README.
+	// If Types is specified, exported variables for each type will also be added to the README.
+	Vars bool `json:"vars"`
 	// Functions will make functions documentation to be added to the README.
 	Functions bool `json:"functions"`
 	// Types will make types documentation to be added to the README.
 	Types bool `json:"types"`
+	// Factories will make functions returning a type to be added to the README, if Types is also specified.
+	// Has no effect if Types is not specified.
+	Factories bool `json:"factories"`
+	// Methods will make the methods for a type to be added to the README, if Types is also specified.
+	// Has no effect if Types is not specified.
+	Methods bool `json:"methods"`
 	// SkipExamples will omit the examples section from the README.
 	SkipExamples bool `json:"skip_examples"`
 	// SkipSubPackages will omit the sub packages section from the README.
@@ -181,14 +193,13 @@ func (r *GoReadme) Create(ctx context.Context, name string, w io.Writer) error {
 	if err != nil {
 		return err
 	}
-	return template.Execute(w, p, markdown.OptNoDiff(r.config.NoDiffBlocks))
+	return template.Execute(w, p, r.config, markdown.OptNoDiff(r.config.NoDiffBlocks))
 }
 
 // pkg contains information about a go package, to be used in the template.
 type pkg struct {
 	Package     *doc.Package
 	SubPackages []subPkg
-	Config      Config
 }
 
 // subPkg is information about sub package, to be used in the template.
@@ -253,7 +264,6 @@ func (r *GoReadme) get(ctx context.Context, name string) (*pkg, error) {
 
 	pkg := &pkg{
 		Package: p,
-		Config:  r.config,
 	}
 
 	if !r.config.SkipSubPackages {

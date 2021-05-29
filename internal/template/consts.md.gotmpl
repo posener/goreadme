@@ -1,0 +1,15 @@
+{{ define "consts" }}
+{{ if . }}
+
+## Constants
+
+{{ range . }}
+
+{{ doc .Doc }}
+
+{{ gocode .Decl.Text }}
+
+{{ end }}
+
+{{ end }}
+{{ end}}

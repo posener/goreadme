@@ -33,6 +33,14 @@ inputs:
     default: false
     description: "Load docs recursively."
     required: false
+  constants:
+    default: false
+    description: "Write package constants section, and if 'types' is specified, also write per-type constants section."
+    required: false
+  variabless:
+    default: false
+    description: "Write package variables section, and if 'types' is specified, also write per-type variables section."
+    required: false
   functions:
     default: false
     description: "Write functions section."
@@ -40,6 +48,14 @@ inputs:
   types:
     default: false
     description: "Write types section."
+    required: false
+  factories:
+    default: false
+    description: "If 'types' is specified, write section for functions returning each type."
+    required: false
+  methods:
+    default: false
+    description: "If 'types' is specified, write section for methods for each type."
     required: false
   skip-examples:
     default: false
@@ -87,8 +103,12 @@ runs:
   - "-import-path=${{ inputs.import-path }}"
   - "-title=${{ inputs.title }}"
   - "-recursive=${{ inputs.recursive }}"
+  - "-constants=${{ inputs.constants }}"
+  - "-variabless=${{ inputs.variabless }}"
   - "-functions=${{ inputs.functions }}"
   - "-types=${{ inputs.types }}"
+  - "-factories=${{ inputs.factories }}"
+  - "-methods=${{ inputs.methods }}"
   - "-skip-examples=${{ inputs.skip-examples }}"
   - "-skip-sub-packages=${{ inputs.skip-sub-packages }}"
   - "-badge-travisci=${{ inputs.badge-travisci }}"

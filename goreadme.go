@@ -12,7 +12,7 @@
 // the README file.
 //
 // To use this with Github actions, add the following content to `.github/workflows/goreadme.yml`.
-// See ./actions.yml for all available input options.
+// See ./action.yml for all available input options.
 //
 // 	on:
 // 	  push:

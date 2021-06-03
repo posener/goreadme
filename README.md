@@ -18,7 +18,7 @@ is given, the action will post a comment on the pull request with changes that w
 the README file.
 
 To use this with Github actions, add the following content to `.github/workflows/goreadme.yml`.
-See [./actions.yml](./actions.yml) for all available input options.
+See [./action.yml](./action.yml) for all available input options.
 
 ```go
 on:

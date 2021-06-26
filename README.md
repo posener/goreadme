@@ -70,7 +70,7 @@ bit more limited. Currently, `goreadme` supports the formatting as explained in
 
 ```go
 func main() {
-	...
+  ...
 }
 ```
 

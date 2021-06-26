@@ -14,31 +14,31 @@
 // To use this with Github actions, add the following content to `.github/workflows/goreadme.yml`.
 // See ./action.yml for all available input options.
 //
-// 	on:
-// 	  push:
-// 	    branches: [master]
-// 	  pull_request:
-// 	    branches: [master]
-// 	jobs:
-// 	    goreadme:
-// 	        runs-on: ubuntu-latest
-// 	        steps:
-// 	        - name: Check out repository
-// 	          uses: actions/checkout@v2
-// 	        - name: Update readme according to Go doc
-// 	          uses: posener/goreadme@v1
-// 	          with:
-// 	            badge-travisci: 'true'
-// 	            badge-codecov: 'true'
-// 	            badge-godoc: 'true'
-// 	            badge-goreadme: 'true'
-// 	            # Optional: Token allows goreadme to comment the PR with diff preview.
-// 	            github-token: '${{ secrets.GITHUB_TOKEN }}'
+//  on:
+//    push:
+//      branches: [master]
+//    pull_request:
+//      branches: [master]
+//  jobs:
+//      goreadme:
+//          runs-on: ubuntu-latest
+//          steps:
+//          - name: Check out repository
+//            uses: actions/checkout@v2
+//          - name: Update readme according to Go doc
+//            uses: posener/goreadme@v1
+//            with:
+//              badge-travisci: 'true'
+//              badge-codecov: 'true'
+//              badge-godoc: 'true'
+//              badge-goreadme: 'true'
+//              # Optional: Token allows goreadme to comment the PR with diff preview.
+//              github-token: '${{ secrets.GITHUB_TOKEN }}'
 //
 // Use as a command line tool
 //
-// 	$ GO111MODULE=on go get github.com/posener/goreadme/cmd/goreadme
-// 	$ goreadme -h
+//  $ GO111MODULE=on go get github.com/posener/goreadme/cmd/goreadme
+//  $ goreadme -h
 //
 // Why Should You Use It
 //
@@ -58,9 +58,9 @@
 //
 // * Code block is recognized by indentation as Go code.
 //
-// 	func main() {
-// 		...
-// 	}
+//  func main() {
+//    ...
+//  }
 //
 // * Inline code is marked with `backticks`.
 //
@@ -74,9 +74,9 @@
 // * Diff blocks are automatically detected when each line in a code block starts with a `' '`,
 // `'-'` or `'+'`:
 //
-// 	-removed line starts with '-'
-// 	 remained line starts with ' '
-// 	+added line starts with '+'
+//  -removed line starts with '-'
+//   remained line starts with ' '
+//  +added line starts with '+'
 //
 // * A repository file can be linked when providing a path that start with `./`: ./goreadme.go.
 //

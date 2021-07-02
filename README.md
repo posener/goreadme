@@ -23,9 +23,9 @@ See [./action.yml](./action.yml) for all available input options.
 ```go
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
-    branches: [master]
+    branches: [main]
 jobs:
     goreadme:
         runs-on: ubuntu-latest

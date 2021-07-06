@@ -19,6 +19,9 @@
 //      branches: [master]
 //    pull_request:
 //      branches: [master]
+//  permissions:
+//    # Goreadme needs permissions to update pull requests comments.
+//    pull-requests: write
 //  jobs:
 //      goreadme:
 //          runs-on: ubuntu-latest

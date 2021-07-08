@@ -156,7 +156,7 @@ func emphasize(w io.Writer, line string, words map[string]string, nice bool) {
 		// m >= 6 (two parenthesized sub-regexps in matchRx, 1st one is urlRx)
 
 		// write text before match
-		fmt.Fprintf(w, line[0:m[0]])
+		fmt.Fprint(w, line[0:m[0]])
 		// adjust match if necessary
 		match := line[m[0]:m[1]]
 		if n := pairedParensPrefixLen(match); n < len(match) {
@@ -197,7 +197,7 @@ func emphasize(w io.Writer, line string, words map[string]string, nice bool) {
 
 			// Skip Go path ellipsis.
 			if strings.HasSuffix(url, "/...") {
-				fmt.Fprintf(w, line[1:m[1]])
+				fmt.Fprint(w, line[1:m[1]])
 				line = line[m[1]:]
 				continue
 			}
@@ -228,9 +228,9 @@ func emphasize(w io.Writer, line string, words map[string]string, nice bool) {
 			fmt.Fprint(w, "*")
 		}
 		if len(url) > 0 {
-			fmt.Fprintf(w, url)
+			fmt.Fprint(w, url)
 		} else {
-			fmt.Fprintf(w, match)
+			fmt.Fprint(w, match)
 		}
 		if italics {
 			fmt.Fprint(w, "*")
@@ -243,7 +243,7 @@ func emphasize(w io.Writer, line string, words map[string]string, nice bool) {
 		// advance
 		line = line[m[1]:]
 	}
-	fmt.Fprintf(w, line)
+	fmt.Fprint(w, line)
 }
 
 func indentLen(s string) int {

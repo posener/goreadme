@@ -27,8 +27,9 @@ on:
   pull_request:
     branches: [main]
 permissions:
-  # Goreadme needs permissions to update pull requests comments.
+  # Goreadme needs permissions to update pull requests comments and change contents.
   pull-requests: write
+  contents: write
 jobs:
     goreadme:
         runs-on: ubuntu-latest

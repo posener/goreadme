@@ -2,5 +2,4 @@
 
 Package pkg12 tests special symbols
 
-This is issue #115: %!
-(MISSING)
+This is issue #115: %

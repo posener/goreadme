@@ -4,8 +4,9 @@ on:
     push:
       branches: [master]
 permissions:
-  # Goaction needs permissions to update pull requests comments.
+  # Goaction needs permissions to update pull requests comments and update content.
   pull-requests: write
+  contents: write
 jobs:
     goaction:
       runs-on: ubuntu-latest

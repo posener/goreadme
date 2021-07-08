@@ -5,9 +5,9 @@
 // Github Action
 //
 // Github actions can be configured to update the README file automatically every time it is needed.
-// Below there is an example that on every time a new change is pushed to the master branch, the
+// Below there is an example that on every time a new change is pushed to the main branch, the
 // action is trigerred, generates a new README file, and if there is a change - commits and pushes
-// it to the master branch. In pull requests that affect the README content, if the `github-token`
+// it to the main branch. In pull requests that affect the README content, if the `github-token`
 // is given, the action will post a comment on the pull request with changes that will be made to
 // the README file.
 //
@@ -16,9 +16,9 @@
 //
 //  on:
 //    push:
-//      branches: [master]
+//      branches: [main]
 //    pull_request:
-//      branches: [master]
+//      branches: [main]
 //  permissions:
 //    # Goreadme needs permissions to update pull requests comments.
 //    pull-requests: write

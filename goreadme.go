@@ -7,7 +7,7 @@
 // Github actions can be configured to update the README file automatically every time it is needed.
 // Below there is an example that on every time a new change is pushed to the main branch, the
 // action is trigerred, generates a new README file, and if there is a change - commits and pushes
-// it to the main branch. In pull requests that affect the README content, if the `github-token`
+// it to the main branch. In pull requests that affect the README content, if the `GITHUB_TOKEN`
 // is given, the action will post a comment on the pull request with changes that will be made to
 // the README file.
 //
@@ -37,7 +37,7 @@
 //              badge-godoc: 'true'
 //              badge-goreadme: 'true'
 //              # Optional: Token allows goreadme to comment the PR with diff preview.
-//              github-token: '${{ secrets.GITHUB_TOKEN }}'
+//              GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
 //
 // Use as a command line tool
 //

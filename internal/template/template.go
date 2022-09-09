@@ -1,7 +1,6 @@
 package template
 
 import (
-	"bytes"
 	"embed"
 	"io"
 	"regexp"
@@ -30,7 +29,7 @@ func funcs(cfg interface{}, options []markdown.Option) template.FuncMap {
 			return cfg
 		},
 		"doc": func(s string) string {
-			b := bytes.NewBuffer(nil)
+			b := &strings.Builder{}
 			markdown.ToMarkdown(b, s, options...)
 			return b.String()
 		},

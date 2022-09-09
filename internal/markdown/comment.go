@@ -9,6 +9,7 @@ package markdown
 
 import (
 	"fmt"
+	"go/doc/comment"
 	"io"
 	"regexp"
 	"strings"
@@ -39,6 +40,13 @@ func ToMarkdown(w io.Writer, text string, opts ...Option) {
 	var o options
 	for _, f := range opts {
 		f(&o)
+	}
+
+	if o.useStdlib {
+		parser := comment.Parser{Words: o.words}
+		printer := comment.Printer{HeadingLevel: 2}
+		w.Write(printer.Markdown(parser.Parse(text)))
+		return
 	}
 
 	for _, b := range blocks(text, o.noDiffs) {
@@ -83,9 +91,14 @@ func OptNoDiff(noDiffs bool) Option {
 	return func(o *options) { o.noDiffs = noDiffs }
 }
 
+func OptUseStdlib(useStdlib bool) Option {
+	return func(o *options) { o.useStdlib = useStdlib }
+}
+
 type options struct {
-	words   map[string]string
-	noDiffs bool
+	words     map[string]string
+	noDiffs   bool
+	useStdlib bool // Use standard library comments parsers introduced in Go 1.19.
 }
 
 const (

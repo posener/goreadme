@@ -2,7 +2,7 @@
 //
 // The package can be used as a command line tool and as Github action, described below:
 //
-// Github Action
+// # Github Action
 //
 // Github actions can be configured to update the README file automatically every time it is needed.
 // Below there is an example that on every time a new change is pushed to the main branch, the
@@ -14,44 +14,44 @@
 // To use this with Github actions, add the following content to `.github/workflows/goreadme.yml`.
 // See ./action.yml for all available input options.
 //
-//  on:
-//    push:
-//      branches: [main]
-//    pull_request:
-//      branches: [main]
-//  permissions:
-//    # Goreadme needs permissions to update pull requests comments and change contents.
-//    pull-requests: write
-//    contents: write
-//  jobs:
-//      goreadme:
-//          runs-on: ubuntu-latest
-//          steps:
-//          - name: Check out repository
-//            uses: actions/checkout@v2
-//          - name: Update readme according to Go doc
-//            uses: posener/goreadme@v1
-//            with:
-//              badge-travisci: 'true'
-//              badge-codecov: 'true'
-//              badge-godoc: 'true'
-//              badge-goreadme: 'true'
-//              # Optional: Token allows goreadme to comment the PR with diff preview.
-//              GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+//	on:
+//	  push:
+//	    branches: [main]
+//	  pull_request:
+//	    branches: [main]
+//	permissions:
+//	  # Goreadme needs permissions to update pull requests comments and change contents.
+//	  pull-requests: write
+//	  contents: write
+//	jobs:
+//	    goreadme:
+//	        runs-on: ubuntu-latest
+//	        steps:
+//	        - name: Check out repository
+//	          uses: actions/checkout@v2
+//	        - name: Update readme according to Go doc
+//	          uses: posener/goreadme@v1
+//	          with:
+//	            badge-travisci: 'true'
+//	            badge-codecov: 'true'
+//	            badge-godoc: 'true'
+//	            badge-goreadme: 'true'
+//	            # Optional: Token allows goreadme to comment the PR with diff preview.
+//	            GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
 //
 // Use as a command line tool
 //
-//  $ GO111MODULE=on go get github.com/posener/goreadme/cmd/goreadme
-//  $ goreadme -h
+//	$ GO111MODULE=on go get github.com/posener/goreadme/cmd/goreadme
+//	$ goreadme -h
 //
-// Why Should You Use It
+// # Why Should You Use It
 //
 // Both Go doc and readme files are important. Go doc to be used by your user's library, and README
 // file to welcome users to use your library. They share common content, which is usually duplicated
 // from the doc to the readme or vice versa once the library is ready. The problem is that keeping
 // documentation updated is important, and hard enough - keeping both updated is twice as hard.
 //
-// Go Doc Instructions
+// # Go Doc Instructions
 //
 // The formatting of the README.md is done by the go doc parser. This makes the result README.md a
 // bit more limited. Currently, `goreadme` supports the formatting as explained in
@@ -62,9 +62,9 @@
 //
 // * Code block is recognized by indentation as Go code.
 //
-//  func main() {
-//    ...
-//  }
+//	func main() {
+//	  ...
+//	}
 //
 // * Inline code is marked with `backticks`.
 //
@@ -78,9 +78,9 @@
 // * Diff blocks are automatically detected when each line in a code block starts with a `' '`,
 // `'-'` or `'+'`:
 //
-//  -removed line starts with '-'
-//   remained line starts with ' '
-//  +added line starts with '+'
+//	-removed line starts with '-'
+//	 remained line starts with ' '
+//	+added line starts with '+'
 //
 // * A repository file can be linked when providing a path that start with `./`: ./goreadme.go.
 //
@@ -93,7 +93,7 @@
 //
 // (image/title of image) https://github.githubassets.com/images/icons/emoji/unicode/1f44c.png
 //
-// Testing
+// # Testing
 //
 // The goreadme tests the test cases in the ./testdata directory. It generates readme files for
 // all the packages in that directory and asserts that the result readme matches the existing one.
@@ -123,9 +123,9 @@ import (
 // client is an HTTP client used to perform the requests. It can be used
 // to authenticate github requests, for example, a github client can be used:
 //
-//		oauth2.NewClient(ctx, oauth2.StaticTokenSource(
-//			&oauth2.Token{AccessToken: "...github access token..."
-//		))
+//	oauth2.NewClient(ctx, oauth2.StaticTokenSource(
+//		&oauth2.Token{AccessToken: "...github access token..."
+//	))
 func New(c *http.Client) *GoReadme {
 	return &GoReadme{client: c}
 }
@@ -142,6 +142,8 @@ type Config struct {
 	// ImportPath is used to override the import path. For example: github.com/user/project,
 	// github.com/user/project/package or github.com/user/project/version.
 	ImportPath string `json:"import_path"`
+	// Use the standard library comment parser introduced in Go 1.19 to generate the markdown output.
+	StdMarkdown bool `json:"std_markdown"`
 	// Consts will make constants documentation to be added to the README.
 	// If Types is specified, constants for each type will also be added to the README.
 	Consts bool `json:"consts"`

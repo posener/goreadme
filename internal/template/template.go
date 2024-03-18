@@ -34,7 +34,7 @@ func funcs(cfg interface{}, options []markdown.Option) template.FuncMap {
 			return b.String()
 		},
 		"gocode": func(s string) string {
-			return "```golang\n" + s + "\n```\n"
+			return "```go\n" + s + "\n```\n"
 		},
 		"code": func(s string) string {
 			if !strings.HasSuffix(s, "\n") {

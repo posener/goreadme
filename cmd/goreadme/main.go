@@ -50,7 +50,7 @@ func init() {
 	flag.BoolVar(&cfg.RecursiveSubPackages, "recursive", false, "Load docs recursively.")
 	flag.BoolVar(&cfg.Ellipsis, "ellipsis", true, "If 'types' is specified, replace types content with an ellipsis.")
 	flag.BoolVar(&cfg.Consts, "constants", false, "Write package constants section, and if 'types' is specified, also write per-type constants section.")
-	flag.BoolVar(&cfg.Vars, "variabless", false, "Write package variables section, and if 'types' is specified, also write per-type variables section.")
+	flag.BoolVar(&cfg.Vars, "variables", false, "Write package variables section, and if 'types' is specified, also write per-type variables section.")
 	flag.BoolVar(&cfg.Functions, "functions", false, "Write functions section.")
 	flag.BoolVar(&cfg.Types, "types", false, "Write types section.")
 	flag.BoolVar(&cfg.Factories, "factories", false, "If 'types' is specified, write section for functions returning each type.")

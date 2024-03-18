@@ -4,6 +4,13 @@
 [![codecov](https://codecov.io/gh/posener/goreadme/branch/master/graph/badge.svg)](https://codecov.io/gh/posener/goreadme)
 [![GoDoc](https://img.shields.io/badge/pkg.go.dev-doc-blue)](http://pkg.go.dev/github.com/posener/goreadme)
 
+---
+
+⚠️ Since the original repo seems inactive, I decided to maintain a fork here, with the changes I wanted.  
+My PRs are also [open on the main repo](https://github.com/posener/goreadme/pulls/alexandregv).
+
+---
+
 Package goreadme generates readme markdown file from go doc.
 
 The package can be used as a command line tool and as Github action, described below:

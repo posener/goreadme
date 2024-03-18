@@ -55,8 +55,11 @@ github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINE
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/posener/autogen v0.0.2/go.mod h1:23ND5WRzjjNM+lOMUvy4WudgDikSK3Sm0rmaXAfnIWo=
+github.com/posener/goaction v0.1.0/go.mod h1:HaHvM/qmQUIX/grEXhkfBJEC2AaUkyBNByJq7EGyT3Q=
 github.com/posener/goaction v1.2.1 h1:zOrQ52GhRdpZNjDBFale1QNwDoXbR6rrmnWYV2Be0ac=
 github.com/posener/goaction v1.2.1/go.mod h1:aHgsx8Q6UtebZBWRs8JiSCapjNTfPVqB2Mvi+0REtRQ=
+github.com/posener/goreadme v1.4.2 h1:wllVDVZiEZMstQxBTG/QCBxK/uGZSJomukc7n8uzgq0=
+github.com/posener/goreadme v1.4.2/go.mod h1:SvGw9nZP/KnxmtDx5vIqhET7GE8aHajWLCm4L6jYzOQ=
 github.com/posener/script v1.1.5 h1:su+9YHNlevT+Hlq2Xul5skh5kYDIBE+x4xu+5mLDT9o=
 github.com/posener/script v1.1.5/go.mod h1:Rg3ijooqulo05aGLyGsHoLmIOUzHUVK19WVgrYBPU/E=
 github.com/spf13/afero v0.0.0-20170901052352-ee1bd8ee15a1/go.mod h1:j4pytiNVoe2o6bmDsKpLACNPDBIoEAkihy7loJ1B0CQ=

@@ -50,6 +50,11 @@ func funcs(cfg interface{}, options []markdown.Option) template.FuncMap {
 			s = r.ReplaceAllString(s, "{ ... }")
 			return "`" + s + "`"
 		},
+		"gocodeEllipsis": func(s string) string {
+			r := regexp.MustCompile(`{(?s).*}`)
+			s = r.ReplaceAllString(s, "{ ... }")
+			return "```go\n" + s + "\n```\n"
+		},
 		"importPath": func(p *doc.Package) string {
 			return p.ImportPath
 		},

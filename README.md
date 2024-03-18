@@ -6,8 +6,10 @@
 
 ---
 
-⚠️ Since the original repo seems inactive, I decided to maintain a fork here, with the changes I wanted.  
+⚠️ Since the [original repo](https://github.com/posener/goreadme) seems inactive, I decided to maintain a fork here, with the changes I wanted.  
 My PRs are also [open on the main repo](https://github.com/posener/goreadme/pulls/alexandregv).
+
+Original work by [Eyal Posener](https://github.com/posener).
 
 ---
 

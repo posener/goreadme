@@ -34,7 +34,7 @@ func funcs(cfg interface{}, options []markdown.Option) template.FuncMap {
 			return b.String()
 		},
 		"gocode": func(s string) string {
-			return "```golang\n" + s + "\n```\n"
+			return "```go\n" + s + "\n```\n"
 		},
 		"code": func(s string) string {
 			if !strings.HasSuffix(s, "\n") {
@@ -49,6 +49,11 @@ func funcs(cfg interface{}, options []markdown.Option) template.FuncMap {
 			r := regexp.MustCompile(`{(?s).*}`)
 			s = r.ReplaceAllString(s, "{ ... }")
 			return "`" + s + "`"
+		},
+		"gocodeEllipsis": func(s string) string {
+			r := regexp.MustCompile(`{(?s).*}`)
+			s = r.ReplaceAllString(s, "{ ... }")
+			return "```go\n" + s + "\n```\n"
 		},
 		"importPath": func(p *doc.Package) string {
 			return p.ImportPath

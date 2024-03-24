@@ -7,7 +7,7 @@
 
 ### type [{{ .Name }}]({{ urlOrName (index $.Files .Pos.File) }}#L{{ .Pos.Line }})
 
-{{ inlineCodeEllipsis .Decl.Text }}
+{{ gocodeEllipsis .Decl.Text }}
 
 {{ doc .Doc }}
 
@@ -27,7 +27,7 @@
 
 #### func [{{ .Name }}]({{ urlOrName (index $.Files .Pos.File) }}#L{{ .Pos.Line }})
 
-{{ inlineCodeEllipsis .Decl.Text }}
+{{ gocodeEllipsis .Decl.Text }}
 
 {{ doc .Doc }}
 
@@ -43,7 +43,7 @@
 
 #### func ({{ .Recv }}) [{{ .Name }}]({{ urlOrName (index $.Files .Pos.File) }}#L{{ .Pos.Line }})
 
-{{ inlineCodeEllipsis .Decl.Text }}
+{{ gocodeEllipsis .Decl.Text }}
 
 {{ doc .Doc }}
 

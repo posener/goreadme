@@ -143,7 +143,7 @@ type Config struct {
 	// github.com/user/project/package or github.com/user/project/version.
 	ImportPath string `json:"import_path"`
 	// GoDocURL is the Go Doc URL used in the GoDoc Badge.
-	GoDocURL string `json:"go_doc_url"`
+	GoDocURL string `json:"godoc_url"`
 	// Use the standard library comment parser introduced in Go 1.19 to generate the markdown output.
 	StdMarkdown bool `json:"std_markdown"`
 	// Consts will make constants documentation to be added to the README.

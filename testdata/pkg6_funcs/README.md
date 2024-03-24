@@ -6,13 +6,15 @@ Package pkg1 is a testing package.
 
 ### func [Func](/pkg.go#L7)
 
-`func Func()`
+```go
+func Func()
+```
 
 Func is the first function with a description
 
 ExampleFunc tests func
 
-```golang
+```go
 Func()
 ```
 
@@ -26,7 +28,7 @@ hello
 
 ExampleFunc_withName tests func with a name
 
-```golang
+```go
 Func()
 ```
 
@@ -38,7 +40,9 @@ hello
 
 ### func [Punk](/pkg.go#L11)
 
-`func Punk()`
+```go
+func Punk()
+```
 
 ## Examples
 
@@ -46,7 +50,7 @@ hello
 
 Example_hello prints hello
 
-```golang
+```go
 fmt.Println("hello")
 ```
 
@@ -58,7 +62,7 @@ hello
 
 ### NoDoc
 
-```golang
+```go
 fmt.Println("hello")
 ```
 

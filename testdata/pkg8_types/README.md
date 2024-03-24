@@ -6,7 +6,9 @@ Package pkg1 is a testing package.
 
 ### type [ExampleType](/pkg.go#L5)
 
-`type ExampleType struct { ... }`
+```go
+type ExampleType struct { ... }
+```
 
 ExampleType is a type
 
@@ -14,7 +16,7 @@ ExampleType is a type
 
 ExampleExampleType tests using the type ExampleType
 
-```golang
+```go
 
 example := new(ExampleType)
 example.val = 1
@@ -23,12 +25,16 @@ example.val = 1
 
 ### type [ExampleType2](/pkg.go#L20)
 
-`type ExampleType2 struct { ... }`
+```go
+type ExampleType2 struct { ... }
+```
 
 ExampleType2 is a type with an array
 
 ### type [ExampleTypeInt](/pkg.go#L26)
 
-`type ExampleTypeInt struct { ... }`
+```go
+type ExampleTypeInt struct { ... }
+```
 
 ExampleTypeInt is a one-liner type

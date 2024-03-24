@@ -142,7 +142,7 @@ type Config struct {
 	// ImportPath is used to override the import path. For example: github.com/user/project,
 	// github.com/user/project/package or github.com/user/project/version.
 	ImportPath string `json:"import_path"`
-	// GoDocURL is the Go Doc URL used in the GoDoc Badge.
+	// GoDocURL is the Go Doc URL used in the GoDoc Badge. Default: https://pkg.go.dev.
 	GoDocURL string `json:"godoc_url"`
 	// Use the standard library comment parser introduced in Go 1.19 to generate the markdown output.
 	StdMarkdown bool `json:"std_markdown"`
@@ -268,6 +268,10 @@ func (r *GoReadme) get(ctx context.Context, name string) (*pkg, error) {
 
 	if override := r.config.ImportPath; override != "" {
 		p.ImportPath = override
+	}
+
+	if override := r.config.GoDocURL; override == "" {
+		r.config.GoDocURL = "https://pkg.go.dev"
 	}
 
 	pkg := &pkg{

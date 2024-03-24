@@ -37,7 +37,7 @@ inputs:
     default: false
     description: "Write package constants section, and if 'types' is specified, also write per-type constants section."
     required: false
-  variabless:
+  variables:
     default: false
     description: "Write package variables section, and if 'types' is specified, also write per-type variables section."
     required: false
@@ -104,7 +104,7 @@ runs:
   - "-title=${{ inputs.title }}"
   - "-recursive=${{ inputs.recursive }}"
   - "-constants=${{ inputs.constants }}"
-  - "-variabless=${{ inputs.variabless }}"
+  - "-variables=${{ inputs.variables }}"
   - "-functions=${{ inputs.functions }}"
   - "-types=${{ inputs.types }}"
   - "-factories=${{ inputs.factories }}"

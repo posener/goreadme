@@ -29,6 +29,10 @@ inputs:
   title:
     description: "Override readme title. Default is package name."
     required: false
+  godoc-url:
+    default: https://pkg.go.dev
+    description: "Go Doc URL for GoDoc badge."
+    required: false
   recursive:
     default: false
     description: "Load docs recursively."
@@ -102,6 +106,7 @@ runs:
   args:
   - "-import-path=${{ inputs.import-path }}"
   - "-title=${{ inputs.title }}"
+  - "-godoc-url=${{ inputs.godoc-url }}"
   - "-recursive=${{ inputs.recursive }}"
   - "-constants=${{ inputs.constants }}"
   - "-variables=${{ inputs.variables }}"

@@ -48,7 +48,7 @@ Or itemized list:
 
 Example_hello prints hello
 
-```golang
+```go
 fmt.Println("hello")
 ```
 
@@ -60,7 +60,7 @@ hello
 
 ### NoDoc
 
-```golang
+```go
 fmt.Println("hello")
 ```
 
@@ -74,7 +74,7 @@ hello
 
 ExampleFunc tests func
 
-```golang
+```go
 Func()
 ```
 
@@ -88,7 +88,7 @@ hello
 
 ExampleFunc_withName tests func with a name
 
-```golang
+```go
 Func()
 ```
 
@@ -102,7 +102,7 @@ hello
 
 ExampleExampleType tests using the type ExampleType
 
-```golang
+```go
 
 example := new(ExampleType)
 example.val = 1

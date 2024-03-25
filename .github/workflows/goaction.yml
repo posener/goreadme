@@ -14,7 +14,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v2
       - name: Update action files
-        uses: posener/goaction@v1
+        uses: posener/goaction@v1.2.0
         with:
           path: cmd/goreadme
           name: goreadme

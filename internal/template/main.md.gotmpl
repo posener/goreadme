@@ -10,7 +10,7 @@
 [![golangci](https://golangci.com/badges/{{importPath .Package}}.svg)](https://golangci.com/r/{{importPath .Package}})
 {{end -}}
 {{if config.Badges.GoDoc -}}
-[![GoDoc](https://img.shields.io/badge/pkg.go.dev-doc-blue)](http://pkg.go.dev/{{importPath .Package}})
+[![GoDoc](https://pkg.go.dev/badge/pkgsite/pkg.svg)]({{config.GoDocURL}}/{{importPath .Package}})
 {{end -}}
 {{if config.Badges.GoReportCard -}}
 [![Go Report Card](https://goreportcard.com/badge/{{importPath .Package}})](https://goreportcard.com/report/{{importPath .Package}})

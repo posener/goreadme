@@ -7,7 +7,7 @@
 
 ### func [{{ .Name }}]({{ urlOrName (index $.Files .Pos.File) }}#L{{ .Pos.Line }})
 
-{{ inlineCode .Decl.Text }}
+{{ gocodeEllipsis .Decl.Text }}
 
 {{ doc .Doc }}
 

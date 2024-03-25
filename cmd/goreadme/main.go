@@ -47,6 +47,7 @@ var (
 func init() {
 	flag.StringVar(&cfg.ImportPath, "import-path", "", "Override package import path.")
 	flag.StringVar(&cfg.Title, "title", "", "Override readme title. Default is package name.")
+	flag.StringVar(&cfg.GoDocURL, "godoc-url", "https://pkg.go.dev", "Go Doc URL for GoDoc badge.")
 	flag.BoolVar(&cfg.RecursiveSubPackages, "recursive", false, "Load docs recursively.")
 	flag.BoolVar(&cfg.Consts, "constants", false, "Write package constants section, and if 'types' is specified, also write per-type constants section.")
 	flag.BoolVar(&cfg.Vars, "variables", false, "Write package variables section, and if 'types' is specified, also write per-type variables section.")

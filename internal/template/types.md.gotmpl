@@ -10,7 +10,7 @@
 {{ if config.RenderTypeContent }}
 {{ gocode .Decl.Text }}
 {{ else }}
-{{ inlineCodeEllipsis .Decl.Text }}
+{{ gocodeEllipsis .Decl.Text }}
 {{ end }}
 
 {{ doc .Doc }}

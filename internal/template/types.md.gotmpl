@@ -7,10 +7,10 @@
 
 ### type [{{ .Name }}]({{ urlOrName (index $.Files .Pos.File) }}#L{{ .Pos.Line }})
 
-{{ if config.Ellipsis }}
-{{ inlineCodeEllipsis .Decl.Text }}
-{{ else }}
+{{ if config.RenderTypeContent }}
 {{ gocode .Decl.Text }}
+{{ else }}
+{{ inlineCodeEllipsis .Decl.Text }}
 {{ end }}
 
 {{ doc .Doc }}

@@ -144,8 +144,8 @@ type Config struct {
 	ImportPath string `json:"import_path"`
 	// Use the standard library comment parser introduced in Go 1.19 to generate the markdown output.
 	StdMarkdown bool `json:"std_markdown"`
-	// Ellipsis will replace types content with an ellipsis (`{ ... }`).
-	Ellipsis bool `json:"ellipsis"`
+	// RenderTypeContent will render fulll type content instead of an ellipsis (`{ ... }`).
+	RenderTypeContent bool `json:"render_type_content"`
 	// Consts will make constants documentation to be added to the README.
 	// If Types is specified, constants for each type will also be added to the README.
 	Consts bool `json:"consts"`

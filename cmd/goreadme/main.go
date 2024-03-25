@@ -48,7 +48,7 @@ func init() {
 	flag.StringVar(&cfg.ImportPath, "import-path", "", "Override package import path.")
 	flag.StringVar(&cfg.Title, "title", "", "Override readme title. Default is package name.")
 	flag.BoolVar(&cfg.RecursiveSubPackages, "recursive", false, "Load docs recursively.")
-	flag.BoolVar(&cfg.Ellipsis, "ellipsis", true, "If 'types' is specified, replace types content with an ellipsis.")
+	flag.BoolVar(&cfg.RenderTypeContent, "render-type-content", false, "If 'types' is specified, render full type content.")
 	flag.BoolVar(&cfg.Consts, "constants", false, "Write package constants section, and if 'types' is specified, also write per-type constants section.")
 	flag.BoolVar(&cfg.Vars, "variabless", false, "Write package variables section, and if 'types' is specified, also write per-type variables section.")
 	flag.BoolVar(&cfg.Functions, "functions", false, "Write functions section.")

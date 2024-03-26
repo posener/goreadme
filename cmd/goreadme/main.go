@@ -62,6 +62,7 @@ func init() {
 	flag.BoolVar(&cfg.Badges.GolangCI, "badge-golangci", false, "Show GolangCI badge.")
 	flag.BoolVar(&cfg.Badges.GoDoc, "badge-godoc", false, "Show GoDoc badge.")
 	flag.BoolVar(&cfg.Badges.GoReportCard, "badge-goreportcard", false, "Show GoReportCard badge.")
+	flag.BoolVar(&cfg.GeneratedFileNotice, "generated-file-notice", false, "Add generated file notice (visible only in Markdown code).")
 	flag.BoolVar(&cfg.Credit, "credit", true, "Add credit line.")
 	flag.Usage = func() {
 		fmt.Fprint(

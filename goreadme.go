@@ -179,8 +179,8 @@ type Config struct {
 		GoReportCard bool `json:"go_report_card"`
 	} `json:"badges"`
 	// GeneratedFileNotice will add a notice (HTML comment) stating that the README is generated and should probably not be edited.
-	GeneratedFileNotice bool `json:"generated_file_notice"`
-	Credit              bool `json:"credit"`
+	GeneratedNotice bool `json:"generated_notice"`
+	Credit          bool `json:"credit"`
 }
 
 // Create writes the content of readme.md to w, with the default client.

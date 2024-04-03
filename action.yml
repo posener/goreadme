@@ -93,6 +93,10 @@ inputs:
     default: false
     description: "Show GoReportCard badge."
     required: false
+  generated-notice:
+    default: false
+    description: "Add generated file notice (visible only in Markdown code)."
+    required: false
   credit:
     default: true
     description: "Add credit line."
@@ -126,6 +130,7 @@ runs:
   - "-badge-golangci=${{ inputs.badge-golangci }}"
   - "-badge-godoc=${{ inputs.badge-godoc }}"
   - "-badge-goreportcard=${{ inputs.badge-goreportcard }}"
+  - "-generated-notice=${{ inputs.generated-notice }}"
   - "-credit=${{ inputs.credit }}"
 branding:
   icon: book-open

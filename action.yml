@@ -37,6 +37,10 @@ inputs:
     default: false
     description: "Load docs recursively."
     required: false
+  render-type-content:
+    default: false
+    description: "If 'types' is specified, render full type content."
+    required: false
   constants:
     default: false
     description: "Write package constants section, and if 'types' is specified, also write per-type constants section."
@@ -108,6 +112,7 @@ runs:
   - "-title=${{ inputs.title }}"
   - "-godoc-url=${{ inputs.godoc-url }}"
   - "-recursive=${{ inputs.recursive }}"
+  - "-render-type-content=${{ inputs.render-type-content }}"
   - "-constants=${{ inputs.constants }}"
   - "-variables=${{ inputs.variables }}"
   - "-functions=${{ inputs.functions }}"

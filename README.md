@@ -54,6 +54,28 @@ $ GO111MODULE=on go get github.com/posener/goreadme/cmd/goreadme
 $ goreadme -h
 ```
 
+## Pre-Commit hook
+
+goreadme can also be used as a pre-commit hook, acting before each commit is made.
+
+1. Install pre-commit from [https://pre-commit.com/#install](https://pre-commit.com/#install)
+2. Create a `.pre-commit-config.yaml` file at the root of your repository with the following content:
+
+```go
+repos:
+  - repo: [https://github.com/posener/goreadme](https://github.com/posener/goreadme)
+    rev: v1.4.2 # Use the latest ref
+    hooks:
+      - id: goreadme
+        entry: env README_FILE=README.md goreadme
+        args: ['-badge-goreadme=true', '-badge-godoc=true']
+```
+
+3. Change README_FILE to your file name and add any flags you need in `args`.
+4. Auto-update the config to the latest repos' versions by executing `pre-commit autoupdate`
+5. Install with `pre-commit install`
+6. Now you're all set! Try a commit, see the README being updated (if relevant), and continue your commit.
+
 ## Why Should You Use It
 
 Both Go doc and readme files are important. Go doc to be used by your user's library, and README

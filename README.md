@@ -47,7 +47,7 @@ jobs:
             GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
 ```
 
-Use as a command line tool
+## Use as a command line tool
 
 ```go
 $ GO111MODULE=on go get github.com/posener/goreadme/cmd/goreadme

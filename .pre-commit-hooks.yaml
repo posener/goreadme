@@ -1,0 +1,6 @@
+- id: goreadme
+  name: goreadme
+  description: Write README.md from go doc
+  entry: env README_FILE=README.md goreadme
+  language: golang
+  pass_filenames: false

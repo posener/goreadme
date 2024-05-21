@@ -3,6 +3,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"flag"
 	"fmt"
 	"io"
@@ -42,9 +43,14 @@ var (
 	path2 = os.Getenv("README_FILE")
 	//goaction:description An optional alias which can be used instead of 'github-token'.
 	githubToken2 = os.Getenv("GITHUB_TOKEN")
+
+	// dest is a flag to set the output destination. It overrides the `readme-file` and
+	// `README_FILE` env vars.
+	dest string
 )
 
 func init() {
+	flag.StringVar(&dest, "dest", "", "Override the output destination.")
 	flag.StringVar(&cfg.ImportPath, "import-path", "", "Override package import path.")
 	flag.StringVar(&cfg.Title, "title", "", "Override readme title. Default is package name.")
 	flag.StringVar(&cfg.GoDocURL, "godoc-url", "https://pkg.go.dev", "Go Doc URL for GoDoc badge.")
@@ -81,7 +87,9 @@ Flags:
 	}
 	flag.Parse()
 
-	if path == "" {
+	if dest != "" {
+		path = dest
+	} else if path == "" {
 		path = path2
 	}
 	if githubToken == "" {
@@ -93,6 +101,12 @@ func main() {
 	// Steps to do only in Github Action mode.
 	if path != "" {
 		// Setup output file.
+		if _, err := os.Stat(filepath.Dir(path)); errors.Is(err, os.ErrNotExist) {
+			if err := os.MkdirAll(filepath.Dir(path), os.ModeDir|os.ModePerm); err != nil {
+				log.Fatalf("Failed creating folders %s: %v", path, err)
+			}
+		}
+
 		var err error
 		out, err = os.Create(path)
 		if err != nil {

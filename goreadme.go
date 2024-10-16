@@ -35,7 +35,6 @@
 //	            badge-travisci: 'true'
 //	            badge-codecov: 'true'
 //	            badge-godoc: 'true'
-//	            badge-goreadme: 'true'
 //	            # Optional: Token allows goreadme to comment the PR with diff preview.
 //	            GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
 //
@@ -57,7 +56,7 @@
 //	    hooks:
 //	      - id: goreadme
 //	        entry: env README_FILE=README.md goreadme
-//	        args: ['-badge-goreadme=true', '-badge-godoc=true']
+//	        args: ['-badge-godoc=true']
 //
 // 3. Change README_FILE to your file name and add any flags you need in `args`.
 // 4. Auto-update the config to the latest repos' versions by executing `pre-commit autoupdate`
